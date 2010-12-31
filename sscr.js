@@ -1,13 +1,13 @@
 
-// SmoothScroll v0.8.3
+// SmoothScroll v0.8.5
 // Licensed under the terms of the MIT license.
 
 // People involved
+// - Balazs Galambosi: maintainer (CHANGELOG.txt)
 // - Patrick Brunner (patrickb1991@gmail.com)
 // - Michael Herf: Pulse Algorithm
 // - Frank Yan: Direction Switching Fixes
 // - Ismael Barros: Keyboard Fixes
-// - Balazs Galambosi: CHANGELOG.txt
 
 (function(window){
 
@@ -17,7 +17,7 @@ var noscrollframe = false;
 var lastYOffset = 0;
 
 // Scroll Variables (tweakables)
-var framerate = 50;  // [Hz] 50
+var framerate = 50;  // [Hz]
 var animtime  = 400; // [px]
 var scrollsz  = 120; // [px]
 

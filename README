@@ -1,0 +1,11 @@
+A Google Chrome extension for smooth scrolling with the mouse wheel and keyboard buttons.
+
+Extension homepage:
+ https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn
+
+People involved
+ - Balazs Galambosi: maintainer
+ - Patrick Brunner: original idea
+ - Michael Herf: Pulse Algorithm
+ - Frank Yan: Direction Switching Fixes
+ - Ismael Barros: Keyboard Fixes
