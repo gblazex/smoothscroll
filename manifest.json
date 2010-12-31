@@ -1,17 +1,17 @@
 {
-   "background_page": "background.html",
+   "background_page": "background_page/background.html",
    "content_scripts": [ {
       "all_frames": true,
-      "js": [ "sscr.js" ],
+      "js": [ "src/sscr.js" ],
       "matches": [ "http://*/*", "https://*/*", "ftp://*/*" ],
       "run_at": "document_start"
    } ],
    "description": "Scrolls the websites smoothly when scrolling with the mouse wheel or the keyboard",
    "icons": {
-      "128": "128n.png",
-      "16": "16n.png",
-      "32": "32n.png",
-      "48": "48n.png"
+      "128": "img/128n.png",
+      "16": "img/16n.png",
+      "32": "img/32n.png",
+      "48": "img/48n.png"
    },
 	 "name": "SmoothScroll",
    "options_page": "options_page/options.html",
