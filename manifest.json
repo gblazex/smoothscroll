@@ -1,5 +1,5 @@
 {
-   "background_page": "background/background.html",
+   "background_page": "pages/background.html",
    "content_scripts": [ {
       "all_frames": true,
       "js": [ "src/sscr.js" ],
@@ -14,6 +14,6 @@
       "48": "img/48n.png"
    },
 	 "name": "SmoothScroll",
-   "options_page": "options/options.html",
+   "options_page": "pages/options.html",
    "version": "0.8.5"
 }
