@@ -1,0 +1,69 @@
+<script>
+// Fetch version number of SmoothScroll
+function get_manifest(callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function () {
+    callback(JSON.parse(xhr.responseText));
+  };
+  xhr.open('GET', './manifest.json', true);
+  xhr.send(null);
+}
+
+get_manifest(function (manifest) {
+  version = manifest.version;
+  init();
+});
+
+function init() {
+
+  var store = localStorage;
+
+  // update to new pulse names (keep old values if possible)
+  if (!store.pulseScale || !store.pulseNormalize) {
+    store.pulseScale     = store.PulseScale     || 8;
+    store.pulseNormalize = store.PulseNormalize || 1;
+  }
+
+  // update to new enable pulse setting
+  if (store.pulseAlgorithm == null) {
+    store.pulseAlgorithm = true;
+  }
+
+  // Fresh install
+  if (!store.version) {
+
+    store.version = version;
+
+    // Set the default settings
+    store.framerate = 50;
+    store.animtime  = 400;
+    store.scrollsz  = 120;
+
+    store.pulseAlgorithm = true;
+    store.pulseScale     = 8;
+    store.pulseNormalize = 1;
+
+    store.keyboardsupport = true;
+    store.arrscroll = 40;
+    store.arrframes = 6;
+    store.pgscroll  = 800;
+    store.pgframes  = 20;
+
+    // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});
+  }
+
+  // If updated do something
+  if (store.version != version) {
+    store.version = version;
+    // This should be replaced by an infobar once the API is ready
+    // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});
+  }
+}
+
+// If content scripts connect send the settings
+chrome.extension.onConnect.addListener(function (port) {
+  if (port.name == 'smoothscroll') {
+    port.postMessage(localStorage);
+  }
+});
+</script>
