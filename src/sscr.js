@@ -74,10 +74,10 @@ port.onMessage.addListener(function (settings) {
     
     scrolls = setupScrolls();
     computePulseScale();
-
-    if (!initdone) {
-        initTest();
-    }
+    
+    // it seems that sometimes settings come late
+    // and we need to test again for excluded pages
+    initTest();
 
     if (keyboardsupport && !disableKeyboard) {
         document.onkeydown = keydown;
@@ -103,12 +103,11 @@ function initTest() {
     if (embed && embed.type === "application/pdf") {
         window.onmousewheel = null;
         disableKeyboard = true;
-    }
-    else if (document.URL.indexOf("google.com/reader/view") > -1) {
+    } else if (document.URL.indexOf("google.com/reader/view") > -1) {
         disableKeyboard = true;
-    } 
-    else if (exclude) {
+    } else if (exclude) {
         var domains = exclude.split(/[,\n] ?/);
+        console.log(domains)
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
                 window.onmousewheel = null;
@@ -117,9 +116,9 @@ function initTest() {
             }
         }
     }
-
+    
     if (disableKeyboard) {
-        document.onkeydown = null;   
+        document.onkeydown = null;
     }
 }
 
