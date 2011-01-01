@@ -1,11 +1,12 @@
 <script>
+
 // Fetch version number of SmoothScroll
 function get_manifest(callback) {
   var xhr = new XMLHttpRequest();
   xhr.onload = function () {
     callback(JSON.parse(xhr.responseText));
   };
-  xhr.open('GET', './manifest.json', true);
+  xhr.open('GET', '../manifest.json', true);
   xhr.send(null);
 }
 
@@ -48,6 +49,13 @@ function init() {
     store.arrframes = 6;
     store.pgscroll  = 800;
     store.pgframes  = 20;
+    store.exclude   = "twitter.com, mail.google.com";
+
+    /**
+     * NOTE: It's easier if we give an example 
+     * how to format the excluded pages list,
+     * plus gmail and twitter are good examples.
+     */
 
     // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});
   }
@@ -66,4 +74,5 @@ chrome.extension.onConnect.addListener(function (port) {
     port.postMessage(localStorage);
   }
 });
+
 </script>

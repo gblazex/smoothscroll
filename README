@@ -1,6 +1,6 @@
 A Google Chrome extension for smooth scrolling with the mouse wheel and keyboard buttons.
 
-Extension homepage:
+Extension homepage
  https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn
 
 People involved
@@ -9,3 +9,6 @@ People involved
  - Michael Herf: Pulse Algorithm
  - Frank Yan: Direction Switching Fixes
  - Ismael Barros: Keyboard Fixes
+
+Note
+ The manifest file doesn't contain key and update_url. It's for a standalone testing.

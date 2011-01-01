@@ -33,7 +33,7 @@ var arrscroll = 40;  // [px]
 var arrframes = 6;
 var pgscroll  = 800; // [px]
 var pgframes  = 20;
-var exclude; // under development...
+var exclude   = "";
 
 // Arrays of timeouts
 var up   = [];
@@ -44,7 +44,7 @@ var scrolls;
 var lastScrollTop = 1337; // 1337??
 var delta    = 0;
 var initdone = false;
-var cancel   = false; // for edge cases
+var disableKeyboard = false;
 
 
 /***********************************************
@@ -70,11 +70,16 @@ port.onMessage.addListener(function (settings) {
     arrframes = +settings.arrframes;
     pgscroll  = +settings.pgscroll;
     pgframes  = +settings.pgframes;
+    exclude   = settings.exclude;
     
     scrolls = setupScrolls();
     computePulseScale();
 
-    if (keyboardsupport && !cancel) {
+    if (!initdone) {
+        initTest();
+    }
+
+    if (keyboardsupport && !disableKeyboard) {
         document.onkeydown = keydown;
     }
 
@@ -98,12 +103,24 @@ function initTest() {
     var embed = document.getElementsByTagName('embed')[0];
     if (embed && embed.type === "application/pdf") {
         window.onmousewheel = null;
-        document.onkeydown  = null;   
-        cancel = true;
+        disableKeyboard = true;
     }
     else if (document.URL.indexOf("google.com/reader/view") > -1) {
-        document.onkeydown  = null; 
-        cancel = true;
+        disableKeyboard = true;
+    } 
+    else if (exclude) {
+        var domains = exclude.split(/[,\n] ?/);
+        for (var i = domains.length; i--;) {
+            if (document.URL.indexOf(domains[i]) > -1) {
+                window.onmousewheel = null;
+                disableKeyboard = true;
+                break;
+            }
+        }
+    }
+
+    if (disableKeyboard) {
+        document.onkeydown = null;   
     }
 }
 

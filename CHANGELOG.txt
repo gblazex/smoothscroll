@@ -21,3 +21,4 @@
 // - wrapped the extension into its scope
 // - localStorage strings are converted to number/bool
 // - setting to switch pulse algorithm
+// - setting to exclude pages
