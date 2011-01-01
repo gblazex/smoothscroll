@@ -11,4 +11,4 @@ People involved
  - Ismael Barros: Keyboard Fixes
 
 Note
- The manifest file doesn't contain key and update_url. It's for a standalone testing.
+ The manifest file doesn't contain key and update_url. It's for standalone testing.

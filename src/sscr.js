@@ -1,5 +1,5 @@
 
-// SmoothScroll v0.8.5
+// SmoothScroll v0.8.6
 // Licensed under the terms of the MIT license.
 
 // People involved
@@ -97,7 +97,6 @@ port.onMessage.addListener(function (settings) {
 
 /**
  * Tests if page scrolling is possible. Shuts down everything if not.
- * (Only blocks PDF reader currently)
  */
 function initTest() {
     var embed = document.getElementsByTagName('embed')[0];
