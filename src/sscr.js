@@ -96,7 +96,7 @@ port.onMessage.addListener(function (settings) {
  ***********************************************/
 
 /**
- * Tests if page scrolling is possible. Shuts down everything if not.
+ * Tests if smooth scrolling is allowed. Shuts down everything if not.
  */
 function initTest() {
     var embed = document.getElementsByTagName('embed')[0];
@@ -447,12 +447,13 @@ function scrollElement(el, delta, amount) {
  */
 function scrollArray(dir, multiply, delay) {
     clearTimeouts(dir === up ? down : up);
-    scrolls.forEach(function(elem, i) {
-        dir.push(setTimeout(function() {
-            //scrollElement(el, -1, multiply * elem)
-            window.scrollBy( 0 , multiply * elem );
-        }, i * delay / framerate + 1));
-    });
+    function step() {
+        window.scrollBy( 0 , multiply * scrolls[i++] );
+    }    
+    for (var i = scrolls.length; i--;) {
+        dir.push(setTimeout(step, i * delay / framerate + 1));
+    }
+    i = 0; // reset so that step() can increment again   
 }
 
 /**
