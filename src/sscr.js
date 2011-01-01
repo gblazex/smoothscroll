@@ -107,7 +107,6 @@ function initTest() {
         disableKeyboard = true;
     } else if (exclude) {
         var domains = exclude.split(/[,\n] ?/);
-        console.log(domains)
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
                 window.onmousewheel = null;
