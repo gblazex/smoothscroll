@@ -315,13 +315,13 @@ function keydown(event) {
   
     var shift = (event.shiftKey ? 1 : -1)
     var keys = {
-        38 : [ arrowScroll,         1   ], // up arrow
-        40 : [ arrowScroll,        -1   ], // down arrow
-        32 : [ pageScroll,        shift ], // spacebar (+ shift)
-        33 : [ pageScroll,          1   ], // page up
-        34 : [ pageScroll,         -1   ], // page down
-        35 : [ scrollToBottom,   target ], // end
-        36 : [ scrollToTop,      target ]  // home
+        38 : [ arrowScroll,        1   ], // up arrow
+        40 : [ arrowScroll,       -1   ], // down arrow
+        32 : [ pageScroll,       shift ], // spacebar (+ shift)
+        33 : [ pageScroll,         1   ], // page up
+        34 : [ pageScroll,        -1   ], // page down
+        35 : [ scrollToBottom,  target ], // end
+        36 : [ scrollToTop,     target ]  // home
     };
     if (keys[keyCode]) {
         keys[keyCode][0]( keys[keyCode][1] );
@@ -333,11 +333,7 @@ function keydown(event) {
 /***********************************************
  * HELPERS
  ***********************************************/
-
-function computedStyle(el, style) {
-    return document.defaultView.getComputedStyle(el, "").getPropertyValue(style);
-}
-
+ 
 function isNodeName(el, tag) {
     return el.nodeName.toLowerCase() === tag.toLowerCase();
 }
@@ -355,7 +351,7 @@ function overflowingAncestor(el) {
             return document.body;
         }
         else if (el.clientHeight + 10 < el.scrollHeight) {
-            overflow = computedStyle(el, "overflow");
+            overflow = getComputedStyle(el, "").getPropertyValue("overflow");
             if (overflow === "scroll" || overflow === "auto") {
                 return el;
             }
