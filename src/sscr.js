@@ -30,7 +30,7 @@ var pulseNormalize = 1;
 // Keyboard Settings
 var keyboardsupport = true;
 var arrscroll = 40;  // [px]
-var pgscroll  = 800; // [px]
+var pgscroll  = 800; // [px] unused
 var exclude   = "";
 
 // Arrays of timeouts
@@ -65,7 +65,7 @@ port.onMessage.addListener(function (settings) {
 
     keyboardsupport = (settings.keyboardsupport == "true");
     arrscroll = +settings.arrscroll;
-    pgscroll  = +settings.pgscroll;
+    //pgscroll  = +settings.pgscroll;
     exclude   = settings.exclude;
     
     scrolls = setupScrolls();
@@ -490,7 +490,7 @@ function scrollToBottom(src) {
  * Scrolls the element for one Page Up/Down
  */
 function pageScrollWindow(delta) {
-    var winScale = 0.9 * window.innerHeight / scrollsz;
+    var winScale = window.innerHeight / scrollsz;
     var dir = (delta > 0) ? up : down;
     scrollArray(dir, -delta*winScale, 1000);
 }
