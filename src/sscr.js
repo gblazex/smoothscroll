@@ -228,8 +228,7 @@ function wheel(event) {
             scroll = true;
             break;
         }
-        // NOTE: no need for else, because of "break"
-        if (src.clientHeight + 10 < src.scrollHeight) {
+        else if (src.clientHeight + 10 < src.scrollHeight) {
             overflow = computedStyle(src, "overflow");
             if (overflow === "scroll" || overflow === "auto") {
                 prevent = true;
@@ -477,8 +476,7 @@ function scrollToTop(src) {
  * Scrolls an element to the absolute bottom.
  */
 function scrollToBottom(src) {
-    // NOTE: doesn't include current client area...
-    var damt = src.scrollHeight - src.scrollTop;
+    var damt = src.scrollHeight - src.scrollTop - src.parentNode.clientHeight;
     var winScale = damt / scrollsz;
     if (damt <= 0) { 
       return;
