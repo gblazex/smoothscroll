@@ -198,13 +198,12 @@ function wheel(event) {
         init();
     }
 
-    var src = event.target;
     var scroll = true;
     var prevent = false;
     var scrollup = true;
     var scrolldown = true;
     var lastdelta = delta;
-    var i, overflow, delay;
+    var i, overflow, delay, elem, dir;
 
     delta = event.wheelDelta || 0;
 
@@ -219,44 +218,38 @@ function wheel(event) {
         }
     }
 
-    // do less in the loop
-    var bodyScrollHeight = document.body.scrollHeight;
-    var dir = (delta > 0) ? up : down;
+    dir = (delta > 0) ? up : down;
+    elem = overflowingAncestor(event.target);
+  
+    if (!elem) {
+        return true;
+    }
     
-    do {
-        if (bodyScrollHeight === src.scrollHeight) {
-            scroll = true;
-            break;
-        }
-        else if (src.clientHeight + 10 < src.scrollHeight) {
-            overflow = computedStyle(src, "overflow");
-            if (overflow === "scroll" || overflow === "auto") {
-                prevent = true;
-                if (src.scrollTop === lastScrollTop) {
-                    if (src.scrollTop === 0) {
-                        scrollup   = true;
-                        scrolldown = false;
-                    } else {
-                        scrolldown = true;
-                        scrollup   = false;
-                    }
-                } else {
-                    scroll = false;
-                }
-                lastScrollTop = src.scrollTop;
-                scrollElement(src, delta, 1); // Fixes a bug
-                clearTimeouts(dir === up ? down : up);
-                for (i = 0; i < 10; i++) {
-                    delay = i * 1000 / framerate + 1;
-                    dir.push(setTimeout(function() {
-                        scrollElement(src, delta, 10);
-                    }, delay));
-                }
-                break;
+    if (elem === document.body) {
+        scroll = true;
+    } else { // other overflowing element
+        prevent = true;
+        if (elem.scrollTop === lastScrollTop) {
+            if (elem.scrollTop === 0) {
+                scrollup   = true;
+                scrolldown = false;
+            } else {
+                scrolldown = true;
+                scrollup   = false;
             }
+        } else {
+            scroll = false;
         }
-    } while (src = src.parentNode);
-
+        lastScrollTop = elem.scrollTop;
+        scrollElement(elem, delta, 1); // Fixes a bug
+        clearTimeouts(dir === up ? down : up);
+        for (i = 0; i < 10; i++) {
+            delay = i * 1000 / framerate + 1;
+            dir.push(setTimeout(function() {
+                scrollElement(elem, delta, 10);
+            }, delay));
+        }
+    }
 
     if (frame) {
         if (noscrollframe) {
@@ -280,7 +273,7 @@ function wheel(event) {
     }
     if (scroll) {
         if ((scrolldown && delta < 0) || (scrollup && delta > 0)) {
-            scrollArray(dir, -delta, 1000);
+            scrollArray(dir, -delta);
             event.preventDefault();
         }
     }
@@ -376,6 +369,21 @@ function clearTimeouts(array) {
     }
 }
 
+function overflowingAncestor(el) {
+    var bodyScrollHeight = document.body.scrollHeight;
+    do {
+        if (bodyScrollHeight === el.scrollHeight) {
+            return document.body;
+        }
+        else if (el.clientHeight + 10 < el.scrollHeight) {
+            overflow = computedStyle(el, "overflow");
+            if (overflow === "scroll" || overflow === "auto") {
+                return el;
+            }
+        }
+    } while (el = el.parentNode);
+}
+
 
 /***********************************************
  * PULSE
@@ -441,6 +449,7 @@ function scrollElement(el, delta, amount) {
  * Pushes scroll actions to a given direction Array.
  */
 function scrollArray(dir, multiply, delay) {
+    delay || (delay = 1000);
     clearTimeouts(dir === up ? down : up);
     function step() {
         window.scrollBy( 0 , multiply * scrolls[i++] );
@@ -469,19 +478,20 @@ function scrollToTop(src) {
     if (!upamt) {
       return;
     }
-    scrollArray(up, -winScale, 1000);    
+    scrollArray(up, -winScale);    
 }
 
 /**
  * Scrolls an element to the absolute bottom.
  */
 function scrollToBottom(src) {
-    var damt = src.scrollHeight - src.scrollTop - src.parentNode.clientHeight;
+    var clientHeight = document.documentElement.clientHeight;
+    var damt = src.scrollHeight - src.scrollTop - clientHeight;
     var winScale = damt / scrollsz;
     if (damt <= 0) { 
       return;
     }
-    scrollArray(down, winScale, 1000);
+    scrollArray(down, winScale);
 }
 
 /**
@@ -490,7 +500,7 @@ function scrollToBottom(src) {
 function pageScrollWindow(delta) {
     var winScale = window.innerHeight / scrollsz;
     var dir = (delta > 0) ? up : down;
-    scrollArray(dir, -delta*winScale, 1000);
+    scrollArray(dir, -delta*winScale);
 }
 
 window.onmousewheel = wheel;

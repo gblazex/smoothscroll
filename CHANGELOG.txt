@@ -22,3 +22,4 @@
 // - localStorage strings are converted to number/bool
 // - setting to switch pulse algorithm
 // - setting to exclude pages
+// - fixed End button smoothness
