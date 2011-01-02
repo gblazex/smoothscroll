@@ -30,9 +30,7 @@ var pulseNormalize = 1;
 // Keyboard Settings
 var keyboardsupport = true;
 var arrscroll = 40;  // [px]
-var arrframes = 6;
 var pgscroll  = 800; // [px]
-var pgframes  = 20;
 var exclude   = "";
 
 // Arrays of timeouts
@@ -67,9 +65,7 @@ port.onMessage.addListener(function (settings) {
 
     keyboardsupport = (settings.keyboardsupport == "true");
     arrscroll = +settings.arrscroll;
-    arrframes = +settings.arrframes;
     pgscroll  = +settings.pgscroll;
-    pgframes  = +settings.pgframes;
     exclude   = settings.exclude;
     
     scrolls = setupScrolls();
@@ -449,7 +445,7 @@ function scrollArray(dir, multiply, delay) {
     clearTimeouts(dir === up ? down : up);
     function step() {
         window.scrollBy( 0 , multiply * scrolls[i++] );
-    }    
+    }
     for (var i = scrolls.length; i--;) {
         dir.push(setTimeout(step, i * delay / framerate + 1));
     }
