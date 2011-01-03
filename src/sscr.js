@@ -301,7 +301,6 @@ function wheel(event) {
  */
 function keydown(event) {
 
-    var keyCode  = event.keyCode;
     var target   = event.target;
     var modifier = event.ctrlKey || event.altKey || event.metaKey;
 
@@ -316,31 +315,39 @@ function keydown(event) {
  
     var scale, dir, shift;
     
-    if (key.up === keyCode) {
-        scale = -arrscroll;
-        dir = up;
-    } else if (key.down === keyCode) { 
-        scale = arrscroll;
-        dir = down;
-    } else if (key.spacebar === keyCode) { 
-        shift = event.shiftKey ? 1 : -1; // (+ shift)
-        scale = -shift * window.innerHeight;
-        dir = (shift > 0) ? up : down;
-    } else if (key.pageup === keyCode) { 
-        scale = -window.innerHeight;
-        dir = up;
-    } else if (key.pagedown === keyCode) { 
-        scale = window.innerHeight;
-        dir = down;
-    } else if (key.home === keyCode) {
-        scale = -target.scrollTop;
-        dir = up;
-    } else if (key.end === keyCode) {
-        var damt = target.scrollHeight - target.scrollTop - window.innerHeight;
-        scale = (damt > 0) ? damt : 0;
-        dir = down;
-    } else { 
-        return true; // a key we don't care about
+    switch (event.keyCode) {
+        case key.up:
+            scale = -arrscroll;
+            dir = up; 
+            break;
+        case key.down:
+            scale = arrscroll;
+            dir = down; 
+            break;
+        case key.spacebar:
+            shift = event.shiftKey ? 1 : -1; // (+ shift)
+            scale = -shift * window.innerHeight;
+            dir = (shift > 0) ? up : down; 
+            break;
+        case key.pageup:
+            scale = -window.innerHeight;
+            dir = up; 
+            break;
+        case key.pagedown:
+            scale = window.innerHeight;
+            dir = down; 
+            break;
+        case key.home:
+            scale = -target.scrollTop;
+            dir = up; 
+            break;
+        case key.end:
+            var damt = target.scrollHeight - target.scrollTop - window.innerHeight;
+            scale = (damt > 0) ? damt : 0;
+            dir = down; 
+            break;
+        default:
+            return true; // a key we don't care about
     }
     
     scrollArray(dir, scale / scrollsz, 1000);
