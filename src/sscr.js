@@ -19,7 +19,7 @@ var lastYOffset = 0;
 // Scroll Variables (tweakables)
 var framerate = 50;  // [Hz]
 var animtime  = 400; // [px]
-var scrollsz  = 120; // [px]
+var stepsize  = 120; // [px]
 
 // Pulse (less tweakables)
 // ratio of 'tail' to 'acceleration'
@@ -29,9 +29,8 @@ var pulseNormalize = 1;
 
 // Keyboard Settings
 var keyboardsupport = true;
-var arrscroll = 50;  // [px]
-var pgscroll  = 800; // [px] unused
-var exclude   = "";
+var arrowscroll = 50;  // [px]
+var exclude     = "";
 
 // Arrays of timeouts
 var up   = [];
@@ -39,7 +38,7 @@ var down = [];
 
 // Other Variables
 var scrolls;
-var lastScrollTop = 1337; // 1337??
+var lastScrollTop = 1337;
 var delta    = 0;
 var initdone = false;
 var disableKeyboard = false;
@@ -58,16 +57,13 @@ port.onMessage.addListener(function (settings) {
     // NOTE: + converts to {Number}
     framerate = +settings.framerate;
     animtime  = +settings.animtime;
-    scrollsz  = +settings.scrollsz;
-
-    pulseAlgorithm = (settings.pulseAlgorithm == "true");
-    pulseScale     = +settings.pulseScale;
-    pulseNormalize = +settings.pulseNormalize;
-
-    keyboardsupport = (settings.keyboardsupport == "true");
-    arrscroll = +settings.arrscroll;
-    //pgscroll  = +settings.pgscroll;
+    stepsize  = +settings.scrollsz;
     exclude   = settings.exclude;
+    pulseAlgorithm  = (settings.pulseAlgorithm == "true");
+    pulseScale      = +settings.pulseScale;
+    pulseNormalize  = +settings.pulseNormalize;
+    keyboardsupport = (settings.keyboardsupport == "true");
+    arrowscroll     = +settings.arrscroll;
     
     scrolls = setupScrolls();
     computePulseScale();
@@ -85,7 +81,6 @@ port.onMessage.addListener(function (settings) {
         alert("SmoothScroll: Please restart Chrome");
     }
 });
-
 
 
 /***********************************************
@@ -138,7 +133,7 @@ function setupScrolls() {
         }
        
         // scale and quantize to int so our pixel difference works:
-        var iscroll = Math.floor(scrollsz * scroll + 0.99);
+        var iscroll = Math.floor(stepsize * scroll + 0.99);
         scrolls.push(iscroll - last);
         last = iscroll;
     }
@@ -187,7 +182,7 @@ function init() {
 /***********************************************
  * EVENTS
  ***********************************************/
-
+ 
 /**
  * Mouse wheel handler.
  * NOTE: function logic should be decomposed.
@@ -284,7 +279,6 @@ function wheel(event) {
     }
 }
 
-
 /**
  * Keydown event handler.
  * @param {Object} event
@@ -307,11 +301,11 @@ function keydown(event) {
     
     switch (event.keyCode) {
         case key.up:
-            scale = -arrscroll;
+            scale = -arrowscroll;
             dir = up; 
             break;
         case key.down:
-            scale = arrscroll;
+            scale = arrowscroll;
             dir = down; 
             break;
         case key.spacebar:
@@ -340,7 +334,7 @@ function keydown(event) {
             return true; // a key we don't care about
     }
     
-    scrollArray(dir, scale / scrollsz, 1000);
+    scrollArray(dir, scale / stepsize, 1000);
     event.preventDefault();
 }
 
