@@ -43,6 +43,7 @@ var lastScrollTop = 1337; // 1337??
 var delta    = 0;
 var initdone = false;
 var disableKeyboard = false;
+var key = { up: 38, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
 
 /***********************************************
@@ -315,26 +316,26 @@ function keydown(event) {
  
     var scale, dir, shift;
     
-    if (keyCode === 38) {         // up arrow
+    if (key.up === keyCode) {
         scale = -arrscroll;
         dir = up;
-    } else if (keyCode === 40) {  // down arrow
+    } else if (key.down === keyCode) { 
         scale = arrscroll;
         dir = down;
-    } else if (keyCode === 32) {  // spacebar (+ shift)
-        shift = event.shiftKey ? 1 : -1;
+    } else if (key.spacebar === keyCode) { 
+        shift = event.shiftKey ? 1 : -1; // (+ shift)
         scale = -shift * window.innerHeight;
         dir = (shift > 0) ? up : down;
-    } else if (keyCode === 33) {  // page up
+    } else if (key.pageup === keyCode) { 
         scale = -window.innerHeight;
         dir = up;
-    } else if (keyCode === 34) {  // page down
+    } else if (key.pagedown === keyCode) { 
         scale = window.innerHeight;
         dir = down;
-    } else if (keyCode === 36) {  // home
+    } else if (key.home === keyCode) {
         scale = -target.scrollTop;
         dir = up;
-    } else if (keyCode === 35) {  // end
+    } else if (key.end === keyCode) {
         var damt = target.scrollHeight - target.scrollTop - window.innerHeight;
         scale = (damt > 0) ? damt : 0;
         dir = down;
