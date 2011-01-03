@@ -312,21 +312,38 @@ function keydown(event) {
          modifier ) {
       return true;
     }
-  
-    var shift = (event.shiftKey ? 1 : -1);
-    var keys = {
-        38 : [ arrowScroll,        1   ], // up arrow
-        40 : [ arrowScroll,       -1   ], // down arrow
-        32 : [ pageScroll,       shift ], // spacebar (+ shift)
-        33 : [ pageScroll,         1   ], // page up
-        34 : [ pageScroll,        -1   ], // page down
-        35 : [ scrollToBottom,  target ], // end
-        36 : [ scrollToTop,     target ]  // home
-    };
-    if (keys[keyCode]) {
-        keys[keyCode][0]( keys[keyCode][1] );
-        event.preventDefault();
+ 
+    var scale, dir, shift;
+    
+    if (keyCode === 38) {         // up arrow
+        scale = -arrscroll;
+        dir = up;
+    } else if (keyCode === 40) {  // down arrow
+        scale = arrscroll;
+        dir = down;
+    } else if (keyCode === 32) {  // spacebar (+ shift)
+        shift = event.shiftKey ? 1 : -1;
+        scale = -shift * window.innerHeight;
+        dir = (shift > 0) ? up : down;
+    } else if (keyCode === 33) {  // page up
+        scale = -window.innerHeight;
+        dir = up;
+    } else if (keyCode === 34) {  // page down
+        scale = window.innerHeight;
+        dir = down;
+    } else if (keyCode === 36) {  // home
+        scale = -target.scrollTop;
+        dir = up;
+    } else if (keyCode === 35) {  // end
+        var damt = target.scrollHeight - target.scrollTop - window.innerHeight;
+        scale = (damt > 0) ? damt : 0;
+        dir = down;
+    } else { 
+        return true; // a key we don't care about
     }
+    
+    scrollArray(dir, scale / scrollsz, 1000);
+    event.preventDefault();
 }
 
 
@@ -433,48 +450,6 @@ function scrollArray(dir, multiply, delay) {
         dir.push(setTimeout(step, i * delay / framerate + 1));
     }
     i = 0; // reset so that step() can increment again   
-}
-
-/**
- * Scrolls the window according to a given delta.
- */
-function arrowScroll(delta) {
-    var scale = arrscroll / scrollsz;
-    var dir = (delta > 0) ? up : down;
-    scrollArray(dir, -delta*scale, 500);    
-}
-
-/**
- * Scrolls the element for one Page Up/Down
- */
-function pageScroll(delta) {
-    var winScale = window.innerHeight / scrollsz;
-    var dir = (delta > 0) ? up : down;
-    scrollArray(dir, -delta*winScale);
-}
-
-/**
- * Scrolls an element to the absolute top.
- */
-function scrollToTop(src) {
-    var upamt = src.scrollTop;
-    var winScale = upamt / scrollsz;
-    if (!upamt) {
-      return;
-    }
-    scrollArray(up, -winScale);    
-}
-
-/**
- * Scrolls an element to the absolute bottom.
- */
-function scrollToBottom(src) {
-    var damt = src.scrollHeight - src.scrollTop - window.innerHeight;
-    var winScale = damt / scrollsz;
-    if (damt <= 0) { 
-      return;
-    }
-    scrollArray(down, winScale);
 }
 
 window.addEventListener("mousewheel", wheel, false);
