@@ -313,7 +313,7 @@ function keydown(event) {
       return true;
     }
   
-    var shift = (event.shiftKey ? 1 : -1)
+    var shift = (event.shiftKey ? 1 : -1);
     var keys = {
         38 : [ arrowScroll,        1   ], // up arrow
         40 : [ arrowScroll,       -1   ], // down arrow
@@ -477,7 +477,7 @@ function scrollToBottom(src) {
     scrollArray(down, winScale);
 }
 
-window.onmousewheel = wheel;
-window.onload = init;
+window.addEventListener("mousewheel", wheel, false);
+window.addEventListener("DOMContentLoaded", init, false);
 
 })(window);
