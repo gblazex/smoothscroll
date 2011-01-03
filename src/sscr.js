@@ -282,16 +282,6 @@ function wheel(event) {
     if (prevent) {
         event.preventDefault();
     }
-
-    //Debug
-    //console.log("scrollup "+scrollup);
-    //console.log("scrolldown "+scrolldown);
-    //console.log("scroll "+scroll);
-    //console.log("frame "+frame);
-    //console.log("prevent "+prevent);
-    //console.log("noscrframe "+noscrollframe);
-    //console.log(document.documentElement.scrollHeight);
-    //console.log(document.documentElement.clientHeight+10);
 }
 
 
