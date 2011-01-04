@@ -104,7 +104,7 @@ function initTest() {
         var domains = exclude.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
-                window.onmousewheel = null;
+                window.removeEventListener("mousewheel", wheel, false);
                 disableKeyboard = true;
                 break;
             }
