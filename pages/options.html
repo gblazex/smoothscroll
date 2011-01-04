@@ -28,6 +28,7 @@ input {
         text-align: left; 
         padding: 30px;
         -webkit-box-shadow: #BBB 0px 0px 20px;
+        margin-bottom: 10px;
 }
 
 .title {
@@ -53,9 +54,25 @@ a:hover {
         text-decoration: underline;
         color: #444444;
 }
+
+button#save {
+    -webkit-box-shadow: #999 0px 0px 3px;
+     cursor:pointer; 
+     padding: 4px 10px;
+     width: 180px;
+     font-size: 20px;
+     background-color: #fafafa;
+     -webkit-border-radius: 4px;
+     border: 1px solid #BBB;
+     color: #444;
+     font-weight:bold;
+     display:block;
+     margin:0 auto;
+}
+
 .setting-name { width: 150px; }
 .note { font-size: 80%; color: #666; padding-left: 10px; cursor:help; }
-input[type=text] { margin-right:10px; }
+input[type=text] { margin-right:10px; -webkit-box-shadow: #CCC 0px 0px 2px; border-color:#999; }
 label[title] { cursor:help; }
 </style>
 <script src="../src/sscr.js"></script>
@@ -256,9 +273,11 @@ window.save = save;
 
 <br>
 
-<button onclick="save()" style="cursor:pointer; padding: 4px;font-size: 15px; background-color: transparent; -webkit-border-radius: 4px; border: 1px solid #111111; color: #000000">Save Settings</button>
-<br><div id="saving" style="color: #00CCFF; font-size: 12px; font-weight: bold">&nbsp;</div>
-<br><div id="message" style="color: #00CCFF; font-size: 11px;"></div>
+<button onclick="save()" id="save">Save Settings</button>
+<center>
+  <div id="saving" style="color: #00CCFF; font-size: 12px; font-weight: bold; margin:20px 0 5px;">&nbsp;</div>
+  <div id="message" style="color: #00CCFF; font-size: 11px; font-style:italic;"></div>
+</center>
 <br>
 <span style="font-size: 16px; color: #00CCFF"><b>Links</b></span>
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
