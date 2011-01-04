@@ -3,6 +3,11 @@ A Google Chrome extension for smooth scrolling with the mouse wheel and keyboard
 Extension homepage
  https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn
 
+Features
+ - Picasa-like smooth scrolling
+ - Supports mouse wheel, middle mouse, and keyboard (Arrow keys, PgUp/PgDown, Spacebar)
+ - Customizable step sizes, frames per second and more...
+
 People involved
  - Balazs Galambosi: maintainer
  - Patrick Brunner: original idea
