@@ -30,6 +30,12 @@ function init() {
     store.pulseAlgorithm = true;
   }
 
+  // update to new enable middle mouse setting
+  if (store.middlemouse == null) {
+    store.middlemouse = true;
+  }  
+
+
   // Fresh install
   if (!store.version) {
 
@@ -39,6 +45,7 @@ function init() {
     store.framerate = 50;
     store.animtime  = 400;
     store.scrollsz  = 120;
+    store.middlemouse = true;
 
     store.pulseAlgorithm = true;
     store.pulseScale     = 8;

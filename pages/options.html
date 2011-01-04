@@ -93,7 +93,7 @@ var options = [
   'animtime',
   'scrollsz',
   'arrscroll',
-  //'pgscroll',
+  'middlemouse',
   'pulseAlgorithm',
   'pulseScale',
   'pulseNormalize',
@@ -112,7 +112,7 @@ function isNodeName(el, tag) {
  */
 function init() {
     options.forEach(function(key, i) {
-        if (/keyboardsupport|pulseAlgorithm/.test(key)) {
+        if (/keyboardsupport|middlemouse|pulseAlgorithm/.test(key)) {
             byId(key).checked = (localStorage[key] == "true");
         } else if (localStorage[key]) {
             byId(key).value = localStorage[key];
@@ -130,7 +130,7 @@ function save() {
     // save options to the local storage
     options.forEach(function(key, i) {
         // <input type="text"> and <textarea>
-        if (!/keyboardsupport|pulseAlgorithm/.test(key)) {
+        if (!/keyboardsupport|middlemouse|pulseAlgorithm/.test(key)) {
             elem = byId(key);
             opt = elem.value;
             // every <input> 
@@ -143,7 +143,7 @@ function save() {
                }
             }
             localStorage[key] = opt;
-        } else { // keyboardsupport | pulseAlgorithm
+        } else { // keyboardsupport | middlemouse | pulseAlgorithm
             localStorage[key] = byId(key).checked;
         }
     });
@@ -231,6 +231,7 @@ window.save = save;
  </tr>
 </table>
 <br>
+<input type="checkbox" id="middlemouse"><label for="middlemouse">Enable <b>middle mouse</b> scrolling</label><br><br>
 <br>
 
 <b>Pulse Algorithm</b><br><br>
