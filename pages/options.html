@@ -188,7 +188,7 @@ function reload() {
 //}
 
 // public interface
-window.onload = init;
+window.addEventListener("DOMContentLoaded", init, false);
 window.reload = reload;
 window.save = save;
 
