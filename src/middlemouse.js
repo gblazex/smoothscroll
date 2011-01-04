@@ -6,7 +6,7 @@
 /**
  * A module for middle mouse scrolling.
  */
-(function(){
+(function(window){
 
 // local settings
 var img = document.createElement("div"); // img at the reference point
@@ -124,4 +124,4 @@ function mousedown(e) {
 addEvent("mousedown", mousedown);
 addEvent("DOMContentLoaded", init);
 
-})();
+})(window);
