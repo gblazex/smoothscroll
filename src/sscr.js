@@ -12,16 +12,16 @@
 (function(window){
 
 // Frame Variables
-var frame = false;
+var frame         = false;
 var noscrollframe = false;
-var lastYOffset = 0;
+var lastYOffset   = 0;
 
-// Scroll Variables (tweakables)
+// Scroll Variables (tweakable)
 var framerate = 50;  // [Hz]
 var animtime  = 400; // [px]
 var stepsize  = 120; // [px]
 
-// Pulse (less tweakables)
+// Pulse (less tweakable)
 // ratio of 'tail' to 'acceleration'
 var pulseAlgorithm = true;
 var pulseScale     = 8;
@@ -29,8 +29,11 @@ var pulseNormalize = 1;
 
 // Keyboard Settings
 var keyboardsupport = true;
-var arrowscroll = 50;  // [px]
-var exclude     = "";
+var disableKeyboard = false;
+var arrowscroll     = 50; // [px]
+
+// Excluded pages
+var exclude = "";
 
 // Arrays of timeouts
 var up   = [];
@@ -38,10 +41,10 @@ var down = [];
 
 // Other Variables
 var scrolls;
-var lastScrollTop = 1337;
-var delta    = 0;
+var delta = 0;
 var initdone = false;
-var disableKeyboard = false;
+var lastScrollTop = 1337; // ad-hoc
+
 var key = { up: 38, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
 
@@ -205,7 +208,6 @@ function wheel(event) {
 
     // normalize delta
     if (delta) {
-        ///simple: delta /= Math.abs(delta);
         delta /= 120;
         // synaptics seems to send 1 sometimes, 
         // and 120 other times (fix)

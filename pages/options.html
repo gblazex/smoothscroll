@@ -21,15 +21,26 @@ input {
          text-align: center;
 }
 
+#page {
+        border: 3px solid #28AEA8; 
+        -webkit-border-radius: 20px; 
+        width: 800px; 
+        text-align: left; 
+        padding: 30px;
+        -webkit-box-shadow: #BBB 0px 0px 20px;
+}
+
 .title {
-         margin: 30px;
+         margin: 30px auto;
          color: #4400CC;
          font-size: 40px;
          background-image:url(../img/128n.png);
-         width: 800px;
-         height: 120px;
+         width: 400px;
+         padding-left: 140px;
+         /*height: 120px;*/
          background-repeat: no-repeat;
-         background-position: bottom right;
+         /*background-position: center right;*/
+         background-position: 0% 50%;
          text-align: left;
          font-weight: bold;
 }
@@ -43,9 +54,9 @@ a:hover {
         color: #444444;
 }
 .setting-name { width: 150px; }
-.note { font-size: 80%; color: #666; padding-left: 10px; }
+.note { font-size: 80%; color: #666; padding-left: 10px; cursor:help; }
 input[type=text] { margin-right:10px; }
-
+label[title] { cursor:help; }
 </style>
 <script src="../src/sscr.js"></script>
 
@@ -172,30 +183,30 @@ window.save = save;
 <center>
 
 
-<div class="title">SmoothScroll <span style="color: #CBCBCB; font-size: 22px; font-weight: normal;"> Version <span id="version"></span></span></div>
-<div style="border: 3px solid #28AEA8; -webkit-border-radius: 20px; width: 800px; text-align: left; padding: 30px">
+<div class="title">SmoothScroll <div style="color: #CBCBCB; font-size: 22px; font-weight: normal;"> Version <span id="version"></span></div></div>
+<div id="page">
 
 <span style="font-size: 16px; color: #00CCFF"><b>Scroll Settings</b></span>
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
 <br>
 <table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 6px">
  <tr>
-  <td class="setting-name"><label for="framerate">Frames per second</label></td>
+  <td class="setting-name"><label for="framerate" title="higher is smoother but more CPU intensive">Frames per second</label></td>
   <td><input id="framerate" type="text" size="1" maxlength="3"> </td>
    <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 50</i></span></td>
-   <td class="note">(higher is smoother but more CPU intensive)</td>
+   <td class="note" title="higher is smoother but more CPU intensive">(<b>how</b> smooth)</td>
  </tr>
  <tr>
-  <td class="setting-name"><label for="scrollsz">Step size [px]</label></td>
+  <td class="setting-name"><label for="scrollsz" title="higher means more scrolling for each mouse event">Step size [px]</label></td>
   <td><input id="scrollsz" type="text" size="1" maxlength="3"> </td>
   <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 120</i></span></td>
-  <td class="note">(higher means more scrolling for each mouse event)</td>
+  <td class="note" title="higher means more scrolling for each mouse event">(<b>how</b> much)</td>
  </tr>
  <tr>
-  <td class="setting-name"><label for="animtime">Animation time [ms]</label></td>
+  <td class="setting-name"><label for="animtime" title="higher number stretches animation">Animation time [ms]</label></td>
   <td><input id="animtime" type="text" size="1" maxlength="3"> </td>
   <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 400</i></span></td>
-  <td class="note">(higher number stretches animation)</td>
+  <td class="note" title="higher number stretches animation">(<b>how</b> quick)</td>
  </tr>
 </table>
 <br>
