@@ -96,7 +96,7 @@ port.onMessage.addListener(function (settings) {
 function initTest() {
     var embed = document.getElementsByTagName('embed')[0];
     if (embed && embed.type === "application/pdf") {
-        window.onmousewheel = null;
+        window.removeEventListener("mousewheel", wheel, false);
         disableKeyboard = true;
     } else if (document.URL.indexOf("google.com/reader/view") > -1) {
         disableKeyboard = true;
