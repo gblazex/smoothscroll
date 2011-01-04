@@ -23,3 +23,6 @@
 // - setting to switch pulse algorithm
 // - setting to exclude pages
 // - fixed End button smoothness
+// - removed unused settings (keyboard framrates, pageUp/Down scroll size)
+// - added help notes to most settings
+// - added a whole NEW module for middle mouse scrolling
