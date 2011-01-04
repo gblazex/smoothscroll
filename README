@@ -9,6 +9,3 @@ People involved
  - Michael Herf: Pulse Algorithm
  - Frank Yan: Direction Switching Fixes
  - Ismael Barros: Keyboard Fixes
-
-Note
- The manifest file doesn't contain key and update_url. It's for standalone testing.
