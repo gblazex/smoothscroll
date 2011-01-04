@@ -312,15 +312,15 @@ function keydown(event) {
             break;
         case key.spacebar:
             shift = event.shiftKey ? 1 : -1; // (+ shift)
-            scale = -shift * window.innerHeight;
+            scale = -shift * window.innerHeight * 0.9;
             dir = (shift > 0) ? up : down; 
             break;
         case key.pageup:
-            scale = -window.innerHeight;
+            scale = -window.innerHeight * 0.9;
             dir = up; 
             break;
         case key.pagedown:
-            scale = window.innerHeight;
+            scale = window.innerHeight * 0.9;
             dir = down; 
             break;
         case key.home:
