@@ -27,3 +27,5 @@
 // - added help notes to most settings
 // - added a whole NEW module for middle mouse scrolling
 // - moved init to DOMContentLoaded instead of window.onload (much faster)
+// - added a `key` object, and refactored keydown into a clear switch statement
+// - fixed how default options work

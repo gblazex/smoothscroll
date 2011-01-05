@@ -3,77 +3,82 @@
 <head><title>SmoothScroll Options</title>
 <style type="text/css">
 body {
-         font-size: 13.4px;
-         font-family: Verdana, sans-serif;
-         color: #333333;
-         text-align: center;
-         margin: auto;
-         background-color: #000000;
-         }
-input {
-         color: #010101;
-         background-color: transparent;
-         padding: 3px;
-         -webkit-border-radius: 4px;
-         border: 1px solid #343434;
-         width: 38px;
-         outline: none;
-         text-align: center;
+    font-size: 13.4px;
+    font-family: Verdana, sans-serif;
+    color: #333333;
+    text-align: center;
+    margin: auto;
+    background-color: #000000;
 }
+
+a       { text-decoration: none;       color: #333333; }
+a:hover { text-decoration: underline;  color: #444444; }
 
 #page {
-        border: 3px solid #28AEA8; 
-        -webkit-border-radius: 20px; 
-        width: 800px; 
-        text-align: left; 
-        padding: 30px;
-        -webkit-box-shadow: #BBB 0px 0px 20px;
-        margin-bottom: 10px;
+    border: 3px solid #28AEA8; 
+    width: 800px; 
+    text-align: left; 
+    padding: 30px;
+    margin-bottom: 10px;
+    -webkit-border-radius: 20px; 
+    -webkit-box-shadow: #BBB 0px 0px 20px;
 }
 
-.title {
-         margin: 30px auto;
-         color: #4400CC;
-         font-size: 40px;
-         background-image:url(../img/128n.png);
-         width: 400px;
-         padding-left: 140px;
-         /*height: 120px;*/
-         background-repeat: no-repeat;
-         /*background-position: center right;*/
-         background-position: 0% 50%;
-         text-align: left;
-         font-weight: bold;
-}
-a {
-        text-decoration: none;
-        color: #333333;
+#title {
+    margin: 30px auto;
+    font-size: 40px;
+    background-image:url(../img/128n.png);
+    width: 400px;
+    padding-left: 140px;
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
+    text-align: left;
+    font-weight: bold;
 }
 
-a:hover {
-        text-decoration: underline;
-        color: #444444;
+#title a { color: #4400CC; }
+
+input {
+    color: #010101;
+    background-color: transparent;
+    padding: 3px;
+    width: 38px;
+    outline: none;
+    text-align: center;
+    border: 1px solid #343434;
+    -webkit-border-radius: 4px;
+}
+
+input[type=text] { 
+    margin-right:10px; 
+    border-color:#999;
+    -webkit-box-shadow: #CCC 0px 0px 2px;  
 }
 
 button#save {
+    cursor:pointer; 
+    padding: 4px 10px;
+    width: 180px;
+    font-size: 20px;
+    background-color: #fafafa;
+    color: #444;
+    font-weight:bold;
+    display:block;
+    margin:0 auto;
+    border: 1px solid #BBB;
+    -webkit-border-radius: 4px;
     -webkit-box-shadow: #999 0px 0px 3px;
-     cursor:pointer; 
-     padding: 4px 10px;
-     width: 180px;
-     font-size: 20px;
-     background-color: #fafafa;
-     -webkit-border-radius: 4px;
-     border: 1px solid #BBB;
-     color: #444;
-     font-weight:bold;
-     display:block;
-     margin:0 auto;
 }
 
+.note { 
+    font-size: 80%;
+    color: #666; 
+    padding-left: 10px; 
+    cursor:help; 
+}
+
+label[title]  { cursor:help;  }
 .setting-name { width: 150px; }
-.note { font-size: 80%; color: #666; padding-left: 10px; cursor:help; }
-input[type=text] { margin-right:10px; -webkit-box-shadow: #CCC 0px 0px 2px; border-color:#999; }
-label[title] { cursor:help; }
 </style>
 <script src="../src/sscr.js"></script>
 <script src="../src/middlemouse.js"></script>
@@ -200,7 +205,10 @@ window.save = save;
 <center>
 
 
-<div class="title">SmoothScroll <div style="color: #CBCBCB; font-size: 22px; font-weight: normal;"> Version <span id="version"></span></div></div>
+<div id="title">
+  <a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn" target="_blank">SmoothScroll</a> 
+  <div style="color: #CBCBCB; font-size: 22px; font-weight: normal;"> Version <span id="version"></span></div>
+</div>
 
 <!-- Fork me on GitHub -->
 <a href="https://github.com/galambalazs/smoothscroll"><img style="position: absolute; top: 0; left: 0; border: 0;" src="../img/forkme.png" alt="Fork me on GitHub"></a>
@@ -209,7 +217,7 @@ window.save = save;
 
 <span style="font-size: 16px; color: #00CCFF"><b>Scroll Settings</b></span>
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
-<br>
+
 <table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 6px">
  <tr>
   <td class="setting-name"><label for="framerate" title="higher is smoother but more CPU intensive">Frames per second</label></td>
@@ -289,10 +297,10 @@ window.save = save;
 <br>
 <span style="font-size: 16px; color: #00CCFF"><b>People involved</b></span>
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
+ - Balázs Galambosi: Many improvements and bug fixes (see CHANGELOG.txt)<br>
  - <a href="http://stereopsis.com/stopping/">Michael Herf: Pulse Algorithm</a><br>
  - <a href="http://frankyan.com/">Frank Yan: Direction Switching Fixes</a><br>
  - Ismael Barros: Keyboard Fixes<br>
- - Balázs Galambosi: Many improvements and bug fixes (see CHANGELOG.txt)<br>
 </div>
 
 <small>Patrick Brunner | patrickb1991&#64;gmail.com</small>
