@@ -100,7 +100,9 @@ function initTest() {
         disableKeyboard = true;
     } else if (document.URL.indexOf("google.com/reader/view") > -1) {
         disableKeyboard = true;
-    } else if (exclude) {
+    } 
+    
+    if (exclude) {
         var domains = exclude.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
