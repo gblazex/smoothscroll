@@ -94,6 +94,8 @@ port.onMessage.addListener(function (settings) {
  * Tests if smooth scrolling is allowed. Shuts down everything if not.
  */
 function initTest() {
+    // disable everything by default for built-in PDF Reader,
+    // and keyboard support for google reader (spacebar conflict)
     var embed = document.getElementsByTagName('embed')[0];
     if (embed && embed.type === "application/pdf") {
         window.removeEventListener("mousewheel", wheel, false);
@@ -102,6 +104,7 @@ function initTest() {
         disableKeyboard = true;
     } 
     
+    // check if the page is on the blacklist
     if (exclude) {
         var domains = exclude.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
@@ -113,6 +116,7 @@ function initTest() {
         }
     }
     
+    // disable keyboard support if anything above requested it
     if (disableKeyboard) {
         document.onkeydown = null;
     }
