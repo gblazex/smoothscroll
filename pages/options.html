@@ -79,6 +79,31 @@ button#save {
 
 label[title]  { cursor:help;  }
 .setting-name { width: 150px; }
+
+.dialog { 
+    display:none;
+    opacity: 0;
+    -webkit-transition: opacity 1s ease-in-out;
+    background-color: #333;
+    color: #fff;
+    position: fixed;
+    padding: 30px;
+    bottom: 0; 
+    right: 30%; 
+    left: 30%; 
+    border-radius: 8px 8px 0 0;
+}
+
+.dialog-header {
+    color: #999;
+    font: bold 20px 'arial black', arial;
+}
+
+.dialog a { 
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+}
 </style>
 <script src="../src/sscr.js"></script>
 <script src="../src/middlemouse.js"></script>
@@ -107,9 +132,26 @@ var options = [
 ];
 
 function byId(id) { return document.getElementById(id); }
+function byClass(cname) { return document.getElementsByClassName(cname); }
 
 function isNodeName(el, tag) {
     return el.nodeName.toLowerCase() === tag.toLowerCase();
+}
+
+function show(elem) {
+    elem.style.display = "block";
+    elem.style.webkitTransition = "opacity 0.2s ease-in-out";
+    setTimeout(function(){
+        elem.style.opacity = 1;
+    }, 0);
+}
+
+function hide(elem) {
+    elem.style.webkitTransition = "opacity 1s ease-in-out";
+    elem.style.opacity = 0;
+    setTimeout(function(){
+        elem.style.display = "none";
+    }, 1000);
 }
 
 /**
@@ -155,14 +197,11 @@ function save() {
 
     // update message
     if (!error) {
-        var saving  = byId("saving");
-        var message = byId("message");
-        saving.innerHTML  = "Settings saved!";
-        message.innerHTML = '<a href="#" onclick="reload()">' +
-                            'Reload this page and test the new scroll settings!</a>';
+        var dialog  = byClass('dialog')[0];
+        show(dialog);
         setTimeout(function () {
-            saving.innerHTML = "&nbsp;";
-        }, 1500);
+            hide(dialog);
+        }, 3000);
     }
     // error message
     else {
@@ -280,15 +319,17 @@ window.save = save;
 <br><br>
 <span style="font-size: 16px; color: #00CCFF"><b><label for="exclude">Excluded pages</label></b></span>
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
-<textarea id="exclude" cols="70" rows="5"></textarea> <br><br>
+<textarea id="exclude" cols="70" rows="5"></textarea> 
 
-<br>
+<br><br>
 
 <button onclick="save()" id="save">Save Settings</button>
-<center>
-  <div id="saving" style="color: #00CCFF; font-size: 12px; font-weight: bold; margin:20px 0 5px;">&nbsp;</div>
+<!--
+<div style="text-align:center; height: 30px;margin:20px 0 5px;">
+  <div id="saving"  style="color: #00CCFF; font-size: 12px; font-weight: bold;">&nbsp;</div>
   <div id="message" style="color: #00CCFF; font-size: 11px; font-style:italic;"></div>
-</center>
+</div>
+-->
 <br>
 <span style="font-size: 16px; color: #00CCFF"><b>Links</b></span>
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
@@ -305,6 +346,12 @@ window.save = save;
 
 <small>Patrick Brunner | patrickb1991&#64;gmail.com</small>
 <br><br><br><br><br><br>
+
+<div class="dialog">
+  <div class="dialog-header">Settings saved</div>
+  <div class="dialog-content"><a href="#" onclick="reload();">Reload</a> this page and test the new scroll settings!</div>
+</div>
+
 </center>
 </body>
 </html>
