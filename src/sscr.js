@@ -105,6 +105,7 @@ function initTest() {
     } 
     
     // check if the page is on the blacklist
+    // disable everything for blacklisted pages
     if (exclude) {
         var domains = exclude.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
