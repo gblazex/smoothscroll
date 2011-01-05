@@ -84,7 +84,7 @@ label[title]  { cursor:help;  }
     display:none;
     opacity: 0;
     -webkit-transition: opacity 1s ease-in-out;
-    background-color: #333;
+    background-color: #222;
     color: #fff;
     position: fixed;
     padding: 30px;
@@ -138,17 +138,17 @@ function isNodeName(el, tag) {
     return el.nodeName.toLowerCase() === tag.toLowerCase();
 }
 
-function show(elem) {
+function show(elem, newop) {
     elem.style.display = "block";
     elem.style.webkitTransition = "opacity 0.2s ease-in-out";
     setTimeout(function(){
-        elem.style.opacity = 1;
+        elem.style.opacity = (newop || 1);
     }, 0);
 }
 
-function hide(elem) {
+function hide(elem, newop) {
     elem.style.webkitTransition = "opacity 1s ease-in-out";
-    elem.style.opacity = 0;
+    elem.style.opacity = (newop || 0);
     setTimeout(function(){
         elem.style.display = "none";
     }, 1000);
@@ -198,7 +198,7 @@ function save() {
     // update message
     if (!error) {
         var dialog  = byClass('dialog')[0];
-        show(dialog);
+        show(dialog, 0.9);
         setTimeout(function () {
             hide(dialog);
         }, 3000);
