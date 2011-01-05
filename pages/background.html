@@ -15,53 +15,44 @@ get_manifest(function (manifest) {
   init();
 });
 
+function setDefault(key, value) {
+  if (localStorage[key] == null) {
+    localStorage[key] = value;
+  }
+}
+
 function init() {
+
+  // TODO: store the defaults in the localStorage so
+  // they are available for sscr.js and on options.html
+
+  // Set the default settings
+  setDefault("version", version);
+  // general & mouse
+  setDefault("framerate", 50);
+  setDefault("animtime", 400);
+  setDefault("scrollsz", 120);
+  setDefault("middlemouse", true);
+  // pulse
+  setDefault("pulseAlgorithm", true);
+  setDefault("pulseScale", 8);
+  setDefault("pulseNormalize", 1);
+  // keyboard
+  setDefault("keyboardsupport", true);
+  setDefault("arrscroll", 50);
+  // exlude page
+  setDefault("exclude", "twitter.com, mail.google.com");
+
+  /**
+   * NOTE: It's easier if we give an example 
+   * how to format the excluded pages list,
+   * plus gmail and twitter are good examples.
+   */
 
   var store = localStorage;
 
-  // update to new pulse names (keep old values if possible)
-  if (!store.pulseScale || !store.pulseNormalize) {
-    store.pulseScale     = store.PulseScale     || 8;
-    store.pulseNormalize = store.PulseNormalize || 1;
-  }
-
-  // update to new enable pulse setting
-  if (store.pulseAlgorithm == null) {
-    store.pulseAlgorithm = true;
-  }
-
-  // update to new enable middle mouse setting
-  if (store.middlemouse == null) {
-    store.middlemouse = true;
-  }  
-
-
   // Fresh install
   if (!store.version) {
-
-    store.version = version;
-
-    // Set the default settings
-    store.framerate = 50;
-    store.animtime  = 400;
-    store.scrollsz  = 120;
-    store.middlemouse = true;
-
-    store.pulseAlgorithm = true;
-    store.pulseScale     = 8;
-    store.pulseNormalize = 1;
-
-    store.keyboardsupport = true;
-    store.arrscroll = 50;
-    store.pgscroll  = 800; // unused
-    store.exclude   = "twitter.com, mail.google.com";
-
-    /**
-     * NOTE: It's easier if we give an example 
-     * how to format the excluded pages list,
-     * plus gmail and twitter are good examples.
-     */
-
     // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});
   }
 
