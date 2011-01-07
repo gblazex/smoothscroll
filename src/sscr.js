@@ -289,7 +289,7 @@ function keydown(event) {
 
     var target   = event.target;
     var modifier = event.ctrlKey || event.altKey || event.metaKey;
-console.log(target)
+
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     if ( isNodeName(target, "input")    ||
