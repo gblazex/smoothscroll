@@ -314,6 +314,11 @@ function keydown(event) {
          modifier ) {
       return true;
     }
+    // spacebar should trigger button press
+    if (isNodeName(target, "button") &&
+        event.keyCode === key.spacebar) {
+      return true;
+    }
  
     var scale, dir, shift;
     
