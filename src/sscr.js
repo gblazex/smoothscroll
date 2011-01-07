@@ -12,8 +12,6 @@
 // Frame Variables
 var frame         = false;
 var noscrollframe = false;
-var lastYOffset   = 0;
-var lastXOffset   = 0;
 
 // Scroll Variables (tweakable)
 var framerate = 50;  // [Hz]
@@ -43,8 +41,6 @@ var scrolls;
 var deltaX = 0;
 var deltaY = 0;
 var initdone = false;
-var lastScrollTop  = 1337; // ad-hoc
-var lastScrollLeft = 1337; // ad-hoc
 
 var key = { up: 38, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
