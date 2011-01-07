@@ -252,13 +252,12 @@ function keydown(event) {
     
     var scale, dir, shift;
     var elem = overflowingAncestor(target);
-    
-    var clientHeight = target.clientHeight;
-    
-    if (elem === document.body) {
+    var clientHeight = elem.clientHeight;
+
+    if (elem == document.body) {
         clientHeight = window.innerHeight;
     }
- 
+    
     switch (event.keyCode) {
         case key.up:
             scale = -arrowscroll;
@@ -282,11 +281,11 @@ function keydown(event) {
             dir = down; 
             break;
         case key.home:
-            scale = -target.scrollTop;
+            scale = -elem.scrollTop;
             dir = up; 
             break;
         case key.end:
-            var damt = target.scrollHeight - target.scrollTop - clientHeight;
+            var damt = elem.scrollHeight - elem.scrollTop - clientHeight;
             scale = (damt > 0) ? damt : 0;
             dir = down; 
             break;
@@ -399,23 +398,23 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         var scale = scrolls[i++]; // linear or pulse
         
         // scroll left
-        if (multiplyX) {
-            var scrollLeft  = elem.scrollLeft;
-            elem.scrollLeft = elem.scrollLeft + (multiplyX * scale);
+        if (multiplyX && scale) {
+            var lastLeft = elem.scrollLeft;
+            elem.scrollLeft += multiplyX * scale;
             
             // scroll left failed (edge)
-            if (elem.scrollLeft === scrollLeft) {
+            if (elem.scrollLeft === lastLeft) {
                 multiplyX = 0;
             }
         }
         
         // scroll top
-        if (multiplyY) {       
-            var scrollTop  = elem.scrollTop;
-            elem.scrollTop = elem.scrollTop  + (multiplyY * scale);
+        if (multiplyY && scale) {       
+            var lastTop = elem.scrollTop;
+            elem.scrollTop += multiplyY * scale;
             
             // scroll top failed (edge)
-            if (elem.scrollTop === scrollTop) {
+            if (elem.scrollTop === lastTop) {
                 multiplyY = 0;
             }            
         }
@@ -424,8 +423,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         if (!multiplyX && !multiplyY) {
             clearTimeouts(dir);
         }
-
     }
+    
     // populate directions array
     for (var i = scrolls.length; i--;) {
         dir.push(setTimeout(step, i * delay / framerate + 1));
