@@ -57,13 +57,14 @@ function removeEvent(type, fn) {
  */
 function mousedown(e) {
 
-    var elem = document.elementFromPoint(e.clientX, e.clientY);
-    var isLink;
+    var isLink = false;
+    var elem   = document.elementFromPoint(e.clientX, e.clientY);
     
-    do {
+    while (elem) {
         isLink = elem.nodeName.toLowerCase() === "a";
         if (isLink) break;
-    } while (elem = elem.parentNode)
+        elem = elem.parentNode;
+    }
 
     // if it's not the middle button, or
     // it's being used on an <a> element
