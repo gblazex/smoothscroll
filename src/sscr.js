@@ -185,6 +185,58 @@ function init() {
 }
 
 
+/************************************************
+ * SCROLLING 
+ ************************************************/
+
+/**
+ * Pushes scroll actions to a given direction Array.
+ */
+function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
+    
+    delay || (delay = 1000);
+    clearTimeouts(dir === up ? down : up);
+    
+    function step() {
+        
+        var scale = scrolls[i++]; // linear or with easing
+        
+        // scroll left
+        if (multiplyX && scale) {
+            var lastLeft = elem.scrollLeft;
+            elem.scrollLeft += multiplyX * scale;
+            
+            // scroll left failed (edge)
+            if (elem.scrollLeft === lastLeft) {
+                multiplyX = 0;
+            }
+        }
+        
+        // scroll top
+        if (multiplyY && scale) {       
+            var lastTop = elem.scrollTop;
+            elem.scrollTop += multiplyY * scale;
+            
+            // scroll top failed (edge)
+            if (elem.scrollTop === lastTop) {
+                multiplyY = 0;
+            }            
+        }
+        
+        // clean up if there's nothing left to do
+        if (!multiplyX && !multiplyY) {
+            clearTimeouts(dir);
+        }
+    }
+    
+    // populate directions array
+    for (var i = scrolls.length; i--;) {
+        dir.push(setTimeout(step, i * delay / framerate + 1));
+    }
+    i = 0; // reset so that step() can increment again   
+}
+
+
 /***********************************************
  * EVENTS
  ***********************************************/
@@ -381,56 +433,6 @@ function pulse(x) {
     return pulse_(x);
 }
 
-
-/************************************************
- * SCROLLING 
- ************************************************/
-
-/**
- * Pushes scroll actions to a given direction Array.
- */
-function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
-    delay || (delay = 1000);
-    clearTimeouts(dir === up ? down : up);
-    
-    function step() {
-        
-        var scale = scrolls[i++]; // linear or with easing
-        
-        // scroll left
-        if (multiplyX && scale) {
-            var lastLeft = elem.scrollLeft;
-            elem.scrollLeft += multiplyX * scale;
-            
-            // scroll left failed (edge)
-            if (elem.scrollLeft === lastLeft) {
-                multiplyX = 0;
-            }
-        }
-        
-        // scroll top
-        if (multiplyY && scale) {       
-            var lastTop = elem.scrollTop;
-            elem.scrollTop += multiplyY * scale;
-            
-            // scroll top failed (edge)
-            if (elem.scrollTop === lastTop) {
-                multiplyY = 0;
-            }            
-        }
-        
-        // clean up if there's nothing left to do
-        if (!multiplyX && !multiplyY) {
-            clearTimeouts(dir);
-        }
-    }
-    
-    // populate directions array
-    for (var i = scrolls.length; i--;) {
-        dir.push(setTimeout(step, i * delay / framerate + 1));
-    }
-    i = 0; // reset so that step() can increment again   
-}
 
 addEvent("mousewheel", wheel);
 addEvent("DOMContentLoaded", init);
