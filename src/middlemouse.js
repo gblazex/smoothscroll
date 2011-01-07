@@ -37,20 +37,6 @@ function init() {
 }
 
 /**
- * Helper function for adding an event listener.
- */
-function addEvent(type, fn) {
-    window.addEventListener(type, fn, false);
-}
-
-/**
- * Helper function for removing an event listener.
- */
-function removeEvent(type, fn) {
-    window.removeEventListener(type, fn, false);  
-}
-
-/**
  * Shows the reference image, and binds event listeners for scrolling.
  * It also manages the animation.
  * @param {Object} event
@@ -95,10 +81,13 @@ function mousedown(e) {
     var speedX = 0;
     var speedY = 0;
     
+    var elem = overflowingAncestor(e.target);
+    
     // animation loop
     var delay = 1000 / framerate;
     var interval = setInterval(function(){
-        window.scrollBy(speedX, speedY);
+        elem.scrollLeft += speedX;
+        elem.scrollTop  += speedY;
     }, delay);
     
     var first = true;

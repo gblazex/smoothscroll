@@ -9,8 +9,6 @@
 // - Frank Yan: Direction Switching Fixes
 // - Ismael Barros: Keyboard Fixes
 
-(function(window){
-
 // Frame Variables
 var frame         = false;
 var noscrollframe = false;
@@ -101,7 +99,7 @@ function initTest() {
     // and keyboard support for google reader (spacebar conflict)
     var embed = document.getElementsByTagName('embed')[0];
     if (embed && embed.type === "application/pdf") {
-        window.removeEventListener("mousewheel", wheel, false);
+        removeEvent("mousewheel", wheel);
         disableKeyboard = true;
     } else if (document.URL.indexOf("google.com/reader/view") > -1) {
         disableKeyboard = true;
@@ -112,7 +110,7 @@ function initTest() {
         var domains = exclude.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
-                window.removeEventListener("mousewheel", wheel, false);
+                removeEvent("mousewheel", wheel);
                 disableKeyboard = true;
                 break;
             }
@@ -364,6 +362,20 @@ function keydown(event) {
  * HELPERS
  ***********************************************/
  
+/**
+ * Helper function for adding an event listener.
+ */
+function addEvent(type, fn, bubble) {
+    window.addEventListener(type, fn, (bubble||false));
+}
+
+/**
+ * Helper function for removing an event listener.
+ */
+function removeEvent(type, fn, bubble) {
+    window.removeEventListener(type, fn, (bubble||false));  
+}
+
 function isNodeName(el, tag) {
     return el.nodeName.toLowerCase() === tag.toLowerCase();
 }
@@ -466,7 +478,5 @@ function scrollArray(dir, multiplyX, multiplyY, delay) {
     i = 0; // reset so that step() can increment again   
 }
 
-window.addEventListener("mousewheel", wheel, false);
-window.addEventListener("DOMContentLoaded", init, false);
-
-})(window);
+addEvent("mousewheel", wheel);
+addEvent("DOMContentLoaded", init);
