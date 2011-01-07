@@ -204,7 +204,7 @@ function wheel(event) {
 
     if (!initdone) {
         init();
-    }
+    } 
 
     var scroll = true;
     var prevent = false;
