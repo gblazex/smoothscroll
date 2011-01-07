@@ -398,23 +398,30 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         
         var scale = scrolls[i++]; // linear or pulse
         
-        var scrollLeft = elem.scrollLeft;
-        var scrollTop  = elem.scrollTop;
-        
-        elem.scrollLeft = elem.scrollLeft + (multiplyX * scale);
-        elem.scrollTop  = elem.scrollTop  + (multiplyY * scale);
-        
-        // scroll left failed (edge)
-        if (elem.scrollLeft === scrollLeft) {
-            multiplyX = 0;
+        // scroll left
+        if (multiplyX) {
+            var scrollLeft  = elem.scrollLeft;
+            elem.scrollLeft = elem.scrollLeft + (multiplyX * scale);
+            
+            // scroll left failed (edge)
+            if (elem.scrollLeft === scrollLeft) {
+                multiplyX = 0;
+            }
         }
-        // scroll top failed (edge)
-        if (elem.scrollTop === scrollTop) {
-            multiplyY = 0;
+        
+        // scroll top
+        if (multiplyY) {       
+            var scrollTop  = elem.scrollTop;
+            elem.scrollTop = elem.scrollTop  + (multiplyY * scale);
+            
+            // scroll top failed (edge)
+            if (elem.scrollTop === scrollTop) {
+                multiplyY = 0;
+            }            
         }
-        // if there's nothing left ot do
+        
+        // clean up if there's nothing left to do
         if (!multiplyX && !multiplyY) {
-            console.log("edge");
             clearTimeouts(dir);
         }
 
