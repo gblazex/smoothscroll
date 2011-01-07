@@ -84,7 +84,7 @@ label[title]  { cursor:help;  }
     display:none;
     opacity: 0;
     -webkit-transition: opacity 1s ease-in-out;
-    background-color: #222;
+    background-color: #111;
     color: #fff;
     position: fixed;
     padding: 30px;
@@ -126,7 +126,6 @@ var options = [
   'middlemouse',
   'pulseAlgorithm',
   'pulseScale',
-  'pulseNormalize',
   'keyboardsupport',
   'exclude'
 ];
@@ -285,14 +284,10 @@ window.save = save;
 
 <table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 6px">
  <tr>
-  <td class="setting-name"><label for="pulseScale">Pulse Scale</label></td>
+  <td class="setting-name"><label for="pulseScale" title="higher means the decceleration part is longer">Pulse Scale</label></td>
   <td><input id="pulseScale" type="text" size="1" maxlength="2"></td>
-     <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 8</i></span></td>
- </tr>
- <tr>
-  <td class="setting-name"><label for="pulseNormalize">Pulse Normalize</label></td>
-  <td><input id="pulseNormalize" type="text" size="1" maxlength="2"></td>
-     <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 1</i></span></td>
+  <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 8</i></span></td>
+  <td class="note" title="higher means the decceleration part is longer">(<b>ratio </b>of "tail" to "acceleration")</td>
  </tr>
 </table>
 

@@ -15,6 +15,7 @@
 var frame         = false;
 var noscrollframe = false;
 var lastYOffset   = 0;
+var lastXOffset   = 0;
 
 // Scroll Variables (tweakable)
 var framerate = 50;  // [Hz]
@@ -41,9 +42,11 @@ var down = [];
 
 // Other Variables
 var scrolls;
-var delta = 0;
+var deltaX = 0;
+var deltaY = 0;
 var initdone = false;
-var lastScrollTop = 1337; // ad-hoc
+var lastScrollTop  = 1337; // ad-hoc
+var lastScrollLeft = 1337; // ad-hoc
 
 var key = { up: 38, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
@@ -64,7 +67,6 @@ port.onMessage.addListener(function (settings) {
     exclude   = settings.exclude;
     pulseAlgorithm  = (settings.pulseAlgorithm == "true");
     pulseScale      = +settings.pulseScale;
-    pulseNormalize  = +settings.pulseNormalize;
     keyboardsupport = (settings.keyboardsupport == "true");
     arrowscroll     = +settings.arrscroll;
     
@@ -208,22 +210,29 @@ function wheel(event) {
     var prevent = false;
     var scrollup = true;
     var scrolldown = true;
-    var lastdelta = delta;
-    var i, overflow, delay, elem, dir;
+    var lastdeltaY = deltaY;
+    var i, overflow, delay, elem, dirX, dirY;
 
-    delta = event.wheelDelta || 0;
+    deltaX = event.wheelDeltaX || 0;
+    deltaY = event.wheelDeltaY || 0;
 
-    // normalize delta
-    if (delta) {
-        delta /= 120;
+    // normalize deltas
+    if (deltaX) {
+        deltaX /= 120;
         // synaptics seems to send 1 sometimes, 
         // and 120 other times (fix)
-        if (Math.abs(delta) < 0.01) {
-            delta *= 120;
+        if (Math.abs(deltaX) < 0.01) {
+            deltaX *= 120;
+        }
+    }
+    if (deltaY) {
+        deltaY /= 120;
+        if (Math.abs(deltaY) < 0.01) {
+            deltaY *= 120;
         }
     }
 
-    dir = (delta > 0) ? up : down;
+    dir = (deltaY > 0) ? up : down;
     elem = overflowingAncestor(event.target);
   
     if (!elem) {
@@ -246,12 +255,12 @@ function wheel(event) {
             scroll = false;
         }
         lastScrollTop = elem.scrollTop;
-        scrollElement(elem, delta, 1); // Fixes a bug
+        scrollElement(elem, deltaY, 1); // Fixes a bug
         clearTimeouts(dir === up ? down : up);
         for (i = 0; i < 10; i++) {
             delay = i * 1000 / framerate + 1;
             dir.push(setTimeout(function() {
-                scrollElement(elem, delta, 10);
+                scrollElement(elem, deltaY, 10);
             }, delay));
         }
     }
@@ -263,12 +272,12 @@ function wheel(event) {
             // the last scroll did nothing
             if (lastYOffset === window.pageYOffset) {
                 // scrolling downwards did nothing
-                if (lastdelta < 0) {
+                if (lastdeltaY < 0) {
                     scrollup   = true;
                     scrolldown = false;
                 } 
                 // scrolling upwards did nothing
-                else if (lastdelta > 0) {
+                else if (lastdeltaY > 0) {
                     scrollup   = false;
                     scrolldown = true;
                 } 
@@ -277,8 +286,8 @@ function wheel(event) {
         }
     }
     if (scroll) {
-        if ((scrolldown && delta < 0) || (scrollup && delta > 0)) {
-            scrollArray(dir, -delta);
+        if ((scrolldown && deltaY < 0) || (scrollup && deltaY > 0)) {
+            scrollArray(dir, -deltaX, -deltaY);
             event.preventDefault();
         }
     }
@@ -317,8 +326,8 @@ function keydown(event) {
             scale = arrowscroll;
             dir = down; 
             break;
-        case key.spacebar:
-            shift = event.shiftKey ? 1 : -1; // (+ shift)
+        case key.spacebar: // (+ shift)
+            shift = event.shiftKey ? 1 : -1;
             scale = -shift * window.innerHeight * 0.9;
             dir = (shift > 0) ? up : down; 
             break;
@@ -342,8 +351,9 @@ function keydown(event) {
         default:
             return true; // a key we don't care about
     }
-    
-    scrollArray(dir, scale / stepsize, 1000);
+    scale /= stepsize;
+    scale = (scale > 0) ? Math.ceil(scale) : Math.floor(scale); 
+    scrollArray(dir, 0, scale, 1000);
     event.preventDefault();
 }
 
@@ -392,9 +402,9 @@ function pulse_(x) {
     var val, start, expx;
     // test
     x = x * pulseScale;
-    if (x < 1) {
+    if (x < 1) { // acceleartion
         val = x - (1 - Math.exp(-x));
-    } else {
+    } else {     // tail
         // the previous animation ended here:
         start = Math.exp(-1);
         // simple viscous drag
@@ -441,11 +451,12 @@ function scrollElement(el, delta, amount) {
 /**
  * Pushes scroll actions to a given direction Array.
  */
-function scrollArray(dir, multiply, delay) {
+function scrollArray(dir, multiplyX, multiplyY, delay) {
     delay || (delay = 1000);
     clearTimeouts(dir === up ? down : up);
     function step() {
-        window.scrollBy( 0 , multiply * scrolls[i++] );
+        var scale = scrolls[i++]; // linear or pulse
+        window.scrollBy( multiplyX * scale, multiplyY * scale );
     }
     for (var i = scrolls.length; i--;) {
         dir.push(setTimeout(step, i * delay / framerate + 1));
