@@ -90,14 +90,16 @@ onMessage.addListener(function (settings) {
 function initTest() {
     
     // disable everything by default for built-in PDF Reader,
-    // and keyboard support for google reader (spacebar conflict)
-    var embed = document.getElementsByTagName('embed')[0];
-    if (embed && embed.type === "application/pdf") {
-        removeEvent("mousewheel", wheel);
+    //var embed = document.getElementsByTagName('embed')[0];
+    //if (embed && embed.type === "application/pdf") {
+    //    removeEvent("mousewheel", wheel);
+    //    disableKeyboard = true;
+    //}
+
+    // disable keys for google reader (spacebar conflict)
+    if (document.URL.indexOf("google.com/reader/view") > -1) {
         disableKeyboard = true;
-    } else if (document.URL.indexOf("google.com/reader/view") > -1) {
-        disableKeyboard = true;
-    } 
+    }
     
     // disable everything if the page is blacklisted
     if (exclude) {
@@ -250,6 +252,14 @@ function wheel(event) {
         init();
     } 
 
+    // use default if there's no overflowing
+    // element or the target is an <embed>
+    var elem = overflowingAncestor(event.target);
+    if (!elem || (frame && noscrollframe) ||
+        isNodeName(event.target, "embed")) {
+        return true;
+    }
+
     deltaX = event.wheelDeltaX || 0;
     deltaY = event.wheelDeltaY || 0;
 
@@ -267,12 +277,6 @@ function wheel(event) {
     }
   
     var dir = (deltaY > 0) ? up : down;
-    var elem = overflowingAncestor(event.target);
-  
-    if (!elem || (frame && noscrollframe)) {
-        return true;
-    }
-    
     scrollArray(elem, dir, -deltaX, -deltaY);
     event.preventDefault();
 }
@@ -285,11 +289,12 @@ function keydown(event) {
 
     var target   = event.target;
     var modifier = event.ctrlKey || event.altKey || event.metaKey;
-
+console.log(target)
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     if ( isNodeName(target, "input")    ||
          isNodeName(target, "textarea") || 
+         isNodeName(target, "embed")    ||
          target.isContentEditable       || 
          modifier ) {
       return true;
