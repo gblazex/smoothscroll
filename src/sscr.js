@@ -88,13 +88,6 @@ onMessage.addListener(function (settings) {
  * Tests if smooth scrolling is allowed. Shuts down everything if not.
  */
 function initTest() {
-    
-    // disable everything by default for built-in PDF Reader,
-    //var embed = document.getElementsByTagName('embed')[0];
-    //if (embed && embed.type === "application/pdf") {
-    //    removeEvent("mousewheel", wheel);
-    //    disableKeyboard = true;
-    //}
 
     // disable keys for google reader (spacebar conflict)
     if (document.URL.indexOf("google.com/reader/view") > -1) {

@@ -29,3 +29,5 @@
 // - moved init to DOMContentLoaded instead of window.onload (much faster)
 // - added a `key` object, and refactored keydown into a clear switch statement
 // - fixed how default options work
+// - fixed default actions for <embed> elements (both keyboard and mouse)
+// - completely reworked mouse scrolling to support touchpads (two dimensional delta)
