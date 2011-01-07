@@ -219,6 +219,7 @@ function wheel(event) {
     // normalize deltas
     deltaX /= 120;
     deltaY /= 120;
+    
     // synaptics seems to send 1 sometimes, 
     // and 120 other times (fix)
     if (Math.abs(deltaX) < 0.01) {
