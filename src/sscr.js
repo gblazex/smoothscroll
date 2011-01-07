@@ -292,7 +292,7 @@ function keydown(event) {
 
     // do nothing if user is editing text
     // or using a modifier key (except shift)
-    if ( /input|textarea|embed/i.test(taget.nodeName)
+    if ( /input|textarea|embed/i.test(target.nodeName) ||
          target.isContentEditable || 
          modifier ) {
       return true;
