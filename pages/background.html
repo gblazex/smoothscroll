@@ -43,13 +43,17 @@ function init() {
   // exlude page
   setDefault("exclude", "twitter.com, mail.google.com");
 
+  var store = localStorage;
+
+  if (store.exclude.indexOf(", gmail.com") != -1) {
+    store.exclude = store.exclude.replace(", gmail.com", "");
+  }
+
   /**
    * NOTE: It's easier if we give an example 
    * how to format the excluded pages list,
-   * plus gmail and twitter are good examples.
+   * plus the new twitter is a example.
    */
-
-  var store = localStorage;
 
   // Fresh install
   if (!store.version) {

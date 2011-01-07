@@ -395,7 +395,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     
     function step() {
         
-        var scale = scrolls[i++]; // linear or pulse
+        var scale = scrolls[i++]; // linear or with easing
         
         // scroll left
         if (multiplyX && scale) {
