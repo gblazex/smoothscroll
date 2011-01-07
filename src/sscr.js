@@ -204,13 +204,6 @@ function wheel(event) {
         init();
     } 
 
-    var scroll = true;
-    var prevent = false;
-    var scrollup = true;
-    var scrolldown = true;
-    var lastdeltaY = deltaY;
-    var i, overflow, delay, elem, dirX, dirY;
-
     deltaX = event.wheelDeltaX || 0;
     deltaY = event.wheelDeltaY || 0;
 
@@ -227,45 +220,15 @@ function wheel(event) {
         deltaY *= 120;
     }
   
-    dir = (deltaY > 0) ? up : down;
-    elem = overflowingAncestor(event.target);
+    var dir = (deltaY > 0) ? up : down;
+    var elem = overflowingAncestor(event.target);
   
-    if (!elem) {
+    if (!elem || (frame && noscrollframe)) {
         return true;
     }
     
-    scroll = true;
-
-    if (frame) {
-        if (noscrollframe) {
-            scroll = false;
-        } else {
-            // the last scroll did nothing
-            if (lastYOffset === window.pageYOffset) {
-                // scrolling downwards did nothing
-                if (lastdeltaY < 0) {
-                    scrollup   = true;
-                    scrolldown = false;
-                } 
-                // scrolling upwards did nothing
-                else if (lastdeltaY > 0) {
-                    scrollup   = false;
-                    scrolldown = true;
-                } 
-            }
-            lastYOffset = window.pageYOffset;
-        }
-    }
-    if (scroll) {
-        if ((scrolldown && deltaY < 0) || (scrollup && deltaY > 0)) {
-            scrollArray(elem, dir, -deltaX, -deltaY);
-            event.preventDefault();
-        }
-    }
-    // Prevention for scrollable html elements
-    //if (prevent) {
-    //    event.preventDefault();
-    //}
+    scrollArray(elem, dir, -deltaX, -deltaY);
+    event.preventDefault();
 }
 
 /**
@@ -292,7 +255,13 @@ function keydown(event) {
     }
     
     var scale, dir, shift;
-    var elem = overflowingAncestor(event.target);
+    var elem = overflowingAncestor(target);
+    
+    var clientHeight = target.clientHeight;
+    
+    if (elem === document.body) {
+        clientHeight = window.innerHeight;
+    }
  
     switch (event.keyCode) {
         case key.up:
@@ -305,15 +274,15 @@ function keydown(event) {
             break;
         case key.spacebar: // (+ shift)
             shift = event.shiftKey ? 1 : -1;
-            scale = -shift * window.innerHeight * 0.9;
+            scale = -shift * clientHeight * 0.9;
             dir = (shift > 0) ? up : down; 
             break;
         case key.pageup:
-            scale = -window.innerHeight * 0.9;
+            scale = -clientHeight * 0.9;
             dir = up; 
             break;
         case key.pagedown:
-            scale = window.innerHeight * 0.9;
+            scale = clientHeight * 0.9;
             dir = down; 
             break;
         case key.home:
@@ -321,7 +290,7 @@ function keydown(event) {
             dir = up; 
             break;
         case key.end:
-            var damt = target.scrollHeight - target.scrollTop - window.innerHeight;
+            var damt = target.scrollHeight - target.scrollTop - clientHeight;
             scale = (damt > 0) ? damt : 0;
             dir = down; 
             break;
@@ -330,7 +299,7 @@ function keydown(event) {
     }
     scale /= stepsize;
     scale = (scale > 0) ? Math.ceil(scale) : Math.floor(scale); 
-    scrollArray(elem, dir, 0, scale, 1000);
+    scrollArray(elem, dir, 0, scale);
     event.preventDefault();
 }
 
@@ -423,28 +392,38 @@ function pulse(x) {
  ************************************************/
 
 /**
- * Scrolls an element by a given amount.
- */
-function scrollElement(el, delta, amount) {
-    if (delta > 0) {
-        el.scrollTop -= amount;
-    } else {
-        el.scrollTop += amount;
-    }
-}
-
-/**
  * Pushes scroll actions to a given direction Array.
  */
 function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     delay || (delay = 1000);
     clearTimeouts(dir === up ? down : up);
-    scrollTop += multiplyX * scale;
+    
     function step() {
+        
         var scale = scrolls[i++]; // linear or pulse
-        elem.scrollLeft += multiplyX * scale;;
-        elem.scrollTop  += multiplyY * scale;
+        
+        var scrollLeft = elem.scrollLeft;
+        var scrollTop  = elem.scrollTop;
+        
+        elem.scrollLeft = elem.scrollLeft + (multiplyX * scale);
+        elem.scrollTop  = elem.scrollTop  + (multiplyY * scale);
+        
+        // scroll left failed (edge)
+        if (elem.scrollLeft === scrollLeft) {
+            multiplyX = 0;
+        }
+        // scroll top failed (edge)
+        if (elem.scrollTop === scrollTop) {
+            multiplyY = 0;
+        }
+        // if there's nothing left ot do
+        if (!multiplyX && !multiplyY) {
+            console.log("edge");
+            clearTimeouts(dir);
+        }
+
     }
+    // populate directions array
     for (var i = scrolls.length; i--;) {
         dir.push(setTimeout(step, i * delay / framerate + 1));
     }
