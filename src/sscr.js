@@ -234,31 +234,7 @@ function wheel(event) {
         return true;
     }
     
-    if (elem === document.body) {
-        scroll = true;
-    } else { // other overflowing element
-        prevent = true;
-        if (elem.scrollTop === lastScrollTop) {
-            if (elem.scrollTop === 0) {
-                scrollup   = true;
-                scrolldown = false;
-            } else {
-                scrolldown = true;
-                scrollup   = false;
-            }
-        } else {
-            scroll = false;
-        }
-        lastScrollTop = elem.scrollTop;
-        scrollElement(elem, deltaY, 1); // Fixes a bug
-        clearTimeouts(dir === up ? down : up);
-        for (i = 0; i < 10; i++) {
-            delay = i * 1000 / framerate + 1;
-            dir.push(setTimeout(function() {
-                scrollElement(elem, deltaY, 10);
-            }, delay));
-        }
-    }
+    scroll = true;
 
     if (frame) {
         if (noscrollframe) {
@@ -282,14 +258,14 @@ function wheel(event) {
     }
     if (scroll) {
         if ((scrolldown && deltaY < 0) || (scrollup && deltaY > 0)) {
-            scrollArray(dir, -deltaX, -deltaY);
+            scrollArray(elem, dir, -deltaX, -deltaY);
             event.preventDefault();
         }
     }
     // Prevention for scrollable html elements
-    if (prevent) {
-        event.preventDefault();
-    }
+    //if (prevent) {
+    //    event.preventDefault();
+    //}
 }
 
 /**
@@ -314,9 +290,10 @@ function keydown(event) {
         event.keyCode === key.spacebar) {
       return true;
     }
- 
-    var scale, dir, shift;
     
+    var scale, dir, shift;
+    var elem = overflowingAncestor(event.target);
+ 
     switch (event.keyCode) {
         case key.up:
             scale = -arrowscroll;
@@ -353,7 +330,7 @@ function keydown(event) {
     }
     scale /= stepsize;
     scale = (scale > 0) ? Math.ceil(scale) : Math.floor(scale); 
-    scrollArray(dir, 0, scale, 1000);
+    scrollArray(elem, dir, 0, scale, 1000);
     event.preventDefault();
 }
 
@@ -361,17 +338,11 @@ function keydown(event) {
 /***********************************************
  * HELPERS
  ***********************************************/
- 
-/**
- * Helper function for adding an event listener.
- */
+
 function addEvent(type, fn, bubble) {
     window.addEventListener(type, fn, (bubble||false));
 }
 
-/**
- * Helper function for removing an event listener.
- */
 function removeEvent(type, fn, bubble) {
     window.removeEventListener(type, fn, (bubble||false));  
 }
@@ -465,12 +436,14 @@ function scrollElement(el, delta, amount) {
 /**
  * Pushes scroll actions to a given direction Array.
  */
-function scrollArray(dir, multiplyX, multiplyY, delay) {
+function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     delay || (delay = 1000);
     clearTimeouts(dir === up ? down : up);
+    scrollTop += multiplyX * scale;
     function step() {
         var scale = scrolls[i++]; // linear or pulse
-        window.scrollBy( multiplyX * scale, multiplyY * scale );
+        elem.scrollLeft += multiplyX * scale;;
+        elem.scrollTop  += multiplyY * scale;
     }
     for (var i = scrolls.length; i--;) {
         dir.push(setTimeout(step, i * delay / framerate + 1));
