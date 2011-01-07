@@ -47,7 +47,7 @@ function mousedown(e) {
     var elem   = document.elementFromPoint(e.clientX, e.clientY);
     
     while (elem) {
-        isLink = elem.nodeName.toLowerCase() === "a";
+        isLink = isNodeName(elem, "a");
         if (isLink) break;
         elem = elem.parentNode;
     }
