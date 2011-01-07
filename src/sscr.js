@@ -217,21 +217,17 @@ function wheel(event) {
     deltaY = event.wheelDeltaY || 0;
 
     // normalize deltas
-    if (deltaX) {
-        deltaX /= 120;
-        // synaptics seems to send 1 sometimes, 
-        // and 120 other times (fix)
-        if (Math.abs(deltaX) < 0.01) {
-            deltaX *= 120;
-        }
+    deltaX /= 120;
+    deltaY /= 120;
+    // synaptics seems to send 1 sometimes, 
+    // and 120 other times (fix)
+    if (Math.abs(deltaX) < 0.01) {
+        deltaX *= 120;
     }
-    if (deltaY) {
-        deltaY /= 120;
-        if (Math.abs(deltaY) < 0.01) {
-            deltaY *= 120;
-        }
+    if (Math.abs(deltaY) < 0.01) {
+        deltaY *= 120;
     }
-
+  
     dir = (deltaY > 0) ? up : down;
     elem = overflowingAncestor(event.target);
   
