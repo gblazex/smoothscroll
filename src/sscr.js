@@ -49,10 +49,8 @@ var key = { up: 38, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, h
  * SETTINGS
  ***********************************************/
 
-var port = chrome.extension.connect({
-    name: "smoothscroll"
-});
-port.onMessage.addListener(function (settings) {
+chrome.extension.connect({ name: "smoothscroll" }).
+onMessage.addListener(function (settings) {
     
     // NOTE: + converts to {Number}
     framerate = +settings.framerate;
@@ -432,7 +430,6 @@ function pulse(x) {
     }
     return pulse_(x);
 }
-
 
 addEvent("mousewheel", wheel);
 addEvent("DOMContentLoaded", init);
