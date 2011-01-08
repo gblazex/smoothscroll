@@ -6,8 +6,6 @@
 // - Balazs Galambosi: maintainer (CHANGELOG.txt)
 // - Patrick Brunner (patrickb1991@gmail.com)
 // - Michael Herf: Pulse Algorithm
-// - Frank Yan: Direction Switching Fixes
-// - Ismael Barros: Keyboard Fixes
 
 // Frame Variables
 var frame         = false;
