@@ -44,7 +44,7 @@ function init() {
 function mousedown(e) {
 
     var isLink = false;
-    var elem   = document.elementFromPoint(e.clientX, e.clientY);
+    var elem   = e.target;
     
     while (elem) {
         isLink = isNodeName(elem, "a");

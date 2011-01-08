@@ -41,6 +41,7 @@ var scrolls;
 var deltaX = 0;
 var deltaY = 0;
 var initdone = false;
+var activeElement;
 
 var key = { up: 38, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
@@ -70,7 +71,7 @@ onMessage.addListener(function (settings) {
     initTest();
 
     if (keyboardsupport && !disableKeyboard) {
-        document.onkeydown = keydown;
+        addEvent("keydown", keydown, true);
     }
 
     // If extension settings were deleted somehow
@@ -108,7 +109,7 @@ function initTest() {
     
     // disable keyboard support if anything above requested it
     if (disableKeyboard) {
-        document.onkeydown = null;
+        removeEvent("keydown", keydown, true);
     }
 }
 
@@ -146,6 +147,7 @@ function setupScrolls() {
 function init() {
   
     var body = document.body;
+    activeElement = body;
 
     initTest();
 
@@ -244,7 +246,7 @@ function wheel(event) {
     if (!initdone) {
         init();
     } 
-
+    
     // use default if there's no overflowing
     // element or the target is an <embed>
     var elem = overflowingAncestor(event.target);
@@ -252,6 +254,8 @@ function wheel(event) {
         isNodeName(event.target, "embed")) {
         return true;
     }
+    
+    activeElement = elem;
 
     deltaX = event.wheelDeltaX || 0;
     deltaY = event.wheelDeltaY || 0;
@@ -280,9 +284,9 @@ function wheel(event) {
  */
 function keydown(event) {
 
-    var target   = event.target;
+    var target   = activeElement || event.target;
     var modifier = event.ctrlKey || event.altKey || event.metaKey;
-
+    
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     if ( /input|textarea|embed/i.test(target.nodeName) ||
@@ -427,5 +431,13 @@ function pulse(x) {
     return pulse_(x);
 }
 
+/**
+ * Mousedown event only for updating activeElement
+ */
+function mousedown(event) {
+    activeElement = overflowingAncestor(event.target);
+}
+
+addEvent("mousedown", mousedown);
 addEvent("mousewheel", wheel);
 addEvent("DOMContentLoaded", init);
