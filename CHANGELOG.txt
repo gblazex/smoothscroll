@@ -32,3 +32,4 @@
 // - fixed default actions for <embed> elements (both keyboard and mouse)
 // - completely reworked mouse scrolling to support touchpads (two dimensional delta)
 // - added keyboard support for all overflowing elements (activeElement)
+// - both mousewheel and keydown checks if defaultPrevented is true, so pages can add custom behavior
