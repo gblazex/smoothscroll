@@ -15,11 +15,10 @@ var enabled   = false; // from settings
 var framerate = 100;
 
 // get global settings
-chrome.extension
- .connect({ name: "smoothscroll"})
- .onMessage.addListener(function (settings) {
+chrome.extension.connect({ name: "smoothscroll"}).
+onMessage.addListener(function (settings) {
     enabled = (settings.middlemouse == "true");
- });   
+});   
  
 /**
  * Initializes the image at the reference point.
@@ -46,11 +45,10 @@ function mousedown(e) {
     var isLink = false;
     var elem   = e.target;
     
-    while (elem) {
+    do {
         isLink = isNodeName(elem, "a");
         if (isLink) break;
-        elem = elem.parentNode;
-    }
+    } while (elem = elem.parentNode)
 
     // if it's not the middle button, or
     // it's being used on an <a> element
