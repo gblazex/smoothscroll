@@ -250,7 +250,7 @@ function wheel(event) {
     activeElement = event.target;
     
     // use default if there's no overflowing
-    // element or the target is an <embed>
+    // element or default action is prevented
     var elem = overflowingAncestor(event.target);
     if (!elem || (frame && noscrollframe) ||
         event.defaultPrevented) {
