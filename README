@@ -4,13 +4,15 @@ Extension homepage
  https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn
 
 Features
- - Picasa-like smooth scrolling
- - Supports mouse wheel, middle mouse, and keyboard (Arrow keys, PgUp/PgDown, Spacebar)
- - Customizable step sizes, frames per second and more...
+- Picasa-like smooth scrolling
+- Mouse wheel, middle mouse and keyboard support
+- Arrow keys, PgUp/PgDown, Spacebar, Home/End
+- Customizable step sizes, frames per second and more...
+- Works with embedded content (PDF, flash)
+- Full touchpad support
+- Excluded pages list
 
 People involved
- - Balazs Galambosi: maintainer
- - Patrick Brunner: original idea
- - Michael Herf: Pulse Algorithm
- - Frank Yan: Direction Switching Fixes
- - Ismael Barros: Keyboard Fixes
+ - Patrick Brunner  (original idea)
+ - Balazs Galambosi (maintainer)
+ - Michael Herf     (pulse algorithm)
