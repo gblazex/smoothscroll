@@ -339,14 +339,13 @@ function keydown(event) {
             break;
         case key.end:
             var damt = elem.scrollHeight - elem.scrollTop - clientHeight;
-            scale = (damt > 0) ? damt : 0;
+            scale = (damt > 0) ? damt+10 : 0;
             dir = down; 
             break;
         default:
             return true; // a key we don't care about
     }
     scale /= stepsize;
-    scale = (scale > 0) ? Math.ceil(scale) : Math.floor(scale); 
     scrollArray(elem, dir, 0, scale);
     event.preventDefault();
 }
