@@ -247,6 +247,8 @@ function wheel(event) {
         init();
     } 
     
+    activeElement = event.target;
+    
     // use default if there's no overflowing
     // element or the target is an <embed>
     var elem = overflowingAncestor(event.target);
@@ -254,8 +256,6 @@ function wheel(event) {
         isNodeName(event.target, "embed")) {
         return true;
     }
-    
-    activeElement = elem;
 
     deltaX = event.wheelDeltaX || 0;
     deltaY = event.wheelDeltaY || 0;
@@ -284,7 +284,7 @@ function wheel(event) {
  */
 function keydown(event) {
 
-    var target   = activeElement || event.target;
+    var target   = event.target;
     var modifier = event.ctrlKey || event.altKey || event.metaKey;
     
     // do nothing if user is editing text
@@ -301,7 +301,7 @@ function keydown(event) {
     }
     
     var scale, dir, shift;
-    var elem = overflowingAncestor(target);
+    var elem = overflowingAncestor(activeElement);
     var clientHeight = elem.clientHeight;
 
     if (elem == document.body) {
@@ -435,7 +435,7 @@ function pulse(x) {
  * Mousedown event only for updating activeElement
  */
 function mousedown(event) {
-    activeElement = overflowingAncestor(event.target);
+    activeElement = event.target;
 }
 
 addEvent("mousedown", mousedown);
