@@ -71,7 +71,7 @@ onMessage.addListener(function (settings) {
     initTest();
 
     if (keyboardsupport && !disableKeyboard) {
-        addEvent("keydown", keydown, true);
+        addEvent("keydown", keydown);
     }
 
     // If extension settings were deleted somehow
@@ -109,7 +109,7 @@ function initTest() {
     
     // disable keyboard support if anything above requested it
     if (disableKeyboard) {
-        removeEvent("keydown", keydown, true);
+        removeEvent("keydown", keydown);
     }
 }
 
