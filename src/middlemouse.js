@@ -1,7 +1,7 @@
 
-// SmoothScroll v0.9.1
+// SmoothScroll v0.9.2
 // Licensed under the terms of the MIT license.
-// Balázs Galambosi (c) 2010
+// Balázs Galambosi (c) 2011
 
 /**
  * A module for middle mouse scrolling.
