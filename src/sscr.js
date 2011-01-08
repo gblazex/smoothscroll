@@ -253,7 +253,7 @@ function wheel(event) {
     // element or the target is an <embed>
     var elem = overflowingAncestor(event.target);
     if (!elem || (frame && noscrollframe) ||
-        isNodeName(event.target, "embed")) {
+        event.defaultPrevented) {
         return true;
     }
 
@@ -291,6 +291,7 @@ function keydown(event) {
     // or using a modifier key (except shift)
     if ( /input|textarea|embed/i.test(target.nodeName) ||
          target.isContentEditable || 
+         event.defaultPrevented   ||
          modifier ) {
       return true;
     }
