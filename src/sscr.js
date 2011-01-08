@@ -245,7 +245,7 @@ function wheel(event) {
 
     if (!initdone) {
         init();
-    } 
+    }
     
     var target = event.target;
     var noscroll = frame && noscrollframe;
