@@ -247,13 +247,15 @@ function wheel(event) {
         init();
     } 
     
-    activeElement = event.target;
+    //activeElement = event.target;
+    var target = event.target;
     
     // use default if there's no overflowing
     // element or default action is prevented
-    var elem = overflowingAncestor(event.target);
-    if (!elem || (frame && noscrollframe) ||
-        event.defaultPrevented) {
+    var noscroll = frame && noscrollframe;
+    var elem = overflowingAncestor(target);
+    if (!elem || noscroll || event.defaultPrevented ||
+       (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
         return true;
     }
 
