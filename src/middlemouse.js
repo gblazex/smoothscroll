@@ -26,13 +26,12 @@ onMessage.addListener(function (settings) {
 function init() {
     var url = chrome.extension.getURL("../img/cursor.png");
     var style = img.style;
-    style.display    = "none";
     style.background = "url("+url+")";
     style.position   = "fixed";
     style.zIndex     = "1000";
     style.width      = "20px";
     style.height     = "20px";
-    document.body.appendChild(img);
+    new Image().src  = url; // force download
 }
 
 /**
@@ -71,7 +70,7 @@ function mousedown(e) {
     // reference point
     img.style.left = e.clientX - 10 + "px";
     img.style.top  = e.clientY - 10 + "px";
-    img.style.display = ""; // show
+    document.body.appendChild(img);
     
     var refereceX = e.clientX;
     var refereceY = e.clientY;
@@ -105,7 +104,7 @@ function mousedown(e) {
         removeEvent("mouseup", remove);
         removeEvent("keydown", remove);
         clearInterval(interval);
-        img.style.display = "none";
+        document.body.removeChild(img);
         scrolling = false;
     }
     
