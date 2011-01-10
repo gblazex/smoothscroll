@@ -165,16 +165,34 @@ function init() {
     /**
      * This fixes a bug where the areas left and right 
      * to the content does not trigger the onmousewheel
-     * event on some pages. Acid3 test is excluded.
+     * event on some pages.
      */
-    if (document.URL !== "http://acid3.acidtests.org/") {
+    if (body.scrollHeight > window.innerHeight &&
+        body.scrollHeight - body.offsetHeight > 25) {
+            
         var underlay = document.createElement('div');
         underlay.setAttribute( "style",
             "z-index: -1; position: absolute; top: 0; left: 0; " +
-            "width: 100%; height: " + body.scrollHeight + "px;" );
+            "width: 100%; height: " + body.scrollHeight + "px;" );    
         body.appendChild(underlay);
+
+        var scrollHeight = body.scrollHeight;
+        var pending = false;
+        
+        var refresh = function() {
+            if (!pending && scrollHeight != body.scrollHeight) {
+                pending = true; // add a new peding action
+                setTimeout(function(){
+                    underlay.style.height = body.scrollHeight + "px";
+                    scrollHeight = body.scrollHeight; 
+                    pending = false;
+                }, 1000);
+            }
+        }
+
+        addEvent("DOMNodeInserted", refresh);
+        addEvent("DOMNodeRemoved",  refresh);
     }
-    
     initdone = true;
 }
 
