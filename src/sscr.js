@@ -201,19 +201,30 @@ function init() {
  * SCROLLING 
  ************************************************/
 
+
+  var que = []; // Array of offsets [x, y]
+  var peding = false;
+
 /**
  * Pushes scroll actions to a given direction Array.
  */
 function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
-    
     delay || (delay = 1000);
-    clearTimeouts(dir === up ? down : up);
+    var x = 0, y = 1; // {enum}
+    
+    directionCheck(dir);
+
+    for (var i = 0; i < scrolls.length; i++) {
+        que[i] || (que[i] = [0, 0]);
+        que[i][x] += multiplyX * scrolls[i];
+        que[i][y] += multiplyY * scrolls[i];
+    }
     
     function step() {
+        var scroll = que.shift();
         
-        var scale = scrolls[i++]; // linear or with easing
-        var addX = (multiplyX * scale) >> 0; // toInt
-        var addY = (multiplyY * scale) >> 0; // toInt
+        var addX = scroll[x] >> 0; // toInt
+        var addY = scroll[y] >> 0; // toInt           
         
         // scroll left
         if (multiplyX && addX) {
@@ -239,15 +250,21 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         
         // clean up if there's nothing left to do
         if (!multiplyX && !multiplyY) {
-            clearTimeouts(dir);
+            que = [];
+        }
+        
+        if (que.length) { 
+            setTimeout(step, delay / framerate + 1);
+        } else { 
+            peding = false;
         }
     }
     
-    // populate directions array
-    for (var i = scrolls.length; i--;) {
-        dir.push(setTimeout(step, i * delay / framerate + 1));
+    // start a new que of actions
+    if (!peding) {
+        setTimeout(step, 0);
+        peding = true;
     }
-    i = 0; // reset so that step() can increment again   
 }
 
 
@@ -383,9 +400,11 @@ function isNodeName(el, tag) {
     return el.nodeName.toLowerCase() === tag.toLowerCase();
 }
 
-function clearTimeouts(array) {
-    while (array.length) {
-        clearTimeout(array.pop());
+function directionCheck(dir) {
+    var opposite = (dir === up ? down : up);
+    if (que !== dir) {
+        que = dir;     // change direction
+        opposite = []; // flush the oppsite direction
     }
 }
 
