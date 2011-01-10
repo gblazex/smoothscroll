@@ -194,8 +194,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     function step() {
         
         var scale = scrolls[i++]; // linear or with easing
-        var addX = (multiplyX * scale, 10) >> 0; // toInt
-        var addY = (multiplyY * scale, 10) >> 0; // toInt
+        var addX = (multiplyX * scale) >> 0; // toInt
+        var addY = (multiplyY * scale) >> 0; // toInt
         
         // scroll left
         if (multiplyX && addX) {
