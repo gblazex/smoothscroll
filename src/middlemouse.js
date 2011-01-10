@@ -12,7 +12,7 @@
 var img = document.createElement("div"); // img at the reference point
 var scrolling = false; // guards one phase
 var enabled   = false; // from settings
-var framerate = 100;
+var framerate = 200;
 
 // get global settings
 chrome.extension.connect({ name: "smoothscroll"}).
@@ -83,8 +83,8 @@ function mousedown(e) {
     // animation loop
     var delay = 1000 / framerate;
     var interval = setInterval(function(){
-        elem.scrollLeft += speedX;
-        elem.scrollTop  += speedY;
+        elem.scrollLeft += (speedX * delay) << 0;
+        elem.scrollTop  += (speedY * delay) << 0;
     }, delay);
     
     var first = true;
@@ -94,8 +94,8 @@ function mousedown(e) {
             addEvent("mouseup", remove);
             first = false;
         }
-        speedX = (e.clientX - refereceX) / 10;
-        speedY = (e.clientY - refereceY) / 10;
+        speedX = (e.clientX - refereceX) * 10 / 1000;
+        speedY = (e.clientY - refereceY) * 10 / 1000;
     }
     
     function remove(e) {
