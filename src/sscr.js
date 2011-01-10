@@ -12,7 +12,7 @@ var frame         = false;
 var noscrollframe = false;
 
 // Scroll Variables (tweakable)
-var framerate = 50;  // [Hz]
+var framerate = 150;  // [Hz]
 var animtime  = 400; // [px]
 var stepsize  = 120; // [px]
 

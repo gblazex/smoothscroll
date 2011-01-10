@@ -29,9 +29,9 @@ function init() {
   // Set the default settings
   setDefault("version", version);
   // general & mouse
-  setDefault("framerate", 50);
-  setDefault("animtime", 400);
-  setDefault("scrollsz", 120);
+  setDefault("framerate", 150);
+  setDefault("animtime",  400);
+  setDefault("scrollsz",  120);
   setDefault("middlemouse", true);
   // pulse
   setDefault("pulseAlgorithm", true);
@@ -41,7 +41,7 @@ function init() {
   setDefault("keyboardsupport", true);
   setDefault("arrscroll", 50);
   // exlude page
-  setDefault("exclude", "twitter.com, www.msn.com");
+  setDefault("exclude", "twitter.com");
 
   var store = localStorage;
 
@@ -63,6 +63,10 @@ function init() {
   // If updated do something
   if (store.version != version) {
     store.version = version;
+
+    if (store.framerate == "50") {
+      store.framerate = 150;
+    }
     // This should be replaced by an infobar once the API is ready
     // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});
   }
