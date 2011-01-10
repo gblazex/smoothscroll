@@ -165,7 +165,7 @@ function init() {
     /**
      * This fixes a bug where the areas left and right 
      * to the content does not trigger the onmousewheel
-     * event on some pages.
+     * event on some pages. e.g.: body { height: 100% }
      */
     if (body.scrollHeight > window.innerHeight &&
         body.scrollHeight - body.offsetHeight > 25) {
