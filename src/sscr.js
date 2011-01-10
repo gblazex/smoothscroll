@@ -264,16 +264,13 @@ function wheel(event) {
     deltaY = event.wheelDeltaY || 0;
 
     // normalize deltas
-    deltaX /= 120;
-    deltaY /= 120;
-    
     // synaptics seems to send 1 sometimes, 
     // and 120 other times (fix)
-    if (Math.abs(deltaX) < 0.01) {
-        deltaX *= 120;
+    if (Math.abs(deltaX) > 1.2) {
+        deltaX /= 120;
     }
-    if (Math.abs(deltaY) < 0.01) {
-        deltaY *= 120;
+    if (Math.abs(deltaY) > 1.2) {
+        deltaY /= 120;
     }
   
     var dir = (deltaY > 0) ? up : down;
