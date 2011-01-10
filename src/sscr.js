@@ -20,7 +20,7 @@ var stepsize  = 120; // [px]
 // ratio of 'tail' to 'acceleration'
 var pulseAlgorithm = true;
 var pulseScale     = 8;
-var pulseNormalize = 1git ;
+var pulseNormalize = 1;
 
 // Keyboard Settings
 var keyboardsupport = true;
