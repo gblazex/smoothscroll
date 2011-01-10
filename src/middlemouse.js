@@ -12,7 +12,7 @@
 var img = document.createElement("div"); // img at the reference point
 var scrolling = false; // guards one phase
 var enabled   = false; // from settings
-var framerate = 200;
+var framerate = 100;
 
 // get global settings
 chrome.extension.connect({ name: "smoothscroll"}).
