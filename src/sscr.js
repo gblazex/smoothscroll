@@ -170,10 +170,11 @@ function init() {
     if (document.URL !== "http://acid3.acidtests.org/") {
         var underlay = document.createElement('div');
         underlay.setAttribute( "style",
-            "z-index: -1; position:absolute; top:0; left: 0; " +
+            "z-index: -1; position: absolute; top: 0; left: 0; " +
             "width: 100%; height: " + body.scrollHeight + "px;" );
         body.appendChild(underlay);
     }
+    
     initdone = true;
 }
 
@@ -193,11 +194,13 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     function step() {
         
         var scale = scrolls[i++]; // linear or with easing
+        var addX = parseInt(multiplyX * scale, 10);
+        var addY = parseInt(multiplyY * scale, 10);
         
         // scroll left
-        if (multiplyX && scale) {
+        if (multiplyX && addX) {
             var lastLeft = elem.scrollLeft;
-            elem.scrollLeft += multiplyX * scale;
+            elem.scrollLeft += addX;
             
             // scroll left failed (edge)
             if (elem.scrollLeft === lastLeft) {
@@ -206,9 +209,9 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         }
         
         // scroll top
-        if (multiplyY && scale) {       
+        if (multiplyY && addY) {       
             var lastTop = elem.scrollTop;
-            elem.scrollTop += multiplyY * scale;
+            elem.scrollTop += addY;
             
             // scroll top failed (edge)
             if (elem.scrollTop === lastTop) {
