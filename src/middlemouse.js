@@ -1,5 +1,5 @@
 
-// SmoothScroll v0.9.2
+// SmoothScroll v0.9.3
 // Licensed under the terms of the MIT license.
 // Balázs Galambosi (c) 2011
 

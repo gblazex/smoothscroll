@@ -1,5 +1,5 @@
 
-// SmoothScroll v0.9.2
+// SmoothScroll v0.9.3
 // Licensed under the terms of the MIT license.
 
 // People involved
@@ -186,7 +186,7 @@ function init() {
                     underlay.style.height = body.scrollHeight + "px";
                     scrollHeight = body.scrollHeight; 
                     pending = false;
-                }, 1000);
+                }, 1000); // act rarely to stay fast
             }
         }
 
