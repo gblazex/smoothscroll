@@ -20,7 +20,7 @@ var stepsize  = 120; // [px]
 // ratio of 'tail' to 'acceleration'
 var pulseAlgorithm = true;
 var pulseScale     = 8;
-var pulseNormalize = 1;
+var pulseNormalize = 1git ;
 
 // Keyboard Settings
 var keyboardsupport = true;
@@ -200,18 +200,17 @@ function init() {
 /************************************************
  * SCROLLING 
  ************************************************/
-
-
-  var que = []; // Array of offsets [x, y]
-  var peding = false;
+ 
+var que = []; // Array of offsets [x, y]
+var x = 0, y = 1; // {enum}
+var peding = false;
 
 /**
  * Pushes scroll actions to a given direction Array.
  */
 function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
-    delay || (delay = 1000);
-    var x = 0, y = 1; // {enum}
     
+    delay || (delay = 1000);
     directionCheck(dir);
 
     for (var i = 0; i < scrolls.length; i++) {
