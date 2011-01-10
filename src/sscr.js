@@ -181,7 +181,7 @@ function init() {
         
         var refresh = function() {
             if (!pending && scrollHeight != body.scrollHeight) {
-                pending = true; // add a new peding action
+                pending = true; // add a new pending action
                 setTimeout(function(){
                     underlay.style.height = body.scrollHeight + "px";
                     scrollHeight = body.scrollHeight; 
@@ -203,7 +203,7 @@ function init() {
  
 var que = []; // Array of offsets [x, y]
 var x = 0, y = 1; // {enum}
-var peding = false;
+var pending = false;
 
 /**
  * Pushes scroll actions to a given direction Array.
@@ -255,14 +255,14 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         if (que.length) { 
             setTimeout(step, delay / framerate + 1);
         } else { 
-            peding = false;
+            pending = false;
         }
     }
     
     // start a new que of actions
-    if (!peding) {
+    if (!pending) {
         setTimeout(step, 0);
-        peding = true;
+        pending = true;
     }
 }
 
