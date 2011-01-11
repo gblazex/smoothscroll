@@ -41,19 +41,16 @@ function init() {
   setDefault("keyboardsupport", true);
   setDefault("arrscroll", 50);
   // exlude page
-  setDefault("exclude", "twitter.com");
-
-  var store = localStorage;
-
-  if (store.exclude.indexOf(", gmail.com") != -1) {
-    store.exclude = store.exclude.replace(", gmail.com", "");
-  }
+  setDefault("exclude", "twitter.com, google.com/reader");
 
   /**
    * NOTE: It's easier if we give an example 
    * how to format the excluded pages list,
    * plus twitter and msn are good examples.
    */
+
+
+  var store = localStorage;
 
   // Fresh install
   if (!store.version) {
@@ -66,6 +63,14 @@ function init() {
 
     if (store.framerate == "50") {
       store.framerate = 150;
+    }
+
+    if (store.exclude.indexOf(", gmail.com") != -1) {
+      store.exclude = store.exclude.replace(", gmail.com", "");
+    }
+
+    if (store.exclude.indexOf("google.com/reader") == -1) {
+      store.exclude += ", google.com/reader";
     }
     // This should be replaced by an infobar once the API is ready
     // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});

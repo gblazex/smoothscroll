@@ -30,14 +30,12 @@ var arrowscroll     = 50; // [px]
 // Excluded pages
 var exclude = "";
 
-// {enum} Directions
-var direction = "down";
-
 // Other Variables
 var scrolls;
 var deltaX = 0;
 var deltaY = 0;
-var initdone = false;
+var direction = "down";
+var initdone  = false;
 var activeElement;
 
 var key = { up: 38, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
