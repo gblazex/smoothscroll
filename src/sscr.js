@@ -179,6 +179,7 @@ function init() {
         var scrollHeight = body.scrollHeight;
         var pending = false;
         
+        // DOMChange delayed
         var refresh = function() {
             if (!pending && scrollHeight != body.scrollHeight) {
                 pending = true; // add a new pending action
@@ -220,8 +221,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     }
     
     function step() {
-        var scroll = que.shift();
         
+        var scroll = que.shift();
         var addX = scroll[x] >> 0; // toInt
         var addY = scroll[y] >> 0; // toInt           
         
@@ -382,6 +383,13 @@ function keydown(event) {
     event.preventDefault();
 }
 
+/**
+ * Mousedown event only for updating activeElement
+ */
+function mousedown(event) {
+    activeElement = event.target;
+}
+
 
 /***********************************************
  * HELPERS
@@ -465,13 +473,6 @@ function pulse(x) {
         computePulseScale();
     }
     return pulse_(x);
-}
-
-/**
- * Mousedown event only for updating activeElement
- */
-function mousedown(event) {
-    activeElement = event.target;
 }
 
 addEvent("mousedown", mousedown);
