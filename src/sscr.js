@@ -12,7 +12,7 @@ var frame         = false;
 var noscrollframe = false;
 
 // Scroll Variables (tweakable)
-var framerate = 150;  // [Hz]
+var framerate = 150; // [Hz]
 var animtime  = 400; // [px]
 var stepsize  = 120; // [px]
 
@@ -159,13 +159,16 @@ function init() {
         }
     }
    
+    var htmlHeight   = document.documentElement.offsetHeight;
+    var windowHeight = window.innerHeight;   
+    
     /**
-     * This fixes a bug where the areas left and right 
-     * to the content does not trigger the onmousewheel
-     * event on some pages. e.g.: body { height: 100% }
+     * This fixes a bug where the areas left and right to 
+     * the content does not trigger the onmousewheel event
+     * on some pages. e.g.: html, body { height: 100% }
      */
-    if (body.scrollHeight > window.innerHeight &&
-        body.scrollHeight - body.offsetHeight > 25) {
+    if (body.scrollHeight > windowHeight && 
+       (body.offsetHeight === windowHeight || htmlHeight === windowHeight)) {
             
         var underlay = document.createElement("div");
         underlay.setAttribute( "style",
