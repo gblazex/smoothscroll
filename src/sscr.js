@@ -17,7 +17,7 @@ var animtime  = 400; // [px]
 var stepsize  = 120; // [px]
 
 // Pulse (less tweakable)
-// ratio of 'tail' to 'acceleration'
+// ratio of "tail" to "acceleration"
 var pulseAlgorithm = true;
 var pulseScale     = 8;
 var pulseNormalize = 1;
@@ -31,9 +31,7 @@ var arrowscroll     = 50; // [px]
 var exclude = "";
 
 // {enum} Directions
-var up   = 0;
-var down = 1;
-var direction = down;
+var direction = "down";
 
 // Other Variables
 var scrolls;
@@ -171,7 +169,7 @@ function init() {
     if (body.scrollHeight > window.innerHeight &&
         body.scrollHeight - body.offsetHeight > 25) {
             
-        var underlay = document.createElement('div');
+        var underlay = document.createElement("div");
         underlay.setAttribute( "style",
             "z-index: -1; position: absolute; top: 0; left: 0; " +
             "width: 100%; height: " + body.scrollHeight + "px;" );    
@@ -309,7 +307,7 @@ function wheel(event) {
         deltaY /= 120;
     }
   
-    var dir = (deltaY > 0) ? up : down;
+    var dir = (deltaY > 0) ? "up" : "down";
     scrollArray(elem, dir, -deltaX, -deltaY);
     event.preventDefault();
 }
@@ -348,36 +346,36 @@ function keydown(event) {
     switch (event.keyCode) {
         case key.up:
             scale = -arrowscroll;
-            dir = up; 
+            dir = "up"; 
             break;
         case key.down:
             scale = arrowscroll;
-            dir = down; 
+            dir = "down"; 
             break;
         case key.spacebar: // (+ shift)
             shift = event.shiftKey ? 1 : -1;
             scale = -shift * clientHeight * 0.9;
-            dir = (shift > 0) ? up : down; 
+            dir = (shift > 0) ? "up" : "down"; 
             break;
         case key.pageup:
             scale = -clientHeight * 0.9;
-            dir = up; 
+            dir = "up"; 
             break;
         case key.pagedown:
             scale = clientHeight * 0.9;
-            dir = down; 
+            dir = "down"; 
             break;
         case key.home:
             scale = -elem.scrollTop;
-            dir = up; 
+            dir = "up"; 
             break;
         case key.end:
             var damt = elem.scrollHeight - elem.scrollTop - clientHeight;
             scale = (damt > 0) ? damt+10 : 0;
-            dir = down; 
+            dir = "down"; 
             break;
         default:
-            return true; // a key we don't care about
+            return true; // a key we don"t care about
     }
     scale /= stepsize;
     scrollArray(elem, dir, 0, scale);
