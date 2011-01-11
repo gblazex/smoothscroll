@@ -30,9 +30,10 @@ var arrowscroll     = 50; // [px]
 // Excluded pages
 var exclude = "";
 
-// Arrays of timeouts
-var up   = [];
-var down = [];
+// {enum} Directions
+var up   = 0;
+var down = 1;
+var direction = down;
 
 // Other Variables
 var scrolls;
@@ -408,10 +409,9 @@ function isNodeName(el, tag) {
 }
 
 function directionCheck(dir) {
-    var opposite = (dir === up ? down : up);
-    if (que !== dir) {
-        que = dir;     // change direction
-        opposite = []; // flush the oppsite direction
+    if (direction !== dir) {
+        que = [];
+        direction = dir;
     }
 }
 
