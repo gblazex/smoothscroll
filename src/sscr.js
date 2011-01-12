@@ -141,16 +141,19 @@ function setupScrolls() {
  */
 function init() {
   
-    var body = document.body;
+    var body  = document.body;
     var docel = document.documentElement;
+    var htmlHeight   = document.documentElement.offsetHeight;
+    var windowHeight = window.innerHeight;   
+    
     activeElement = body;
-
+    
     initTest();
 
     if (!scrolls) {
       scrolls = setupScrolls();
     }
-
+    
     // Checks if this script is running in a frame
     if (top != self) {
         frame = true;
@@ -160,16 +163,13 @@ function init() {
             noscrollframe = true;
         }
     }
-   
-    var htmlHeight   = document.documentElement.offsetHeight;
-    var windowHeight = window.innerHeight;   
-    
+
     /**
      * This fixes a bug where the areas left and right to 
      * the content does not trigger the onmousewheel event
      * on some pages. e.g.: html, body { height: 100% }
      */
-    if (body.scrollHeight > windowHeight && 
+    else if (body.scrollHeight > windowHeight &&
        (body.offsetHeight === windowHeight || htmlHeight === windowHeight)) {
             
         var underlay = document.createElement("div");
