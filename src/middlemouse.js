@@ -83,8 +83,8 @@ function mousedown(e) {
     // animation loop
     var delay = 1000 / framerate;
     var interval = setInterval(function(){
-        elem.scrollLeft += (speedX * delay) << 0;
-        elem.scrollTop  += (speedY * delay) << 0;
+        elem.scrollLeft += (speedX * delay) >> 0;
+        elem.scrollTop  += (speedY * delay) >> 0;
     }, delay);
     
     var first = true;

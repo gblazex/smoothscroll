@@ -142,6 +142,7 @@ function setupScrolls() {
 function init() {
   
     var body = document.body;
+    var docel = document.documentElement;
     activeElement = body;
 
     initTest();
@@ -153,8 +154,9 @@ function init() {
     // Checks if this script is running in a frame
     if (top != self) {
         frame = true;
+
         // document.documentElement ?
-        if (body.scrollHeight <= body.clientHeight + 10) {
+        if (docel.scrollHeight <= docel.clientHeight + 10) {
             noscrollframe = true;
         }
     }
@@ -284,12 +286,11 @@ function wheel(event) {
     }
     
     var target = event.target;
-    var noscroll = frame && noscrollframe;
     
     // use default if there's no overflowing
     // element or default action is prevented
-    var elem = overflowingAncestor(target);
-    if (!elem || noscroll || event.defaultPrevented ||
+    var elem = overflowingAncestor(target); 
+    if (!elem || noscrollframe || event.defaultPrevented ||
         isNodeName(activeElement, "embed") ||
        (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
         return true;
@@ -416,6 +417,7 @@ function directionCheck(dir) {
 
 function overflowingAncestor(el) {
     var bodyScrollHeight = document.body.scrollHeight;
+    var docel = document.documentElement;
     do {
         if (bodyScrollHeight === el.scrollHeight) {
             return document.body;
