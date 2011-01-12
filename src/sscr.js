@@ -157,8 +157,6 @@ function init() {
     // Checks if this script is running in a frame
     if (top != self) {
         frame = true;
-
-        // document.documentElement ?
         if (docel.scrollHeight <= docel.clientHeight + 10) {
             noscrollframe = true;
         }
