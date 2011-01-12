@@ -143,7 +143,7 @@ function init() {
   
     var body  = document.body;
     var docel = document.documentElement;
-    var htmlHeight   = document.documentElement.offsetHeight;
+    var htmlHeight   = docel.offsetHeight;
     var windowHeight = window.innerHeight;   
     
     activeElement = body;
@@ -170,7 +170,7 @@ function init() {
      * on some pages. e.g.: html, body { height: 100% }
      */
     else if (body.scrollHeight > windowHeight &&
-       (body.offsetHeight === windowHeight || htmlHeight === windowHeight)) {
+            (body.offsetHeight === windowHeight || htmlHeight === windowHeight)) {
             
         var underlay = document.createElement("div");
         underlay.setAttribute( "style",
