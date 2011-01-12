@@ -417,7 +417,6 @@ function directionCheck(dir) {
 
 function overflowingAncestor(el) {
     var bodyScrollHeight = document.body.scrollHeight;
-    var docel = document.documentElement;
     do {
         if (bodyScrollHeight === el.scrollHeight) {
             return document.body;
