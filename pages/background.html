@@ -68,10 +68,6 @@ function init() {
     if (store.exclude.indexOf(", gmail.com") != -1) {
       store.exclude = store.exclude.replace(", gmail.com", "");
     }
-
-    if (store.exclude.indexOf("google.com/reader") == -1) {
-      store.exclude += ", google.com/reader";
-    }
     // This should be replaced by an infobar once the API is ready
     // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});
   }
