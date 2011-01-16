@@ -123,7 +123,7 @@ function init() {
     if (document.domain === "acid3.acidtests.org") return;
 
     // Checks if this script is running in a frame
-    if (top && top != self) {
+    if (top != self) {
         frame = true;
         if (docel.scrollHeight <= docel.clientHeight + 10) {
             noscrollframe = true;
