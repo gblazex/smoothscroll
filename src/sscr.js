@@ -472,4 +472,4 @@ function pulse(x) {
 
 addEvent("mousedown", mousedown);
 addEvent("mousewheel", wheel);
-addEvent("DOMContentLoaded", init);
+addEvent("load", init);
