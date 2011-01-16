@@ -116,13 +116,14 @@ function init() {
     var docel = document.documentElement;
     var htmlHeight   = docel.offsetHeight;
     var windowHeight = window.innerHeight;   
-    
+
     activeElement = body;
-    
     initTest();
+    
+    if (document.domain === "acid3.acidtests.org") return;
 
     // Checks if this script is running in a frame
-    if (top != self) {
+    if (top && top != self) {
         frame = true;
         if (docel.scrollHeight <= docel.clientHeight + 10) {
             noscrollframe = true;
@@ -136,7 +137,7 @@ function init() {
      */
     else if (body.scrollHeight > windowHeight &&
             (body.offsetHeight <= windowHeight || htmlHeight <= windowHeight)) {
-            
+
         var underlay = document.createElement("div");
         underlay.setAttribute( "style",
             "z-index: -1; position: absolute; top: 0; left: 0; " +
