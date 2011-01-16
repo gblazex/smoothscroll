@@ -224,28 +224,25 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
                 que.splice(i, 1); i--;
             }           
         }
-        
-        addX >>= 0; // toInt 
-        addY >>= 0; // toInt
 
         // scroll left
-        if (multiplyX && addX) {
+        if (multiplyX) {
             var lastLeft = elem.scrollLeft;
             elem.scrollLeft += addX;
             
             // scroll left failed (edge)
-            if (elem.scrollLeft === lastLeft) {
+            if (addX >> 0 && elem.scrollLeft === lastLeft) {
                 multiplyX = 0;
             }
         }
         
         // scroll top
-        if (multiplyY && addY) {       
+        if (multiplyY) {       
             var lastTop = elem.scrollTop;
             elem.scrollTop += addY;
             
             // scroll top failed (edge)
-            if (elem.scrollTop === lastTop) {
+            if (addY >> 0 && elem.scrollTop === lastTop) {
                 multiplyY = 0;
             }            
         }
