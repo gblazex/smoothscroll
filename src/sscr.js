@@ -58,7 +58,6 @@ onMessage.addListener(function (settings) {
     keyboardsupport = (settings.keyboardsupport == "true");
     arrowscroll     = +settings.arrscroll;
     
-    scrolls = setupScrolls();
     computePulseScale();
     
     // it seems that sometimes settings come late
@@ -109,34 +108,6 @@ function initTest() {
 }
 
 /**
- * Fills up the scrolls array with easing values.
- * Uses pulse to make it smooth.
- */
-function setupScrolls() {
-
-    scrolls = [];
-
-    var last = 0;
-    var frames = Math.floor(framerate * animtime / 1000);
-
-    for (var i = 0; i < frames; i++) {
-        // scroll is [0, 1]
-        var scroll = (i + 1) / frames;
-        // transform [0, 1] -> [0, 1]:
-        if (pulseAlgorithm) {
-           scroll = pulse(scroll);
-        }
-       
-        // scale and quantize to int so our pixel difference works:
-        var iscroll = Math.floor(stepsize * scroll + 0.99);
-        scrolls.push(iscroll - last);
-        last = iscroll;
-    }
-
-    return scrolls;
-}
-
-/**
  * Sets up scrolls array, determines if frames are involved.
  */
 function init() {
@@ -150,10 +121,6 @@ function init() {
     
     initTest();
 
-    if (!scrolls) {
-      scrolls = setupScrolls();
-    }
-    
     // Checks if this script is running in a frame
     if (top && top != self) {
         frame = true;
@@ -213,8 +180,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     delay || (delay = 1000);
     directionCheck(dir);
     
-    // que contains the scroll commands
-    // [start, x, y]
+    // que contains the scroll commands [start, x, y]
     que.push([multiplyX, multiplyY, +new Date, 0]); // [x, y, start, lastpos]
         
     function step() {
