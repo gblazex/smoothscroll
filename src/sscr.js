@@ -1,5 +1,5 @@
 
-// SmoothScroll v0.9.4
+// SmoothScroll v0.9.5
 // Licensed under the terms of the MIT license.
 
 // People involved
@@ -195,6 +195,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             
             var item = que[i];
             var elapsed = now - item[start];
+            
             finished = (elapsed >= animtime);
 
             // scroll is [0, 1]
@@ -219,8 +220,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             }           
         }
         
-        addX = addX >> 0; // toInt 
-        addY = addY >> 0; // toInt 
+        addX >>= 0; // toInt 
+        addY >>= 0; // toInt 
 
         // scroll left
         if (multiplyX && addX) {
