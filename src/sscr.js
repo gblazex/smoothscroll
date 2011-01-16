@@ -49,7 +49,7 @@ chrome.extension.connect({ name: "smoothscroll" }).
 onMessage.addListener(function (settings) {
     
     // NOTE: + converts to {Number}
-    framerate = Math.max(+settings.framerate, 250);
+    framerate = Math.min(+settings.framerate, 250);
     animtime  = +settings.animtime;
     stepsize  = +settings.scrollsz;
     exclude   = settings.exclude;
@@ -202,10 +202,8 @@ function init() {
  * SCROLLING 
  ************************************************/
  
-var que = []; // Array of offsets [x, y]
-var x = 0, y = 1; // {enum}
+var que = []; 
 var pending = false;
-var last;
 
 /**
  * Pushes scroll actions to a given direction Array.
@@ -214,29 +212,51 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     
     delay || (delay = 1000);
     directionCheck(dir);
-
-    for (var i = 0; i < scrolls.length; i++) {
-        que[i] || (que[i] = [0, 0]);
-        que[i][x] += multiplyX * scrolls[i];
-        que[i][y] += multiplyY * scrolls[i];
-    }
+    
+    // que contains the scroll commands
+    // [start, x, y]
+    que.push([multiplyX, multiplyY, +new Date, 0]); // [x, y, start, lastpos]
         
     function step() {
         
-        var scroll = que.shift();
- 
-        var elapsed = +new Date - last;
-        var percent = (elapsed / delay);
-        if (percent)
-            percent = Math.max(percent - 1, 1);
-        var next = que[0] || [0,0];
+        var now = +new Date;
+        var addX = 0;
+        var addY = 0; 
+        var finished;
+        var x = 0, y = 1, start = 2, last = 3; // {enum}
+    
+        for (var i = 0; i < que.length; i++) {
             
-        var addX = scroll[x] + next[y] * percent >> 0; // toInt
-        var addY = scroll[y] + next[y] * percent >> 0; // toInt 
+            var item = que[i];
+            var elapsed = now - item[start];
+            finished = (elapsed >= animtime);
+
+            // scroll is [0, 1]
+            var scroll = finished ? 1 : elapsed / animtime;
+            // easing
+            if (pulseAlgorithm) {
+                scroll = pulse(scroll);
+            }
+            
+            // scale and quantize to int so our pixel difference works:
+            var iscroll = Math.floor(stepsize * scroll + 0.99);
+            scroll = iscroll - item[last];
+            item[last] = iscroll;
+            
+            // add this to the actual scrolling
+            addX += item[x] * scroll;
+            addY += item[y] * scroll;
+            
+            // delete and step back
+            if (finished) {
+                que.splice(i, 1); i--; 
+                continue;
+            }           
+        }
         
-        next[x] *=  (1 - percent);
-        next[y] *=  (1 - percent);
-               
+        addX = addX >> 0; // toInt 
+        addY = addY >> 0; // toInt 
+
         // scroll left
         if (multiplyX && addX) {
             var lastLeft = elem.scrollLeft;
@@ -265,17 +285,14 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         }
         
         if (que.length) { 
-            last = +new Date;
             setTimeout(step, delay / framerate + 1);
         } else { 
             pending = false;
-            last = 0;
         }
     }
     
     // start a new que of actions
     if (!pending) {
-        last = +new Date;
         setTimeout(step, 0);
         pending = true;
     }
