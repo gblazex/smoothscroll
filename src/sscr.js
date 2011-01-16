@@ -204,14 +204,14 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             
             finished = (elapsed >= animtime);
 
-            // scroll is [0, 1]
+            // scroll position: [0, 1]
             var scroll = (finished) ? 1 : elapsed / animtime;
-            // easing
+            // easing [optional]
             if (pulseAlgorithm) {
                 scroll = pulse(scroll);
             }
             
-            // scale and quantize to int so our pixel difference works:
+            // only need the difference
             scroll -= item[last];
             item[last] += scroll;
             
@@ -294,7 +294,6 @@ function wheel(event) {
     deltaX = event.wheelDeltaX || 0;
     deltaY = event.wheelDeltaY || 0;
 
-    // normalize deltas
     // synaptics seems to send 1 sometimes, 
     // and 120 other times (fix)
     if (Math.abs(deltaX) < 1.2) {
