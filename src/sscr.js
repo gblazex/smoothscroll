@@ -184,7 +184,12 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     // contains the scroll commands [ x, y, start, last ]
     que.push([multiplyX, multiplyY, +new Date, 0]);
         
-    function step() {
+    // don't act if there's a pending queue
+    if (pending) {
+        return;
+    }
+            
+    var step = function() {
         
         var now = +new Date;
         var addX = 0;
@@ -259,10 +264,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     }
     
     // start a new que of actions
-    if (!pending) {
-        setTimeout(step, 0);
-        pending = true;
-    }
+    setTimeout(step, 0);
+    pending = true;
 }
 
 
