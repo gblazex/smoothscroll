@@ -49,7 +49,7 @@ chrome.extension.connect({ name: "smoothscroll" }).
 onMessage.addListener(function (settings) {
     
     // NOTE: + converts to {Number}
-    framerate = +settings.framerate;
+    framerate = Math.max(+settings.framerate, 250);
     animtime  = +settings.animtime;
     stepsize  = +settings.scrollsz;
     exclude   = settings.exclude;
@@ -205,6 +205,7 @@ function init() {
 var que = []; // Array of offsets [x, y]
 var x = 0, y = 1; // {enum}
 var pending = false;
+var last;
 
 /**
  * Pushes scroll actions to a given direction Array.
@@ -219,13 +220,23 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         que[i][x] += multiplyX * scrolls[i];
         que[i][y] += multiplyY * scrolls[i];
     }
-    
+        
     function step() {
         
         var scroll = que.shift();
-        var addX = scroll[x] >> 0; // toInt
-        var addY = scroll[y] >> 0; // toInt           
+ 
+        var elapsed = +new Date - last;
+        var percent = (elapsed / delay);
+        if (percent)
+            percent = Math.max(percent - 1, 1);
+        var next = que[0] || [0,0];
+            
+        var addX = scroll[x] + next[y] * percent >> 0; // toInt
+        var addY = scroll[y] + next[y] * percent >> 0; // toInt 
         
+        next[x] *=  (1 - percent);
+        next[y] *=  (1 - percent);
+               
         // scroll left
         if (multiplyX && addX) {
             var lastLeft = elem.scrollLeft;
@@ -254,14 +265,17 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         }
         
         if (que.length) { 
+            last = +new Date;
             setTimeout(step, delay / framerate + 1);
         } else { 
             pending = false;
+            last = 0;
         }
     }
     
     // start a new que of actions
     if (!pending) {
+        last = +new Date;
         setTimeout(step, 0);
         pending = true;
     }
