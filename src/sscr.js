@@ -212,9 +212,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             }
             
             // scale and quantize to int so our pixel difference works:
-            var iscroll = Math.floor(stepsize * scroll + 0.99);
-            scroll = iscroll - item[last];
-            item[last] = iscroll;
+            scroll -= item[last];
+            item[last] += scroll;
             
             // add this to the actual scrolling
             addX += item[x] * scroll;
@@ -227,7 +226,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         }
         
         addX >>= 0; // toInt 
-        addY >>= 0; // toInt 
+        addY >>= 0; // toInt
 
         // scroll left
         if (multiplyX && addX) {
@@ -263,7 +262,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         }
     }
     
-    // start a new que of actions
+    // start a new queue of actions
     setTimeout(step, 0);
     pending = true;
 }
@@ -301,11 +300,11 @@ function wheel(event) {
     // normalize deltas
     // synaptics seems to send 1 sometimes, 
     // and 120 other times (fix)
-    if (Math.abs(deltaX) > 1.2) {
-        deltaX /= 120;
+    if (Math.abs(deltaX) < 1.2) {
+        deltaX *= 120;
     }
-    if (Math.abs(deltaY) > 1.2) {
-        deltaY /= 120;
+    if (Math.abs(deltaY) < 1.2) {
+        deltaY *= 120;
     }
   
     var dir = (deltaY > 0) ? "up" : "down";
@@ -378,7 +377,7 @@ function keydown(event) {
         default:
             return true; // a key we don"t care about
     }
-    scale /= stepsize;
+
     scrollArray(elem, dir, 0, scale);
     event.preventDefault();
 }
