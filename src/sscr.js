@@ -49,7 +49,7 @@ chrome.extension.connect({ name: "smoothscroll" }).
 onMessage.addListener(function (settings) {
     
     // NOTE: + converts to {Number}
-    framerate = Math.min(+settings.framerate, 250);
+    framerate = +settings.framerate;
     animtime  = +settings.animtime;
     stepsize  = +settings.scrollsz;
     exclude   = settings.exclude;
