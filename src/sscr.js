@@ -155,7 +155,7 @@ function init() {
     }
     
     // Checks if this script is running in a frame
-    if (top != self) {
+    if (top && top != self) {
         frame = true;
         if (docel.scrollHeight <= docel.clientHeight + 10) {
             noscrollframe = true;
@@ -168,7 +168,7 @@ function init() {
      * on some pages. e.g.: html, body { height: 100% }
      */
     else if (body.scrollHeight > windowHeight &&
-            (body.offsetHeight === windowHeight || htmlHeight === windowHeight)) {
+            (body.offsetHeight <= windowHeight || htmlHeight <= windowHeight)) {
             
         var underlay = document.createElement("div");
         underlay.setAttribute( "style",
