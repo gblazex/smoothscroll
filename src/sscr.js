@@ -180,8 +180,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     delay || (delay = 1000);
     directionCheck(dir);
     
-    // que contains the scroll commands [start, x, y]
-    que.push([multiplyX, multiplyY, +new Date, 0]); // [x, y, start, lastpos]
+    // contains the scroll commands [ x, y, start, last ]
+    que.push([multiplyX, multiplyY, +new Date, 0]);
         
     function step() {
         
@@ -198,7 +198,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             finished = (elapsed >= animtime);
 
             // scroll is [0, 1]
-            var scroll = finished ? 1 : elapsed / animtime;
+            var scroll = (finished) ? 1 : elapsed / animtime;
             // easing
             if (pulseAlgorithm) {
                 scroll = pulse(scroll);
@@ -215,8 +215,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             
             // delete and step back
             if (finished) {
-                que.splice(i, 1); i--; 
-                continue;
+                que.splice(i, 1); i--;
             }           
         }
         
