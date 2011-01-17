@@ -1,5 +1,5 @@
 
-// SmoothScroll v0.9.5
+// SmoothScroll v0.9.6
 // Licensed under the terms of the MIT license.
 
 // People involved
