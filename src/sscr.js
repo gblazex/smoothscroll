@@ -181,8 +181,14 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     delay || (delay = 1000);
     directionCheck(dir);
     
-    // contains the scroll commands [ x, y, start, last ]
-    que.push([multiplyX, multiplyY, +new Date, 0]);
+    // push a scroll command
+    que.push({
+        x: multiplyX, 
+        y: multiplyY, 
+        lastX: 0,
+        lastY: 0, 
+        start: +new Date
+    });
         
     // don't act if there's a pending queue
     if (pending) {
@@ -192,34 +198,38 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     var step = function() {
         
         var now = +new Date;
-        var addX = 0;
-        var addY = 0; 
+        var totalX = 0;
+        var totalY = 0; 
         var finished;
-        var x = 0, y = 1, start = 2, last = 3; // {enum}
     
         for (var i = 0; i < que.length; i++) {
             
             var item = que[i];
-            var elapsed = now - item[start];
+            var elapsed = now - item.start;
             
             finished = (elapsed >= animtime);
-
+            
             // scroll position: [0, 1]
             var scroll = (finished) ? 1 : elapsed / animtime;
+            
             // easing [optional]
             if (pulseAlgorithm) {
                 scroll = pulse(scroll);
             }
             
             // only need the difference
-            scroll -= item[last];
-            item[last] += scroll;
+            var scrollX = (item.x * scroll - item.lastX) >> 0;
+            var scrollY = (item.y * scroll - item.lastY) >> 0;
             
-            // add this to the actual scrolling
-            addX += item[x] * scroll;
-            addY += item[y] * scroll;
+            // add this to the total scrolling
+            totalX += scrollX;
+            totalY += scrollY;            
             
-            // delete and step back
+            // update last values
+            item.lastX += scrollX;
+            item.lastY += scrollY;
+        
+            // delete and step back if it's over
             if (finished) {
                 que.splice(i, 1); i--;
             }           
@@ -228,10 +238,10 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         // scroll left
         if (multiplyX) {
             var lastLeft = elem.scrollLeft;
-            elem.scrollLeft += addX;
+            elem.scrollLeft += totalX;
             
             // scroll left failed (edge)
-            if (addX >> 0 && elem.scrollLeft === lastLeft) {
+            if (totalX >> 0 && elem.scrollLeft === lastLeft) {
                 multiplyX = 0;
             }
         }
@@ -239,10 +249,10 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         // scroll top
         if (multiplyY) {       
             var lastTop = elem.scrollTop;
-            elem.scrollTop += addY;
+            elem.scrollTop += totalY;
             
             // scroll top failed (edge)
-            if (addY >> 0 && elem.scrollTop === lastTop) {
+            if (totalY >> 0 && elem.scrollTop === lastTop) {
                 multiplyY = 0;
             }            
         }
