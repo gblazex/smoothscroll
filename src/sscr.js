@@ -170,11 +170,11 @@ function init() {
  * SCROLLING 
  ************************************************/
  
-var que = []; 
+var que = [];
 var pending = false;
 
 /**
- * Pushes scroll actions to a given direction Array.
+ * Pushes scroll actions to the scrolling queue.
  */
 function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     
@@ -200,14 +200,12 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         var now = +new Date;
         var totalX = 0;
         var totalY = 0; 
-        var finished;
     
         for (var i = 0; i < que.length; i++) {
             
             var item = que[i];
-            var elapsed = now - item.start;
-            
-            finished = (elapsed >= animtime);
+            var elapsed  = now - item.start;
+            var finished = (elapsed >= animtime);
             
             // scroll position: [0, 1]
             var scroll = (finished) ? 1 : elapsed / animtime;
