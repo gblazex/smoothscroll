@@ -208,16 +208,16 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             var finished = (elapsed >= animtime);
             
             // scroll position: [0, 1]
-            var scroll = (finished) ? 1 : elapsed / animtime;
+            var position = (finished) ? 1 : elapsed / animtime;
             
             // easing [optional]
             if (pulseAlgorithm) {
-                scroll = pulse(scroll);
+                position = pulse(position);
             }
             
             // only need the difference
-            var scrollX = (item.x * scroll - item.lastX) >> 0;
-            var scrollY = (item.y * scroll - item.lastY) >> 0;
+            var scrollX = (item.x * position - item.lastX) >> 0;
+            var scrollY = (item.y * position - item.lastY) >> 0;
             
             // add this to the total scrolling
             totalX += scrollX;
