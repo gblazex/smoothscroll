@@ -302,8 +302,9 @@ function wheel(event) {
     deltaX = event.wheelDeltaX || 0;
     deltaY = event.wheelDeltaY || 0;
 
-    // synaptics seems to send 1 sometimes, 
-    // and 120 other times (fix)
+    // scale by step size
+    // delta is 120 most of the time
+    // synaptics seems to send 1 sometimes
     if (Math.abs(deltaX) > 1.2) {
         deltaX *= stepsize / 120;
     }
