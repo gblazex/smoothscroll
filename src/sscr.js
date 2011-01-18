@@ -304,13 +304,13 @@ function wheel(event) {
 
     // synaptics seems to send 1 sometimes, 
     // and 120 other times (fix)
-    if (Math.abs(deltaX) < 1.2) {
-        deltaX *= 120;
+    if (Math.abs(deltaX) > 1.2) {
+        deltaX *= stepsize / 120;
     }
-    if (Math.abs(deltaY) < 1.2) {
-        deltaY *= 120;
+    if (Math.abs(deltaY) > 1.2) {
+        deltaY *= stepsize / 120;
     }
-  
+    
     var dir = (deltaY > 0) ? "up" : "down";
     scrollArray(elem, dir, -deltaX, -deltaY);
     event.preventDefault();
