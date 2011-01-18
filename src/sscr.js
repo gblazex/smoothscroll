@@ -301,6 +301,10 @@ function wheel(event) {
 
     deltaX = event.wheelDeltaX || 0;
     deltaY = event.wheelDeltaY || 0;
+    
+    if (!deltaX && !deltaY) {
+        deltaY = event.wheelDelta || 0;
+    }
 
     // scale by step size
     // delta is 120 most of the time
