@@ -31,9 +31,6 @@ var arrowscroll     = 50; // [px]
 var exclude = "";
 
 // Other Variables
-var scrolls;
-var deltaX = 0;
-var deltaY = 0;
 var direction = "down";
 var initdone  = false;
 var activeElement;
@@ -299,8 +296,8 @@ function wheel(event) {
         return true;
     }
 
-    deltaX = event.wheelDeltaX || 0;
-    deltaY = event.wheelDeltaY || 0;
+    var deltaX = event.wheelDeltaX || 0;
+    var deltaY = event.wheelDeltaY || 0;
     
     if (!deltaX && !deltaY) {
         deltaY = event.wheelDelta || 0;
