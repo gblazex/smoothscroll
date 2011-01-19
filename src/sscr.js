@@ -182,8 +182,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
     que.push({
         x: multiplyX, 
         y: multiplyY, 
-        lastX: 0,
-        lastY: 0, 
+        lastX: (multiplyX < 0) ? 0.99 : -0.99,
+        lastY: (multiplyY < 0) ? 0.99 : -0.99, 
         start: +new Date
     });
         
@@ -242,7 +242,8 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         }
         
         // scroll top
-        if (multiplyY) {       
+        if (multiplyY) {
+        	console.log(totalY);///
             var lastTop = elem.scrollTop;
             elem.scrollTop += totalY;
             
@@ -299,6 +300,7 @@ function wheel(event) {
     var deltaX = event.wheelDeltaX || 0;
     var deltaY = event.wheelDeltaY || 0;
     
+    // use wheelDelta if deltaX/Y is not available
     if (!deltaX && !deltaY) {
         deltaY = event.wheelDelta || 0;
     }
