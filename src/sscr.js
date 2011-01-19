@@ -243,7 +243,6 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
         
         // scroll top
         if (multiplyY) {
-        	console.log(totalY);///
             var lastTop = elem.scrollTop;
             elem.scrollTop += totalY;
             
