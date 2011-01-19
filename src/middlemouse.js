@@ -12,12 +12,13 @@
 var img = document.createElement("div"); // img at the reference point
 var scrolling = false; // guards one phase
 var enabled   = false; // from settings
-var framerate = 100;
+var framerate = 200;
 
 // get global settings
 chrome.extension.connect({ name: "smoothscroll"}).
 onMessage.addListener(function (settings) {
-    enabled = (settings.middlemouse == "true");
+    enabled   = (settings.middlemouse == "true");
+    framerate = +settings.framerate + 50;
 });   
  
 /**
@@ -81,10 +82,18 @@ function mousedown(e) {
     var elem = overflowingAncestor(e.target);
     
     // animation loop
+    var last = +new Date;
     var delay = 1000 / framerate;
-    var interval = setInterval(function(){
-        elem.scrollLeft += (speedX * delay) >> 0;
-        elem.scrollTop  += (speedY * delay) >> 0;
+    var finished = false;
+    setTimeout(function step(){
+        var now = +new Date;
+        var elapsed = now - last;
+        elem.scrollLeft += (speedX * elapsed) >> 0;
+        elem.scrollTop  += (speedY * elapsed) >> 0;
+        last = now;
+        if (!finished) {
+            setTimeout(step, delay);
+        }
     }, delay);
     
     var first = true;
@@ -103,9 +112,9 @@ function mousedown(e) {
         removeEvent("mousedown", remove);
         removeEvent("mouseup", remove);
         removeEvent("keydown", remove);
-        clearInterval(interval);
         document.body.removeChild(img);
         scrolling = false;
+        finished  = true;
     }
     
     addEvent("mousemove", mousemove);
