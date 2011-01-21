@@ -34,11 +34,9 @@ var exclude = "";
 var direction = "down";
 var initdone  = false;
 var activeElement;
+var root;
 
-var key = { 
-  left: 37, up: 38, right: 39, down: 40, spacebar: 32, 
-  pageup: 33, pagedown: 34, end: 35, home: 36 
-};
+var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
 
 /***********************************************
@@ -114,8 +112,11 @@ function init() {
   
     var body  = document.body;
     var docel = document.documentElement;
+    var windowHeight = window.innerHeight; 
     var htmlHeight   = docel.offsetHeight;
-    var windowHeight = window.innerHeight;   
+    
+    // check compat mode for root element
+    root = (document.compatMode.indexOf('CSS') >= 0) ?  docel : body;
 
     activeElement = body;
     initTest();
@@ -345,14 +346,14 @@ function keydown(event) {
       return true;
     }
     
-    var scaleX, scaleY, dir, shift;
+    var dir, shift, scaleX = 0, scaleY = 0;
     var elem = overflowingAncestor(activeElement);
     var clientHeight = elem.clientHeight;
 
     if (elem == document.body) {
         clientHeight = window.innerHeight;
     }
-    
+
     switch (event.keyCode) {
         case key.up:
             scaleY = -arrowscroll;
@@ -445,8 +446,7 @@ function overflowingAncestor(el) {
 }
 
 function noScrollCheck() {
-    var html = document.documentElement;
-    noscrollframe = (html.scrollHeight <= html.clientHeight + 10);
+    noscrollframe = (root.scrollHeight <= root.clientHeight + 10);
 }
 
 /***********************************************
