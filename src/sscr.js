@@ -110,7 +110,7 @@ function init() {
     var body = document.body;
     var html = document.documentElement;
     var windowHeight = window.innerHeight; 
-    var htmlHeight   = html.offsetHeight;
+    var scrollHeight = body.scrollHeight;
     
     // check compat mode for root element
     root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
@@ -130,25 +130,25 @@ function init() {
      * the content does not trigger the onmousewheel event
      * on some pages. e.g.: html, body { height: 100% }
      */
-    else if (body.scrollHeight > windowHeight &&
-            (body.offsetHeight <= windowHeight || htmlHeight <= windowHeight)) {
+    else if (scrollHeight > windowHeight &&
+            (body.offsetHeight <= windowHeight || 
+             html.offsetHeight <= windowHeight)) {
 
         var underlay = document.createElement("div");
         underlay.setAttribute( "style",
             "z-index: -1; position: absolute; top: 0; left: 0; " +
-            "width: 100%; height: " + body.scrollHeight + "px;" );    
+            "width: 100%; height: " + scrollHeight + "px;" );    
         body.appendChild(underlay);
 
-        var scrollHeight = body.scrollHeight;
         var pending = false;
         
-        // DOMChange delayed
+        // DOMChange (throttle)
         var refresh = function() {
             if (!pending && scrollHeight != body.scrollHeight) {
                 pending = true; // add a new pending action
                 setTimeout(function(){
-                    underlay.style.height = body.scrollHeight + "px";
                     scrollHeight = body.scrollHeight; 
+                    underlay.style.height = scrollHeight + "px";
                     pending = false;
                 }, 1000); // act rarely to stay fast
             }
