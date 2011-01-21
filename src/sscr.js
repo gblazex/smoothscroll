@@ -107,13 +107,13 @@ function initTest() {
  */
 function init() {
   
-    var body  = document.body;
-    var docel = document.documentElement;
+    var body = document.body;
+    var html = document.documentElement;
     var windowHeight = window.innerHeight; 
-    var htmlHeight   = docel.offsetHeight;
+    var htmlHeight   = html.offsetHeight;
     
     // check compat mode for root element
-    root = (document.compatMode.indexOf('CSS') >= 0) ?  docel : body;
+    root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
     activeElement = body;
     
     initTest();
