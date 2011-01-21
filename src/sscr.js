@@ -107,6 +107,9 @@ function initTest() {
  */
 function init() {
   
+    if (!document.body) return;
+    if (document.domain === "acid3.acidtests.org") return;
+  
     var body = document.body;
     var html = document.documentElement;
     var windowHeight = window.innerHeight; 
@@ -117,8 +120,6 @@ function init() {
     activeElement = body;
     
     initTest();
-    
-    if (document.domain === "acid3.acidtests.org") return;
 
     // Checks if this script is running in a frame
     if (top != self) {
@@ -285,12 +286,10 @@ function wheel(event) {
     
     var target = event.target;
     var elem   = overflowingAncestor(target);
-    var scrollRoot  = (elem == document.body) ? root : elem;
-    var overflowing = (scrollRoot.scrollHeight > scrollRoot.clientHeight + 10);
     
     // use default if there's no overflowing
     // element or default action is prevented    
-    if (!elem || !overflowing || event.defaultPrevented ||
+    if (!elem || event.defaultPrevented ||
         isNodeName(activeElement, "embed") ||
        (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
         return true;
@@ -427,10 +426,12 @@ function directionCheck(dir) {
 }
 
 function overflowingAncestor(el) {
-    var bodyScrollHeight = document.body.scrollHeight;
+    var rootScrollHeight = root.scrollHeight;
     do {
-        if (bodyScrollHeight === el.scrollHeight) {
-            return document.body;
+        if (rootScrollHeight === el.scrollHeight) {
+            if (root.clientHeight + 10 < rootScrollHeight) {
+                return document.body; // scrolling root in WebKit
+            }
         }
         else if (el.clientHeight + 10 < el.scrollHeight) {
             overflow = getComputedStyle(el, "").getPropertyValue("overflow");
