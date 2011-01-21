@@ -85,6 +85,7 @@ function mousedown(e) {
     var last = +new Date;
     var delay = 1000 / framerate;
     var finished = false;
+    
     setTimeout(function step(){
         var now = +new Date;
         var elapsed = now - last;

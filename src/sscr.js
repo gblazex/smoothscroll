@@ -122,9 +122,7 @@ function init() {
     // Checks if this script is running in a frame
     if (top != self) {
         frame = true;
-        if (docel.scrollHeight <= docel.clientHeight + 10) {
-            noscrollframe = true;
-        }
+        noScrollCheck();
     }
 
     /**
@@ -236,7 +234,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             elem.scrollLeft += totalX;
             
             // scroll left failed (edge)
-            if (totalX >> 0 && elem.scrollLeft === lastLeft) {
+            if (totalX && elem.scrollLeft === lastLeft) {
                 multiplyX = 0;
             }
         }
@@ -247,7 +245,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
             elem.scrollTop += totalY;
             
             // scroll top failed (edge)
-            if (totalY >> 0 && elem.scrollTop === lastTop) {
+            if (totalY && elem.scrollTop === lastTop) {
                 multiplyY = 0;
             }            
         }
@@ -284,6 +282,8 @@ function wheel(event) {
     if (!initdone) {
         init();
     }
+    
+    noScrollCheck();
     
     var target = event.target;
     
@@ -435,6 +435,10 @@ function overflowingAncestor(el) {
     } while (el = el.parentNode);
 }
 
+function noScrollCheck() {
+    var html = document.documentElement;
+    noscrollframe = (html.scrollHeight <= html.clientHeight + 10);
+}
 
 /***********************************************
  * PULSE
