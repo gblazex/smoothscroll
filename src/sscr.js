@@ -284,12 +284,13 @@ function wheel(event) {
     }
     
     var target = event.target;
-    var noScrollFrame = (root.scrollHeight <= root.clientHeight + 10);
-       
+    var elem   = overflowingAncestor(target);
+    var scrollRoot  = (elem == document.body) ? root : elem;
+    var overflowing = (scrollRoot.scrollHeight > scrollRoot.clientHeight + 10);
+    
     // use default if there's no overflowing
-    // element or default action is prevented
-    var elem = overflowingAncestor(target); 
-    if (!elem || noScrollFrame || event.defaultPrevented ||
+    // element or default action is prevented    
+    if (!elem || !overflowing || event.defaultPrevented ||
         isNodeName(activeElement, "embed") ||
        (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
         return true;
