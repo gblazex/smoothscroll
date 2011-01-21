@@ -35,7 +35,10 @@ var direction = "down";
 var initdone  = false;
 var activeElement;
 
-var key = { up: 38, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
+var key = { 
+  left: 37, up: 38, right: 39, down: 40, spacebar: 32, 
+  pageup: 33, pagedown: 34, end: 35, home: 36 
+};
 
 
 /***********************************************
@@ -342,7 +345,7 @@ function keydown(event) {
       return true;
     }
     
-    var scale, dir, shift;
+    var scaleX, scaleY, dir, shift;
     var elem = overflowingAncestor(activeElement);
     var clientHeight = elem.clientHeight;
 
@@ -352,40 +355,46 @@ function keydown(event) {
     
     switch (event.keyCode) {
         case key.up:
-            scale = -arrowscroll;
+            scaleY = -arrowscroll;
             dir = "up"; 
             break;
         case key.down:
-            scale = arrowscroll;
+            scaleY = arrowscroll;
             dir = "down"; 
-            break;
+            break;         
         case key.spacebar: // (+ shift)
             shift = event.shiftKey ? 1 : -1;
-            scale = -shift * clientHeight * 0.9;
+            scaleY = -shift * clientHeight * 0.9;
             dir = (shift > 0) ? "up" : "down"; 
             break;
         case key.pageup:
-            scale = -clientHeight * 0.9;
+            scaleY = -clientHeight * 0.9;
             dir = "up"; 
             break;
         case key.pagedown:
-            scale = clientHeight * 0.9;
+            scaleY = clientHeight * 0.9;
             dir = "down"; 
             break;
         case key.home:
-            scale = -elem.scrollTop;
+            scaleY = -elem.scrollTop;
             dir = "up"; 
             break;
         case key.end:
             var damt = elem.scrollHeight - elem.scrollTop - clientHeight;
-            scale = (damt > 0) ? damt+10 : 0;
+            scaleY = (damt > 0) ? damt+10 : 0;
             dir = "down"; 
             break;
+        case key.left:
+            scaleX = -arrowscroll;
+            break;
+        case key.right:
+            scaleX = arrowscroll;
+            break;            
         default:
             return true; // a key we don"t care about
     }
 
-    scrollArray(elem, dir, 0, scale);
+    scrollArray(elem, dir, scaleX, scaleY);
     event.preventDefault();
 }
 
