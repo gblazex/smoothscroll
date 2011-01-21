@@ -238,7 +238,7 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
                 multiplyX = 0;
             }
         }
-        
+
         // scroll top
         if (multiplyY) {
             var lastTop = elem.scrollTop;
