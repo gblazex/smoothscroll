@@ -7,10 +7,6 @@
 // - Patrick Brunner (patrickb1991@gmail.com)
 // - Michael Herf: Pulse Algorithm
 
-// Frame Variables
-var frame         = false;
-var noscrollframe = false;
-
 // Scroll Variables (tweakable)
 var framerate = 150; // [Hz]
 var animtime  = 400; // [px]
@@ -31,6 +27,7 @@ var arrowscroll     = 50; // [px]
 var exclude = "";
 
 // Other Variables
+var frame = false;
 var direction = "down";
 var initdone  = false;
 var activeElement;
@@ -117,8 +114,8 @@ function init() {
     
     // check compat mode for root element
     root = (document.compatMode.indexOf('CSS') >= 0) ?  docel : body;
-
     activeElement = body;
+    
     initTest();
     
     if (document.domain === "acid3.acidtests.org") return;
@@ -126,7 +123,6 @@ function init() {
     // Checks if this script is running in a frame
     if (top != self) {
         frame = true;
-        noScrollCheck();
     }
 
     /**
@@ -287,14 +283,13 @@ function wheel(event) {
         init();
     }
     
-    noScrollCheck();
-    
     var target = event.target;
-    
+    var noScrollFrame = (root.scrollHeight <= root.clientHeight + 10);
+       
     // use default if there's no overflowing
     // element or default action is prevented
     var elem = overflowingAncestor(target); 
-    if (!elem || noscrollframe || event.defaultPrevented ||
+    if (!elem || noScrollFrame || event.defaultPrevented ||
         isNodeName(activeElement, "embed") ||
        (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
         return true;
@@ -445,9 +440,6 @@ function overflowingAncestor(el) {
     } while (el = el.parentNode);
 }
 
-function noScrollCheck() {
-    noscrollframe = (root.scrollHeight <= root.clientHeight + 10);
-}
 
 /***********************************************
  * PULSE
