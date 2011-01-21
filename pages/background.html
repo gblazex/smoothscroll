@@ -46,9 +46,7 @@ function init() {
   /**
    * NOTE: It's easier if we give an example 
    * how to format the excluded pages list,
-   * plus twitter and msn are good examples.
    */
-
 
   var store = localStorage;
 
@@ -59,6 +57,7 @@ function init() {
 
   // If updated do something
   if (store.version != version) {
+
     store.version = version;
 
     if (store.framerate == "50") {
