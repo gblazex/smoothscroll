@@ -429,7 +429,7 @@ function overflowingAncestor(el) {
     var rootScrollHeight = root.scrollHeight;
     do {
         if (rootScrollHeight === el.scrollHeight) {
-            if (root.clientHeight + 10 < rootScrollHeight) {
+            if (!frame || root.clientHeight + 10 < rootScrollHeight) {
                 return document.body; // scrolling root in WebKit
             }
         }
