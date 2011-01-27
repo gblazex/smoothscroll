@@ -30,6 +30,7 @@ var exclude = "";
 var frame = false;
 var direction = { x: 0, y: 0 };
 var initdone  = false;
+var fixedback = true;
 var activeElement;
 var root;
 
@@ -52,6 +53,7 @@ onMessage.addListener(function (settings) {
     pulseScale      = +settings.pulseScale;
     keyboardsupport = (settings.keyboardsupport == "true");
     arrowscroll     = +settings.arrscroll;
+    fixedback       = (settings.fixedback == "true");
     
     // it seems that sometimes settings come late
     // and we need to test again for excluded pages
@@ -139,6 +141,9 @@ function init() {
         var s = document.createElement("style");
         s.innerHTML = ".iu { visibility: hidden }";
         document.body.appendChild(s);
+    }
+    if (!fixedback) {
+        body.style.backgroundAttachment = "scroll";
     }
 }
 

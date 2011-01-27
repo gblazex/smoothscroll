@@ -128,7 +128,8 @@ var options = [
   'pulseAlgorithm',
   'pulseScale',
   'keyboardsupport',
-  'exclude'
+  'exclude',
+  'fixedback'
 ];
 
 function byId(id) { return document.getElementById(id); }
@@ -159,7 +160,7 @@ function hide(elem, newop) {
  */
 function init() {
     options.forEach(function(key, i) {
-        if (/keyboardsupport|middlemouse|pulseAlgorithm/.test(key)) {
+        if (/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
             byId(key).checked = (localStorage[key] == "true");
         } else if (localStorage[key]) {
             byId(key).value = localStorage[key];
@@ -177,7 +178,7 @@ function save() {
     // save options to the local storage
     options.forEach(function(key, i) {
         // <input type="text"> and <textarea>
-        if (!/keyboardsupport|middlemouse|pulseAlgorithm/.test(key)) {
+        if (!/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
             elem = byId(key);
             opt = elem.value;
             // every <input> 
@@ -190,7 +191,7 @@ function save() {
                }
             }
             localStorage[key] = opt;
-        } else { // keyboardsupport | middlemouse | pulseAlgorithm
+        } else { // not a checkbox
             localStorage[key] = byId(key).checked;
         }
     });
@@ -276,23 +277,22 @@ window.save = save;
   <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 400</i></span></td>
   <td class="note" title="higher number stretches animation">(<b>how</b> quick)</td>
  </tr>
-</table>
-<br>
-
-<input type="checkbox" id="middlemouse"><label for="middlemouse" title="scroll smooth with the middle mouse button">Enable <b>middle mouse</b> scrolling</label><br><br>
-
-<input type="checkbox" id="pulseAlgorithm"><label for="pulseAlgorithm" title="adds easing to the animations">Enable <b>pulse algorithm</b></label><br><br>
-
-<table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 6px">
  <tr>
   <td class="setting-name"><label for="pulseScale" title="it affects how long the decceleration part is">Pulse Scale</label></td>
   <td><input id="pulseScale" type="text" size="1" maxlength="2"></td>
   <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 8</i></span></td>
   <td class="note" title="it affects how long the decceleration part is">(<b>ratio </b>of "tail" to "acceleration")</td>
- </tr>
+</tr>
 </table>
+<br>
 
-<br><br>
+<input type="checkbox" id="pulseAlgorithm"><label for="pulseAlgorithm" title="adds easing to the animations">Enable <b>pulse algorithm</b></label><br><br>
+
+<input type="checkbox" id="middlemouse"><label for="middlemouse" title="scroll smooth with the middle mouse button">Enable <b>middle mouse</b> scrolling</label><br><br>
+
+<input type="checkbox" id="fixedback"><label for="fixedback" title="disabling it improves performance on sites like twitter.com">Enable <b>fixed backgrounds</b></label><br><br>
+
+<br>
 <span style="font-size: 16px; color: #00CCFF"><b>Keyboard Settings</b></span>
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
 <input type="checkbox" id="keyboardsupport"><label for="keyboardsupport">Enable keyboard support</label><br><br>
