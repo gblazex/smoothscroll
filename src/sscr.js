@@ -380,6 +380,51 @@ function mousedown(event) {
 
 
 /***********************************************
+ * OVERFLOW
+ ***********************************************/
+ 
+var cache = {}; // cleared out every once in while
+setInterval(function(){ cache = {}; }, 10 * 1000);
+
+var uniqueID = (function() {
+    var i = 0;
+    return function (el) {
+        return el.uniqueID || (el.uniqueID = i++);
+    };
+})();
+
+function setCache(elems, overflowing) {
+    for (var i = elems.length; i--;) {
+        var uid = uniqueID(elems[i]);
+        cache[uid] = overflowing;
+    }
+    return overflowing;
+}
+
+function overflowingAncestor(el) {
+    var elems = [];
+    var rootScrollHeight = root.scrollHeight;
+    do {
+        var cached = cache[uniqueID(el)];
+        if (cached) {
+            return setCache(elems, cached);
+        }
+        elems.push(el);
+        if (rootScrollHeight === el.scrollHeight) {
+            if (!frame || root.clientHeight + 10 < rootScrollHeight) {
+                return setCache(elems, document.body); // scrolling root in WebKit
+            }
+        } else if (el.clientHeight + 10 < el.scrollHeight) {
+            overflow = getComputedStyle(el, "").getPropertyValue("overflow");
+            if (overflow === "scroll" || overflow === "auto") {
+                return setCache(elems, el);
+            }
+        }
+    } while (el = el.parentNode);
+}
+
+
+/***********************************************
  * HELPERS
  ***********************************************/
 
@@ -399,55 +444,12 @@ function directionCheck(x, y) {
     x = (x > 0) ? 1 : -1;
     y = (y > 0) ? 1 : -1;
     if (direction.x !== x || direction.y !== y) {
-        que = [];
         direction.x = x;
         direction.y = y;
+        que = [];
     }
 }
 
-var cache = {};
-setInterval(function(){ cache = {}; }, 10 * 1000);
-
-var uniqueID = (function() {
-    var i = 0;
-    return function (el) {
-        return el.uniqueID || (el.uniqueID = i++);
-    };
-})();
-
-function setCache(elems, overflowing) {
-    for (var i = elems.length; i--;) {
-        var uid = uniqueID(elems[i]);
-        cache[uid] || (cache[uid] = overflowing);
-    }
-}
-
-function overflowingAncestor(el) {
-    var elems = [];
-    var rootScrollHeight = root.scrollHeight;
-    do {
-        var cached = cache[uniqueID(el)];
-        if (cached) {
-            setCache(elems, cached);
-            return cached;
-        }
-
-        elems.push(el);
-        if (rootScrollHeight === el.scrollHeight) {
-            if (!frame || root.clientHeight + 10 < rootScrollHeight) {
-                setCache(elems, document.body);
-                return document.body; // scrolling root in WebKit
-            }
-        }
-        else if (el.clientHeight + 10 < el.scrollHeight) {
-            overflow = getComputedStyle(el, "").getPropertyValue("overflow");
-            if (overflow === "scroll" || overflow === "auto") {
-                setCache(elems, el);
-                return el;
-            }
-        }
-    } while (el = el.parentNode);
-}
 
 /***********************************************
  * PULSE
