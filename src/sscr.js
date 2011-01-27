@@ -391,7 +391,8 @@ function directionCheck(x, y) {
     y = (y > 0) ? 1 : -1;
     if (direction.x !== x || direction.y !== y) {
         que = [];
-        direction = { x: x, y: y };
+        direction.x = x;
+        direction.y = y;
     }
 }
 
