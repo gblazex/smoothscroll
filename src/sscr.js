@@ -471,9 +471,6 @@ function pulse_(x) {
     return val * pulseNormalize;
 }
 
-/**
- * Viscous fluid with a pulse for part and decay for the rest
- */
 function pulse(x) {
     if (x >= 1) return 1;
     if (x <= 0) return 0;
