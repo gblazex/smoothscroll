@@ -394,10 +394,8 @@ var uniqueID = (function() {
 })();
 
 function setCache(elems, overflowing) {
-    for (var i = elems.length; i--;) {
-        var uid = uniqueID(elems[i]);
-        cache[uid] = overflowing;
-    }
+    for (var i = elems.length; i--;)
+        cache[uniqueID(elems[i])] = overflowing;
     return overflowing;
 }
 
