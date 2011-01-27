@@ -180,8 +180,8 @@ function scrollArray(elem, left, top, delay) {
     var step = function() {
         
         var now = +new Date;
-        var totalX = 0;
-        var totalY = 0; 
+        var scrollX = 0;
+        var scrollY = 0; 
     
         for (var i = 0; i < que.length; i++) {
             
@@ -202,8 +202,8 @@ function scrollArray(elem, left, top, delay) {
             var y = (item.y * position - item.lastY) >> 0;
             
             // add this to the total scrolling
-            totalX += x;
-            totalY += y;            
+            scrollX += x;
+            scrollY += y;            
             
             // update last values
             item.lastX += x;
@@ -218,10 +218,10 @@ function scrollArray(elem, left, top, delay) {
         // scroll left
         if (left) {
             var lastLeft = elem.scrollLeft;
-            elem.scrollLeft += totalX;
+            elem.scrollLeft += scrollX;
             
             // scroll left failed (edge)
-            if (totalX && elem.scrollLeft === lastLeft) {
+            if (scrollX && elem.scrollLeft === lastLeft) {
                 left = 0;
             }
         }
@@ -229,10 +229,10 @@ function scrollArray(elem, left, top, delay) {
         // scroll top
         if (top) {
             var lastTop = elem.scrollTop;
-            elem.scrollTop += totalY;
+            elem.scrollTop += scrollY;
             
             // scroll top failed (edge)
-            if (totalY && elem.scrollTop === lastTop) {
+            if (scrollY && elem.scrollTop === lastTop) {
                 top = 0;
             }            
         }
