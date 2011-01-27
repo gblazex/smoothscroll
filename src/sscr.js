@@ -158,17 +158,17 @@ var pending = false;
 /**
  * Pushes scroll actions to the scrolling queue.
  */
-function scrollArray(elem, multiplyX, multiplyY, delay) {
+function scrollArray(elem, left, top, delay) {
     
     delay || (delay = 1000);
-    directionCheck(multiplyX, multiplyY);
+    directionCheck(left, top);
     
     // push a scroll command
     que.push({
-        x: multiplyX, 
-        y: multiplyY, 
-        lastX: (multiplyX < 0) ? 0.99 : -0.99,
-        lastY: (multiplyY < 0) ? 0.99 : -0.99, 
+        x: left, 
+        y: top, 
+        lastX: (left < 0) ? 0.99 : -0.99,
+        lastY: (top  < 0) ? 0.99 : -0.99, 
         start: +new Date
     });
         
@@ -198,16 +198,16 @@ function scrollArray(elem, multiplyX, multiplyY, delay) {
             }
             
             // only need the difference
-            var scrollX = (item.x * position - item.lastX) >> 0;
-            var scrollY = (item.y * position - item.lastY) >> 0;
+            var x = (item.x * position - item.lastX) >> 0;
+            var y = (item.y * position - item.lastY) >> 0;
             
             // add this to the total scrolling
-            totalX += scrollX;
-            totalY += scrollY;            
+            totalX += x;
+            totalY += y;            
             
             // update last values
-            item.lastX += scrollX;
-            item.lastY += scrollY;
+            item.lastX += x;
+            item.lastY += y;
         
             // delete and step back if it's over
             if (finished) {
@@ -216,29 +216,29 @@ function scrollArray(elem, multiplyX, multiplyY, delay) {
         }
 
         // scroll left
-        if (multiplyX) {
+        if (left) {
             var lastLeft = elem.scrollLeft;
             elem.scrollLeft += totalX;
             
             // scroll left failed (edge)
             if (totalX && elem.scrollLeft === lastLeft) {
-                multiplyX = 0;
+                left = 0;
             }
         }
 
         // scroll top
-        if (multiplyY) {
+        if (top) {
             var lastTop = elem.scrollTop;
             elem.scrollTop += totalY;
             
             // scroll top failed (edge)
             if (totalY && elem.scrollTop === lastTop) {
-                multiplyY = 0;
+                top = 0;
             }            
         }
         
         // clean up if there's nothing left to do
-        if (!multiplyX && !multiplyY) {
+        if (!left && !top) {
             que = [];
         }
         
