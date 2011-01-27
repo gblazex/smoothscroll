@@ -145,13 +145,19 @@ function init() {
         
         // DOMChange (throttle)
         var refresh = function() {
-            if (!pending && scrollHeight != body.scrollHeight) {
-                pending = true; // add a new pending action
-                setTimeout(function(){
-                    scrollHeight = body.scrollHeight; 
-                    underlay.style.height = scrollHeight + "px";
-                    pending = false;
-                }, 1000); // act rarely to stay fast
+            if (!pending) {
+                underlay.style.display = "none";
+                if (scrollHeight != body.scrollHeight) {
+                    pending = true; // add a new pending action
+                    setTimeout(function(){
+                        underlay.style.display = "none";
+                        scrollHeight = body.scrollHeight; 
+                        underlay.style.height  = scrollHeight + "px";
+                        underlay.style.display = "";
+                        pending = false;
+                    }, 1000); // act rarely to stay fast
+                }
+                underlay.style.display = "";
             }
         }
 
@@ -275,7 +281,6 @@ function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
  
 /**
  * Mouse wheel handler.
- * NOTE: function logic should be decomposed.
  * @param {Object} event
  */
 function wheel(event) {
