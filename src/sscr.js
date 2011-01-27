@@ -28,7 +28,7 @@ var exclude = "";
 
 // Other Variables
 var frame = false;
-var direction = "down";
+var direction = { x: 0, y: 0 };
 var initdone  = false;
 var activeElement;
 var root;
@@ -149,10 +149,10 @@ var pending = false;
 /**
  * Pushes scroll actions to the scrolling queue.
  */
-function scrollArray(elem, dir, multiplyX, multiplyY, delay) {
+function scrollArray(elem, multiplyX, multiplyY, delay) {
     
     delay || (delay = 1000);
-    directionCheck(dir);
+    directionCheck(multiplyX, multiplyY);
     
     // push a scroll command
     que.push({
@@ -289,8 +289,7 @@ function wheel(event) {
         deltaY *= stepsize / 120;
     }
     
-    var dir = (deltaY > 0) ? "up" : "down";
-    scrollArray(elem, dir, -deltaX, -deltaY);
+    scrollArray(elem, -deltaX, -deltaY);
     event.preventDefault();
 }
 
@@ -317,7 +316,7 @@ function keydown(event) {
       return true;
     }
     
-    var dir, shift, scaleX = 0, scaleY = 0;
+    var shift, x = 0, y = 0;
     var elem = overflowingAncestor(activeElement);
     var clientHeight = elem.clientHeight;
 
@@ -327,46 +326,39 @@ function keydown(event) {
 
     switch (event.keyCode) {
         case key.up:
-            scaleY = -arrowscroll;
-            dir = "up"; 
+            y = -arrowscroll;
             break;
         case key.down:
-            scaleY = arrowscroll;
-            dir = "down"; 
+            y = arrowscroll;
             break;         
         case key.spacebar: // (+ shift)
             shift = event.shiftKey ? 1 : -1;
-            scaleY = -shift * clientHeight * 0.9;
-            dir = (shift > 0) ? "up" : "down"; 
+            y = -shift * clientHeight * 0.9;
             break;
         case key.pageup:
-            scaleY = -clientHeight * 0.9;
-            dir = "up"; 
+            y = -clientHeight * 0.9;
             break;
         case key.pagedown:
-            scaleY = clientHeight * 0.9;
-            dir = "down"; 
+            y = clientHeight * 0.9;
             break;
         case key.home:
-            scaleY = -elem.scrollTop;
-            dir = "up"; 
+            y = -elem.scrollTop;
             break;
         case key.end:
             var damt = elem.scrollHeight - elem.scrollTop - clientHeight;
-            scaleY = (damt > 0) ? damt+10 : 0;
-            dir = "down"; 
+            y = (damt > 0) ? damt+10 : 0;
             break;
         case key.left:
-            scaleX = -arrowscroll;
+            x = -arrowscroll;
             break;
         case key.right:
-            scaleX = arrowscroll;
+            x = arrowscroll;
             break;            
         default:
-            return true; // a key we don"t care about
+            return true; // a key we don't care about
     }
 
-    scrollArray(elem, dir, scaleX, scaleY);
+    scrollArray(elem, x, y);
     event.preventDefault();
 }
 
@@ -394,10 +386,12 @@ function isNodeName(el, tag) {
     return el.nodeName.toLowerCase() === tag.toLowerCase();
 }
 
-function directionCheck(dir) {
-    if (direction !== dir) {
+function directionCheck(x, y) {
+    x = (x > 0) ? 1 : -1;
+    y = (y > 0) ? 1 : -1;
+    if (direction.x !== x || direction.y !== y) {
         que = [];
-        direction = dir;
+        direction = { x: x, y: y };
     }
 }
 
