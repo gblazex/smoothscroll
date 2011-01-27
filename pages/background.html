@@ -69,6 +69,7 @@ function init() {
     // http://www.dustindiaz.com/about-that-slowness-on-twitter/
     if (store.exclude.indexOf("twitter.com, ") != -1) {
       store.exclude = store.exclude.replace("twitter.com, ", "");
+      store.fixedback = false;
     }
 
     // This should be replaced by an infobar once the API is ready
