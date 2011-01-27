@@ -31,7 +31,7 @@ var frame = false;
 var direction = { x: 0, y: 0 };
 var initdone  = false;
 var activeElement;
-var root;
+var root, overflowing;
 
 var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
@@ -135,6 +135,12 @@ function init() {
             (body.offsetHeight <= windowHeight || 
              html.offsetHeight <= windowHeight)) {
         root.style.height = "auto";
+    }
+    
+    if (document.URL.indexOf("mail.google.com") > -1) {
+        var s = document.createElement("style");
+        s.innerHTML = ".iu { visibility: hidden }";
+        document.body.appendChild(s);
     }
 }
 
@@ -249,7 +255,7 @@ function scrollArray(elem, multiplyX, multiplyY, delay) {
 /***********************************************
  * EVENTS
  ***********************************************/
- 
+var el;
 /**
  * Mouse wheel handler.
  * @param {Object} event
@@ -261,11 +267,11 @@ function wheel(event) {
     }
     
     var target = event.target;
-    var elem   = overflowingAncestor(target);
+    var overflowing = overflowingAncestor(target);
     
     // use default if there's no overflowing
     // element or default action is prevented    
-    if (!elem || event.defaultPrevented ||
+    if (!overflowing || event.defaultPrevented ||
         isNodeName(activeElement, "embed") ||
        (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
         return true;
@@ -289,7 +295,7 @@ function wheel(event) {
         deltaY *= stepsize / 120;
     }
     
-    scrollArray(elem, -deltaX, -deltaY);
+    scrollArray(overflowing, -deltaX, -deltaY);
     event.preventDefault();
 }
 
@@ -396,22 +402,52 @@ function directionCheck(x, y) {
     }
 }
 
+
+var cache = {};
+setInterval(function(){ cache = {}; }, 10 * 1000);
+
+var uniqueID = (function() {
+    var i = 0;
+    return function (el) {
+        return el.uniqueID || (el.uniqueID = i++);
+    };
+})();
+
+function setCache(elems, overflowing) {
+    for (var i = elems.length; i--;) {
+        var uid = uniqueID(elems[i]);
+        cache[uid] || (cache[uid] = overflowing);
+    }
+}
+
 function overflowingAncestor(el) {
+    var elems = [];
     var rootScrollHeight = root.scrollHeight;
     do {
+        var cached = cache[uniqueID(el)];
+        if (cached) {
+            setCache(elems, cached);
+            return cached;
+        }
+
+        elems.push(el);
         if (rootScrollHeight === el.scrollHeight) {
             if (!frame || root.clientHeight + 10 < rootScrollHeight) {
+                setCache(elems, document.body);
                 return document.body; // scrolling root in WebKit
             }
         }
         else if (el.clientHeight + 10 < el.scrollHeight) {
             overflow = getComputedStyle(el, "").getPropertyValue("overflow");
             if (overflow === "scroll" || overflow === "auto") {
+                setCache(elems, el);
                 return el;
             }
         }
     } while (el = el.parentNode);
 }
+
+
 
 
 /***********************************************
