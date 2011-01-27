@@ -53,8 +53,6 @@ onMessage.addListener(function (settings) {
     keyboardsupport = (settings.keyboardsupport == "true");
     arrowscroll     = +settings.arrscroll;
     
-    computePulseScale();
-    
     // it seems that sometimes settings come late
     // and we need to test again for excluded pages
     initTest();
@@ -446,7 +444,6 @@ function overflowingAncestor(el) {
     } while (el = el.parentNode);
 }
 
-
 /***********************************************
  * PULSE
  ***********************************************/
@@ -474,10 +471,6 @@ function pulse_(x) {
     return val * pulseNormalize;
 }
 
-function computePulseScale() {
-    pulseNormalize = 1 / pulse_(1);
-}
-
 /**
  * Viscous fluid with a pulse for part and decay for the rest
  */
@@ -486,7 +479,7 @@ function pulse(x) {
     if (x <= 0) return 0;
 
     if (pulseNormalize == 1) {
-        computePulseScale();
+        pulseNormalize /= pulse_(1);
     }
     return pulse_(x);
 }
