@@ -31,7 +31,7 @@ var frame = false;
 var direction = { x: 0, y: 0 };
 var initdone  = false;
 var activeElement;
-var root, overflowing;
+var root;
 
 var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
@@ -255,7 +255,7 @@ function scrollArray(elem, multiplyX, multiplyY, delay) {
 /***********************************************
  * EVENTS
  ***********************************************/
-var el;
+
 /**
  * Mouse wheel handler.
  * @param {Object} event
