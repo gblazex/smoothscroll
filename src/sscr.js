@@ -108,8 +108,7 @@ function initTest() {
 function init() {
   
     if (!document.body) return;
-    if (document.domain === "acid3.acidtests.org") return;
-  
+
     var body = document.body;
     var html = document.documentElement;
     var windowHeight = window.innerHeight; 
@@ -120,6 +119,7 @@ function init() {
     activeElement = body;
     
     initTest();
+    initdone = true;
 
     // Checks if this script is running in a frame
     if (top != self) {
@@ -134,37 +134,8 @@ function init() {
     else if (scrollHeight > windowHeight &&
             (body.offsetHeight <= windowHeight || 
              html.offsetHeight <= windowHeight)) {
-
-        var underlay = document.createElement("div");
-        underlay.setAttribute( "style",
-            "z-index: -1; position: absolute; top: 0; left: 0; " +
-            "width: 100%; height: " + scrollHeight + "px;" );    
-        body.appendChild(underlay);
-
-        var pending = false;
-        
-        // DOMChange (throttle)
-        var refresh = function() {
-            if (!pending) {
-                underlay.style.display = "none";
-                if (scrollHeight != body.scrollHeight) {
-                    pending = true; // add a new pending action
-                    setTimeout(function(){
-                        underlay.style.display = "none";
-                        scrollHeight = body.scrollHeight; 
-                        underlay.style.height  = scrollHeight + "px";
-                        underlay.style.display = "";
-                        pending = false;
-                    }, 1000); // act rarely to stay fast
-                }
-                underlay.style.display = "";
-            }
-        }
-
-        addEvent("DOMNodeInserted", refresh);
-        addEvent("DOMNodeRemoved",  refresh);
+        html.style.height = "auto";
     }
-    initdone = true;
 }
 
 
