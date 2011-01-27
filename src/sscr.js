@@ -402,7 +402,6 @@ function directionCheck(x, y) {
     }
 }
 
-
 var cache = {};
 setInterval(function(){ cache = {}; }, 10 * 1000);
 
@@ -446,8 +445,6 @@ function overflowingAncestor(el) {
         }
     } while (el = el.parentNode);
 }
-
-
 
 
 /***********************************************
