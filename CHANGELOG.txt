@@ -34,3 +34,5 @@
 // - added keyboard support for all overflowing elements (activeElement)
 // - both mousewheel and keydown checks if defaultPrevented is true, so pages can add custom behavior
 // - MAJOR performance improvements (fixed FPS, no polling, elapsed time)
+// - implemented a cache for overflowingAncestor
+// - made GMail to be SS ready :)
