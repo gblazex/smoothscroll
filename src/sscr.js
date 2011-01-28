@@ -135,6 +135,9 @@ function init() {
             (body.offsetHeight <= windowHeight || 
              html.offsetHeight <= windowHeight)) {
         root.style.height = "auto";
+        var underlay = document.createElement("div"); 	
+        underlay.style.clear = "both";
+        body.appendChild(underlay);
     }
     
     if (document.URL.indexOf("mail.google.com") > -1) {
