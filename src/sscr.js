@@ -135,7 +135,7 @@ function init() {
             (body.offsetHeight <= windowHeight || 
              html.offsetHeight <= windowHeight)) {
         root.style.height = "auto";
-        if (body.offsetHeight <= windowHeight) {
+        if (root.offsetHeight <= windowHeight) {
             var underlay = document.createElement("div"); 	
             underlay.style.clear = "both";
             body.appendChild(underlay);
