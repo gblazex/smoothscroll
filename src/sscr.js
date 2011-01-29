@@ -145,7 +145,7 @@ function init() {
     if (document.URL.indexOf("mail.google.com") > -1) {
         var s = document.createElement("style");
         s.innerHTML = ".iu { visibility: hidden }";
-        document.body.appendChild(s);
+        document.getElementsByTagName("head")[0].appendChild(s);
     }
     if (!fixedback) {
         body.style.backgroundAttachment = "scroll";
