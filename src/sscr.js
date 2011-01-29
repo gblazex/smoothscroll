@@ -1,5 +1,5 @@
 
-// SmoothScroll v0.9.8
+// SmoothScroll v0.9.9
 // Licensed under the terms of the MIT license.
 
 // People involved
@@ -143,10 +143,9 @@ function init() {
     }
     
     if (document.URL.indexOf("mail.google.com") > -1) {
-        var head = document.getElementsByTagName("head")[0];
         var s = document.createElement("style");
         s.innerHTML = ".iu { visibility: hidden }";
-        (head || html).appendChild(s);
+        (document.getElementsByTagName("head")[0] || html).appendChild(s);
     }
     if (!fixedback) {
         body.style.backgroundAttachment = "scroll";
