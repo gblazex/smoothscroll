@@ -143,9 +143,10 @@ function init() {
     }
     
     if (document.URL.indexOf("mail.google.com") > -1) {
+        var head = document.getElementsByTagName("head")[0];
         var s = document.createElement("style");
         s.innerHTML = ".iu { visibility: hidden }";
-        document.getElementsByTagName("head")[0].appendChild(s);
+        (head || document.documentElement).appendChild(s);
     }
     if (!fixedback) {
         body.style.backgroundAttachment = "scroll";
