@@ -146,7 +146,7 @@ function init() {
         var head = document.getElementsByTagName("head")[0];
         var s = document.createElement("style");
         s.innerHTML = ".iu { visibility: hidden }";
-        (head || document.documentElement).appendChild(s);
+        (head || html).appendChild(s);
     }
     if (!fixedback) {
         body.style.backgroundAttachment = "scroll";
