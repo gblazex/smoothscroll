@@ -31,8 +31,8 @@ var frame = false;
 var direction = { x: 0, y: 0 };
 var initdone  = false;
 var fixedback = true;
+var root = document.documentElement;
 var activeElement;
-var root;
 
 var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
 
