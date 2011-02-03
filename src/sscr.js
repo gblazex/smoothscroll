@@ -149,6 +149,7 @@ function init() {
     }
     if (!fixedback) {
         body.style.backgroundAttachment = "scroll";
+        html.style.backgroundAttachment = "scroll";
     }
 }
 
