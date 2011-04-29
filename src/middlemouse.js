@@ -17,7 +17,7 @@ var framerate = 200;
 // get global settings
 chrome.extension.connect({ name: "smoothscroll"}).
 onMessage.addListener(function (settings) {
-    enabled   = (settings.middlemouse == "true");
+    enabled   = (settings.middlemouse == "true") && !disabled;
     framerate = +settings.framerate + 50;
 });   
  
@@ -27,7 +27,7 @@ onMessage.addListener(function (settings) {
 function init() {
     var url = chrome.extension.getURL("../img/cursor.png");
     var style = img.style;
-    style.background = "url("+url+")";
+    style.background = "url("+url+") no-repeat";
     style.position   = "fixed";
     style.zIndex     = "1000";
     style.width      = "20px";

@@ -19,12 +19,13 @@ var pulseScale     = 8;
 var pulseNormalize = 1;
 
 // Keyboard Settings
-var keyboardsupport = true;
-var disableKeyboard = false;
-var arrowscroll     = 50; // [px]
+var keyboardsupport = true;  // option
+var disableKeyboard = false; // other reasons
+var arrowscroll     = 50;    // [px]
 
 // Excluded pages
 var exclude = "";
+var disabled = false;
 
 // Other Variables
 var frame = false;
@@ -91,6 +92,7 @@ function initTest() {
             if (document.URL.indexOf(domains[i]) > -1) {
                 removeEvent("mousewheel", wheel);
                 disableKeyboard = true;
+                disabled = true;
                 break;
             }
         }
@@ -147,7 +149,7 @@ function init() {
         s.innerHTML = ".iu { visibility: hidden }";
         (document.getElementsByTagName("head")[0] || html).appendChild(s);
     }
-    if (!fixedback) {
+    if (!fixedback && !disabled) {
         body.style.backgroundAttachment = "scroll";
         html.style.backgroundAttachment = "scroll";
     }
@@ -227,20 +229,20 @@ function scrollArray(elem, left, top, delay) {
             elem.scrollLeft += scrollX;
             
             // scroll left failed (edge)
-            if (scrollX && elem.scrollLeft === lastLeft) {
-                left = 0;
-            }
+            ///if (scrollX && elem.scrollLeft === lastLeft) {
+            ///    left = 0;
+            ///}
         }
 
         // scroll top
         if (top) {
-            var lastTop = elem.scrollTop;
+            var lastTop = elem.scrollTop; 
             elem.scrollTop += scrollY;
             
             // scroll top failed (edge)
-            if (scrollY && elem.scrollTop === lastTop) {
-                top = 0;
-            }            
+            ///if (scrollY && elem.scrollTop === lastTop) {
+                ///top = 0;
+            ///}            
         }
         
         // clean up if there's nothing left to do
