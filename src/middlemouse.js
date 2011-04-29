@@ -14,6 +14,9 @@ var scrolling = false; // guards one phase
 var enabled   = false; // from settings
 var framerate = 200;
 
+// we check the OS for default middlemouse behavior only!
+var isLinux   = (navigator.platform.indexOf("Linux") != -1); 
+
 // get global settings
 chrome.extension.connect({ name: "smoothscroll"}).
 onMessage.addListener(function (settings) {
@@ -45,15 +48,18 @@ function mousedown(e) {
     var isLink = false;
     var elem   = e.target;
     
+    // linux middle mouse shouldn't be overwritten (paste)
+    var linux = (isLinux && /input|textarea/i.test(elem.nodeName));
+   
     do {
         isLink = isNodeName(elem, "a");
         if (isLink) break;
-    } while (elem = elem.parentNode)
-
+    } while (elem = elem.parentNode);
+    
     // if it's not the middle button, or
     // it's being used on an <a> element
     // take the default action
-    if (!enabled || e.button !== 1 || isLink) {
+    if (!enabled || e.button !== 1 || isLink || linux) {
         return true;
     }
     
