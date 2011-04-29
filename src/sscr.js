@@ -317,7 +317,8 @@ function wheel(event) {
 function keydown(event) {
 
     var target   = event.target;
-    var modifier = event.ctrlKey || event.altKey || event.metaKey;
+    var modifier = event.ctrlKey || event.altKey || event.metaKey || 
+                  (event.shiftKey && event.keyCode !== key.spacebar);
     
     // do nothing if user is editing text
     // or using a modifier key (except shift)
