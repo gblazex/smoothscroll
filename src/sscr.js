@@ -241,7 +241,7 @@ function scrollArray(elem, left, top, delay) {
             
             // scroll top failed (edge)
             ///if (scrollY && elem.scrollTop === lastTop) {
-                ///top = 0;
+            ///    top = 0;
             ///}            
         }
         
@@ -421,7 +421,7 @@ function overflowingAncestor(el) {
                 return setCache(elems, document.body); // scrolling root in WebKit
             }
         } else if (el.clientHeight + 10 < el.scrollHeight) {
-            overflow = getComputedStyle(el, "").getPropertyValue("overflow");
+            overflow = getComputedStyle(el, "").getPropertyValue("overflow-y");
             if (overflow === "scroll" || overflow === "auto") {
                 return setCache(elems, el);
             }
