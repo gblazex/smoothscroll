@@ -55,11 +55,13 @@ function mousedown(e) {
         isLink = isNodeName(elem, "a");
         if (isLink) break;
     } while (elem = elem.parentNode);
+        
+    var elem = overflowingAncestor(e.target);
     
     // if it's not the middle button, or
     // it's being used on an <a> element
     // take the default action
-    if (!enabled || e.button !== 1 || isLink || linux) {
+    if (!elem || !enabled || e.button !== 1 || isLink || linux) {
         return true;
     }
     
@@ -84,8 +86,6 @@ function mousedown(e) {
 
     var speedX = 0;
     var speedY = 0;
-    
-    var elem = overflowingAncestor(e.target);
     
     // animation loop
     var last = +new Date;
