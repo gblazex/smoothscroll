@@ -3,6 +3,7 @@
 <head><title>SmoothScroll Options</title>
 <meta charset=utf-8 />
 <style type="text/css">
+
 body {
     font-size: 13.4px;
     font-family: Verdana, sans-serif;
@@ -12,17 +13,22 @@ body {
     background-color: #000000;
 }
 
-a       { text-decoration: none;       color: #333333; }
-a:hover { text-decoration: underline;  color: #444444; }
+a       { text-decoration: none;  color: #333333; border-bottom:1px dotted #ccc; }
+a:hover { text-decoration: none;  color: #0CF; border-bottom:1px solid #0CF; }
+hr      { margin:0; }
+h2      { font-size: 16px; color: #00CCFF; margin:20px 0 10px 0; }
+li      { padding: 2px 0; }
 
 #page {
-    border: 3px solid #28AEA8; 
+    /*border: 3px solid #28AEA8;*/ 
     width: 800px; 
     text-align: left; 
     padding: 30px;
     margin-bottom: 10px;
     -webkit-border-radius: 20px; 
-    -webkit-box-shadow: #BBB 0px 0px 20px;
+
+    /*-webkit-box-shadow: #BBB 0px 0px 20px;*/
+    -webkit-box-shadow: #ddd -2px 2px 10px;
 }
 
 #title {
@@ -37,7 +43,8 @@ a:hover { text-decoration: underline;  color: #444444; }
     font-weight: bold;
 }
 
-#title a { color: #4400CC; }
+#title a { color: #4400CC; border:0; }
+#title a:hover { color:#0CF; border-bottom:2px solid #0CF; }
 
 input[type=text] { 
     color: #010101;
@@ -53,6 +60,16 @@ input[type=text] {
     -webkit-box-shadow: #CCC 0px 0px 2px;  
 }
 
+textarea {
+  padding:10px;
+  width: 770px;
+  border: 1px solid #DDD;
+  -webkit-border-radius: 8px;
+  color: #777;
+}
+
+textarea:focus { color:#222; }
+
 button#save {
     cursor:pointer; 
     padding: 4px 10px;
@@ -67,6 +84,8 @@ button#save {
     -webkit-border-radius: 4px;
     -webkit-box-shadow: #999 0px 0px 3px;
 }
+
+/*.default_value { display:none; }*/
 
 .note { 
     font-size: 80%;
@@ -101,6 +120,12 @@ label[title], .help  { cursor:help;  }
     color: white;
     font-weight: bold;
     text-decoration: underline;
+    border:0;
+}
+
+#footer {
+  margin-top: 50px;
+  border-top: 20px solid #f6f6f6;
 }
 </style>
 <script src="../src/sscr.js"></script>
@@ -310,8 +335,7 @@ window.set_profile = set_profile;
 
 <div id="page">
 
-<span style="font-size: 16px; color: #00CCFF"><b>Scroll Settings</b></span>
-<hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
+<h2 style="margin-top:0;">Scroll Settings</h2>
 
 <!-- -->
 &nbsp;&nbsp;<i class="help "title="Don't forget to hit 'Save' if you want to use them!">Load profile:</i>
@@ -327,29 +351,38 @@ window.set_profile = set_profile;
  <tr>
   <td class="setting-name"><label for="framerate" title="higher is smoother but more CPU intensive">Frames per second</label></td>
   <td><input id="framerate" type="text" size="1" maxlength="3"> </td>
-   <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 150</i></span></td>
+   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 150</i></span></td>
    <td class="note" title="higher is smoother but more CPU intensive">(<b>how</b> smooth)</td>
  </tr>
  <tr>
   <td class="setting-name"><label for="scrollsz" title="higher means more scrolling for each mouse event">Step size [px]</label></td>
   <td><input id="scrollsz" type="text" size="1" maxlength="3"> </td>
-  <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 120</i></span></td>
+  <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 120</i></span></td>
   <td class="note" title="higher means more scrolling for each mouse event">(<b>how</b> much)</td>
  </tr>
  <tr>
   <td class="setting-name"><label for="animtime" title="higher number stretches animation">Animation time [ms]</label></td>
   <td><input id="animtime" type="text" size="1" maxlength="3"> </td>
-  <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 400</i></span></td>
+  <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 400</i></span></td>
   <td class="note" title="higher number stretches animation">(<b>how</b> quick)</td>
  </tr>
  <tr>
   <td class="setting-name"><label for="pulseScale" title="it affects how long the decceleration part is">Pulse Scale</label></td>
   <td><input id="pulseScale" type="text" size="1" maxlength="2"></td>
-  <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 8</i></span></td>
+  <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 8</i></span></td>
   <td class="note" title="it affects how long the decceleration part is">(<b>ratio </b>of "tail" to "acceleration")</td>
 </tr>
+ <tr>
+  <td style="width:200px;"><label for="arrscroll">Arrow key step size [px]</label></td>
+  <td><input id="arrscroll" type="text" size="1" maxlength="3"> </td>
+  <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 50</i></span></td>
+ </tr>
 </table>
 <br>
+
+<h2>Features</h2>
+
+<input type="checkbox" id="keyboardsupport"><label for="keyboardsupport">Enable <b>keyboard support</b></label><br><br>
 
 <input type="checkbox" id="pulseAlgorithm"><label for="pulseAlgorithm" title="adds easing to the animations">Enable <b>pulse algorithm</b></label><br><br>
 
@@ -357,17 +390,8 @@ window.set_profile = set_profile;
 
 <input type="checkbox" id="fixedback"><label for="fixedback" title="disabling it improves performance on sites like twitter.com">Enable <b>fixed backgrounds</b></label><br><br>
 
-<br>
-<span style="font-size: 16px; color: #00CCFF"><b>Keyboard Settings</b></span>
-<hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
-<input type="checkbox" id="keyboardsupport"><label for="keyboardsupport">Enable keyboard support</label><br><br>
+<table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; ">
 
-<table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 39px">
- <tr>
-  <td style="width:200px;"><label for="arrscroll">Arrow key step size [px]</label></td>
-  <td><input id="arrscroll" type="text" size="1" maxlength="3"> </td>
-  <td><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 50</i></span></td>
- </tr>
  <!--
  <tr>
   <td style="width:200px;"><label for="pgscroll">PgUp/PgDown step size [px]</label></td>
@@ -377,9 +401,9 @@ window.set_profile = set_profile;
  -->
 </table>
 
-<br><br>
-<span style="font-size: 16px; color: #00CCFF"><b><label for="exclude">Excluded pages</label></b></span>
-<hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
+<br>
+
+<h2><label for="exclude">Excluded pages</label></h2>
 <textarea id="exclude" cols="70" rows="5"></textarea> 
 
 <br><br>
@@ -391,20 +415,33 @@ window.set_profile = set_profile;
   <div id="message" style="color: #00CCFF; font-size: 11px; font-style:italic;"></div>
 </div>
 -->
-<br>
-<span style="font-size: 16px; color: #00CCFF"><b>Links</b></span>
-<hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
- - <a href="https://github.com/galambalazs/smoothscroll/">Source Code, Known Issues, Bug Report, ...</a><br>
- - <a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn">Extension Homepage</a><br>
-<br>
-<span style="font-size: 16px; color: #00CCFF"><b>People involved</b></span>
-<hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
- - Patrick Brunner: orginal idea (patrickb1991&#64;gmail.com)<br>
- - Balázs Galambosi: maintainer (see CHANGELOG.txt)<br>
- - <a href="http://stereopsis.com/stopping/">Michael Herf: Pulse Algorithm</a><br>
+
+<div id="footer">
+
+<div>
+  <h2>Links</h2>
+  <ul>
+   <li><a href="https://github.com/galambalazs/smoothscroll/">Source Code, Known Issues, Bug Report, ...</a></li>
+   <li><a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn">Extension Homepage</a></li>
+  </ul>
 </div>
 
-<small></small>
+<div>
+  <h2>People involved</h2>
+  <ul>
+   <li><a href="mailto:galambalazs@yahoo.co.uk">Balázs Galambosi: maintainer</a></li>
+   <li><a href="mailto:patrickb1991@gmail.com">Patrick Brunner: orginal idea</a></li>
+   <li><a href="http://stereopsis.com/stopping/">Michael Herf: Pulse Algorithm</a></li>
+  </ul>
+</div>
+
+</div>
+
+</div> <!-- /#page -->
+
+
+
+
 <br><br><br><br><br><br>
 
 <div class="dialog">
