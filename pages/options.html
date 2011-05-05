@@ -52,10 +52,9 @@ input[type=text] {
     padding: 3px;
     outline: none;
     text-align: center;
-    border: 1px solid #343434;
+    border: 1px solid #bbb;
     width: 38px;
     margin-right:10px; 
-    border-color:#999;
     -webkit-border-radius: 4px;
     -webkit-box-shadow: #CCC 0px 0px 2px;  
 }
@@ -70,12 +69,16 @@ textarea {
 
 textarea:focus { color:#222; }
 
-button#save { 
+
+#save {
     font-size:16px; 
+    cursor:pointer; 
     width:160px;
     margin:0 auto;
     display:block;
-    cursor:pointer; 
+}
+
+button { 
     font-weight:bold; 
     border:1px solid #ccc; 
     background:#f6f6f6; 
@@ -86,12 +89,12 @@ button#save {
     background-image:-webkit-gradient(linear,left top,left bottom,from(white),to(#EFEFEF)); 
 }
 
-#save:hover {  
+button:hover {  
     color:#555; 
     box-shadow:0 0 3px #999;
 }
 
-#save:active { 
+button:active { 
     background: #DDD; 
     background-image: -webkit-gradient(linear,left top,left bottom,from(#CCC),to(white)); 
 }
@@ -352,11 +355,11 @@ window.set_profile = set_profile;
 
 <!-- -->
 &nbsp;&nbsp;<i class="help "title="Don't forget to hit 'Save' if you want to use them!">Load profile:</i>
-<input type="button" value="Custom"  onclick="set_profile('custom')" />
-<input type="button" value="Default" onclick="set_profile('default')" />
-<input type="button" value="iPhone"  onclick="set_profile('iphone')" />
-<input type="button" value="Opera"   onclick="set_profile('opera')" />
-<input type="button" value="IE9"     onclick="set_profile('ie9')" />
+<button onclick="set_profile('custom')">Custom</button>
+<button onclick="set_profile('default')">Default</button>
+<button onclick="set_profile('iphone')">iPhone</button>
+<button onclick="set_profile('opera')">Opera</button>
+<button onclick="set_profile('ie9')">IE9</button>
 <br /><br />
 
 
