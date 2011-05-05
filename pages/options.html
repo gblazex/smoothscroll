@@ -16,7 +16,7 @@ body {
 a       { text-decoration: none;  color: #333333; border-bottom:1px dotted #ccc; }
 a:hover { text-decoration: none;  color: #0CF; border-bottom:1px solid #0CF; }
 hr      { margin:0; }
-h2      { font-size: 16px; color: #00CCFF; margin:20px 0 10px 0; }
+h2      { font-size: 16px; color: #00CCFF; margin:20px 0 15px 0; }
 li      { padding: 2px 0; }
 
 #page {
@@ -70,20 +70,32 @@ textarea {
 
 textarea:focus { color:#222; }
 
-button#save {
-    cursor:pointer; 
-    padding: 4px 10px;
-    width: 180px;
-    font-size: 20px;
-    background-color: #fafafa;
-    color: #444;
-    font-weight:bold;
-    display:block;
+button#save { 
+    font-size:16px; 
+    width:160px;
     margin:0 auto;
-    border: 1px solid #BBB;
-    -webkit-border-radius: 4px;
-    -webkit-box-shadow: #999 0px 0px 3px;
+    display:block;
+    cursor:pointer; 
+    font-weight:bold; 
+    border:1px solid #ccc; 
+    background:#f6f6f6; 
+    color:#777;
+    text-shadow:1px 1px 0 white;
+    padding:5px 10px; 
+    border-radius:5px;
+    background-image:-webkit-gradient(linear,left top,left bottom,from(white),to(#EFEFEF)); 
 }
+
+#save:hover {  
+    color:#555; 
+    box-shadow:0 0 3px #999;
+}
+
+#save:active { 
+    background: #DDD; 
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#CCC),to(white)); 
+}
+
 
 /*.default_value { display:none; }*/
 
@@ -373,7 +385,7 @@ window.set_profile = set_profile;
   <td class="note" title="it affects how long the decceleration part is">(<b>ratio </b>of "tail" to "acceleration")</td>
 </tr>
  <tr>
-  <td style="width:200px;"><label for="arrscroll">Arrow key step size [px]</label></td>
+  <td style="width:180px;"><label for="arrscroll">Arrow key step size [px]</label></td>
   <td><input id="arrscroll" type="text" size="1" maxlength="3"> </td>
   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 50</i></span></td>
  </tr>
