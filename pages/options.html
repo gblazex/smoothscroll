@@ -5,12 +5,11 @@
 <style type="text/css">
 
 body {
+    background:#fff;
     font-size: 13.4px;
     font-family: Verdana, sans-serif;
     color: #333333;
-    text-align: center;
-    margin: auto;
-    background-color: #000000;
+    margin: 0;
 }
 
 a       { text-decoration: none;  color: #333333; border-bottom:1px dotted #ccc; }
@@ -21,10 +20,10 @@ li      { padding: 2px 0; }
 
 #page {
     /*border: 3px solid #28AEA8;*/ 
+    margin:0 auto 10px;
     width: 800px; 
     text-align: left; 
     padding: 30px;
-    margin-bottom: 10px;
     -webkit-border-radius: 20px; 
 
     /*-webkit-box-shadow: #BBB 0px 0px 20px;*/
@@ -113,6 +112,7 @@ label[title], .help  { cursor:help;  }
 .setting-name { width: 150px; }
 
 .dialog { 
+    text-align:center;
     display:none;
     opacity: 0;
     -webkit-transition: opacity 1s ease-in-out;
@@ -143,6 +143,9 @@ label[title], .help  { cursor:help;  }
   margin-top: 50px;
   border-top: 20px solid #f6f6f6;
 }
+
+#test  { width:800px; margin:0 auto; }
+#test div { margin:20px 0; }
 </style>
 <script src="../src/sscr.js"></script>
 <script src="../src/middlemouse.js"></script>
@@ -172,6 +175,7 @@ var options = [
 
 function byId(id) { return document.getElementById(id); }
 function byClass(cname) { return document.getElementsByClassName(cname); }
+function byTag(tag,base) { return (base||document).getElementsByTagName(tag||'*'); }
 
 function isNodeName(el, tag) {
     return el.nodeName.toLowerCase() === tag.toLowerCase();
@@ -197,6 +201,20 @@ function hide(elem, newop) {
  * Fills up the form with the saved values from local storage.
  */
 function init() {
+
+    // settings were updated -> show dialog
+    if (localStorage.saved == 'true') {
+        var dialog  = byClass('dialog')[0];
+        show(dialog, 0.9);
+        setTimeout(function () {
+            hide(dialog);
+        }, 3000);
+    }
+
+    // updated complete
+    localStorage.saved = 'false';
+        
+    // fill the form fields from localStorage
     options.forEach(function(key, i) {
         if (/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
             byId(key).checked = (localStorage[key] == "true");
@@ -236,11 +254,8 @@ function save() {
 
     // update message
     if (!error) {
-        var dialog  = byClass('dialog')[0];
-        show(dialog, 0.9);
-        setTimeout(function () {
-            hide(dialog);
-        }, 3000);
+        localStorage.saved = 'true';
+        reload();
     }
     // error message
     else {
@@ -327,19 +342,27 @@ function set_profile(profile) {
 //function restore_options() {
 //}
 
+function generate_test() {
+    var test = byId('test');
+    var el = byTag('div', test)[0];
+    for (var i = 5; i--;) {
+      test.appendChild(el.cloneNode(true));
+    }
+}
+
 // public interface
 window.addEventListener("DOMContentLoaded", init, false);
+window.addEventListener("DOMContentLoaded", generate_test, false);
 window.reload = reload;
 window.save = save;
 window.set_profile = set_profile;
 
 })(window);
+
 </script>
 
 </head>
-<body style="width: 100%; background-color: #FFFFFF; text-align: center;">
-<center>
-
+<body>
 
 <div id="title">
   <a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn" target="_blank">SmoothScroll</a> 
@@ -462,9 +485,28 @@ window.set_profile = set_profile;
 
 <div class="dialog">
   <div class="dialog-header">Settings saved</div>
-  <div class="dialog-content"><a href="#" onclick="reload();">Reload</a> this page and test the new scroll settings!</div>
+  <div class="dialog-content">You can now test the new scroll settings!</div>
 </div>
 
-</center>
+
+
+<div id="test">
+
+<h1>Test your settings</h1>
+
+<div>
+<h2>Lorem ipsum dolor sit amet</h2>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non orci ipsum, eu laoreet nisl. Suspendisse ut dictum neque. Pellentesque nulla ipsum, posuere ut mattis vel, dapibus fringilla arcu. Donec fermentum purus in risus convallis semper. Nullam tempor urna eu libero vulputate vitae pulvinar enim accumsan. Donec vitae leo a enim faucibus consectetur. Nullam lectus justo, eleifend quis condimentum ut, pharetra et risus. Ut luctus molestie nibh sit amet vestibulum. Vestibulum tempor luctus scelerisque. Duis posuere elementum mollis. Cras sit amet varius massa. Nulla condimentum feugiat aliquam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean id ante et diam lacinia convallis vel eu magna.</p>
+
+<p>In congue, risus sed commodo molestie, tortor sem dictum neque, in viverra sapien arcu vulputate velit. Pellentesque nec dignissim neque. Proin non felis quis lectus fermentum lobortis ut nec purus. Nam quam turpis, sodales in pellentesque vel, tempor gravida lacus. Pellentesque euismod aliquet pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed tempus velit in lacus tristique facilisis. Mauris commodo, nunc et tempor pharetra, lectus dui posuere odio, eu auctor lorem augue non neque. Aenean auctor velit ac erat lobortis iaculis. Nullam in nibh et sem porttitor malesuada non non urna. Nulla lacus est, aliquet vel egestas a, accumsan a ante. Sed semper molestie dictum. Morbi at quam non enim porttitor varius. Vivamus ut metus et enim egestas ornare malesuada at augue.</p>
+
+<p>Morbi laoreet velit sit amet metus tincidunt hendrerit. Aliquam augue ante, venenatis a rutrum sit amet, tristique non urna. Suspendisse et euismod nunc. Donec tempus luctus convallis. Proin blandit justo in nulla volutpat imperdiet. Integer dapibus lectus vitae libero hendrerit commodo. Praesent felis metus, pretium id tempus sed, porttitor ut justo. Praesent dapibus massa a erat congue malesuada. Fusce at erat in augue lobortis ultrices. Fusce vitae nunc sed arcu viverra convallis. Etiam nec magna turpis, id iaculis dui. Etiam at interdum est. Ut quis eros justo, vel consequat dolor. Proin pulvinar tristique congue. Mauris consectetur aliquam ipsum lobortis tempor. In non ligula orci, a commodo turpis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer non tempus lectus. Praesent tristique ante a purus lobortis viverra.</p>
+
+<p>Curabitur eget leo velit, ac sagittis arcu. Mauris pulvinar orci et libero ultricies non iaculis velit gravida. Nulla facilisi. Pellentesque vel tellus nisl, et eleifend turpis. Vestibulum accumsan tincidunt tellus ac posuere. Nunc et orci metus. Cras quis lacus at tortor semper sollicitudin. Sed mi velit, semper et eleifend eget, faucibus mattis velit. Quisque interdum, risus et vulputate cursus, mauris elit fermentum nunc, in imperdiet ipsum odio sed magna. Vivamus porttitor ornare lacus in congue. Morbi et justo nulla, non tincidunt eros. Nulla scelerisque, tortor eget pulvinar volutpat, ante justo dapibus arcu, eu lacinia quam ante ut libero. Integer porta libero eu est scelerisque malesuada. Sed risus diam, pellentesque eu euismod sit amet, rhoncus quis velit. Aliquam et vehicula odio. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque nec magna nec odio venenatis sollicitudin non id massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut in eleifend mauris.</p>
+
+<p>Sed ac scelerisque nisl. Vivamus ac diam et nibh pulvinar gravida vitae a magna. Fusce ipsum ligula, suscipit sit amet ullamcorper a, fringilla sed neque. Curabitur ipsum dolor, consectetur condimentum luctus nec, molestie eu nulla. Curabitur eros nunc, varius at vestibulum sed, tincidunt aliquam risus. Aenean ultricies iaculis augue. Sed tempor scelerisque velit, et dignissim erat hendrerit gravida. Mauris consectetur porta lacus vel posuere. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut diam diam, tempus mattis interdum nec, tincidunt in ante. Pellentesque lacus ipsum, eleifend non imperdiet id, dapibus vel metus. Proin egestas sagittis urna facilisis congue. Fusce nec dapibus nibh.</p>
+<div>
+</div>
+
 </body>
 </html>
