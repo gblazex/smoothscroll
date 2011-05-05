@@ -75,7 +75,7 @@ button#save {
     cursor:help; 
 }
 
-label[title]  { cursor:help;  }
+label[title], .help  { cursor:help;  }
 .setting-name { width: 150px; }
 
 .dialog { 
@@ -253,8 +253,13 @@ var profiles = {
     'animtime': 120,
     'scrollsz': 120,
     'pulseAlgorithm': 'false'
+  },
+  
+  '_ie9': {
+    'animtime': 60,
+    'scrollsz': 120,
+    'pulseAlgorithm': 'false'
   }
-
 };
 
 // TODO: merge with init
@@ -309,10 +314,14 @@ window.set_profile = set_profile;
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
 
 <!-- -->
-<input type="button" value="custom"  onclick="set_profile('custom')" />
-<input type="button" value="default" onclick="set_profile('default')" />
+&nbsp;&nbsp;<i class="help "title="Don't forget to hit 'Save' if you want to use them!">Load profile:</i>
+<input type="button" value="Custom"  onclick="set_profile('custom')" />
+<input type="button" value="Default" onclick="set_profile('default')" />
 <input type="button" value="iPhone"  onclick="set_profile('iphone')" />
-<input type="button" value="opera"   onclick="set_profile('opera')" />
+<input type="button" value="Opera"   onclick="set_profile('opera')" />
+<input type="button" value="IE9"     onclick="set_profile('ie9')" />
+<br /><br />
+
 
 <table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 6px">
  <tr>
