@@ -39,20 +39,17 @@ a:hover { text-decoration: underline;  color: #444444; }
 
 #title a { color: #4400CC; }
 
-input {
+input[type=text] { 
     color: #010101;
     background-color: transparent;
     padding: 3px;
-    width: 38px;
     outline: none;
     text-align: center;
     border: 1px solid #343434;
-    -webkit-border-radius: 4px;
-}
-
-input[type=text] { 
+    width: 38px;
     margin-right:10px; 
     border-color:#999;
+    -webkit-border-radius: 4px;
     -webkit-box-shadow: #CCC 0px 0px 2px;  
 }
 
@@ -228,6 +225,58 @@ function reload() {
     window.location.reload();
 }
 
+
+var profiles = {
+
+  '_custom': {
+    'animtime': 160,
+    'scrollsz': 120,
+    'pulseAlgorithm': 'true',
+    'pulseScale': 4
+  },
+
+  '_default': {
+    'animtime': 400,
+    'scrollsz': 120,
+    'pulseAlgorithm': 'true',
+    'pulseScale': 8
+  },
+
+  '_iphone': {
+    'animtime': 400,
+    'scrollsz': 120,
+    'pulseAlgorithm': 'true',
+    'pulseScale': 4
+  },
+  
+  '_opera': {
+    'animtime': 120,
+    'scrollsz': 120,
+    'pulseAlgorithm': 'false'
+  }
+
+};
+
+// TODO: merge with init
+function set_profile(profile) {
+
+    if ('custom' == profile){
+      init();
+      return;
+    }  
+
+    profile = profiles['_'+profile];
+
+    // set
+    for (var key in profile) {
+        if (/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
+            byId(key).checked = (profile[key] == "true");
+        } else if (localStorage[key]) {
+            byId(key).value = profile[key];
+        }
+    };
+}
+
 // Restores select box state to saved value from localStorage.
 //function restore_options() {
 //}
@@ -236,6 +285,7 @@ function reload() {
 window.addEventListener("DOMContentLoaded", init, false);
 window.reload = reload;
 window.save = save;
+window.set_profile = set_profile;
 
 })(window);
 </script>
@@ -257,6 +307,12 @@ window.save = save;
 
 <span style="font-size: 16px; color: #00CCFF"><b>Scroll Settings</b></span>
 <hr style="width:100%; border: 1px dotted grey; margin: 0px;"><br>
+
+<!-- -->
+<input type="button" value="custom"  onclick="set_profile('custom')" />
+<input type="button" value="default" onclick="set_profile('default')" />
+<input type="button" value="iPhone"  onclick="set_profile('iphone')" />
+<input type="button" value="opera"   onclick="set_profile('opera')" />
 
 <table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 6px">
  <tr>
