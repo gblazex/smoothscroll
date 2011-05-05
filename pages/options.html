@@ -15,6 +15,7 @@ body {
 a       { text-decoration: none;  color: #333333; border-bottom:1px dotted #ccc; }
 a:hover { text-decoration: none;  color: #0CF; border-bottom:1px solid #0CF; }
 hr      { margin:0; }
+h1      { text-shadow: transparent 0 0 1px; }
 h2      { font-size: 16px; color: #00CCFF; margin:20px 0 15px 0; }
 li      { padding: 2px 0; }
 
@@ -40,9 +41,10 @@ li      { padding: 2px 0; }
     background-position: 0% 50%;
     text-align: left;
     font-weight: bold;
+    text-shadow: transparent 0 0 1px; /*anit-alias*/
 }
 
-#title a { color: #4400CC; border:0; }
+#title a { color: #3c78d7; border:0; }
 #title a:hover { color:#0CF; border-bottom:2px solid #0CF; }
 
 input[type=text] { 
@@ -146,6 +148,25 @@ label[title], .help  { cursor:help;  }
 
 #test  { width:800px; margin:0 auto; }
 #test div { margin:20px 0; }
+
+#version-container { 
+    color: #222; 
+    font-size: 22px;
+    font-weight: normal; 
+    margin-top: 5px; font-style:italic;
+    width:300px;                     
+    height:10px;
+    background:#ececec; 
+    text-align:center;
+}
+
+#version  { 
+    background:#fff; 
+    color:#999;
+    padding:0 8px;
+    position:relative;
+    top:-8px; 
+}
 </style>
 <script src="../src/sscr.js"></script>
 <script src="../src/middlemouse.js"></script>
@@ -366,7 +387,7 @@ window.set_profile = set_profile;
 
 <div id="title">
   <a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn" target="_blank">SmoothScroll</a> 
-  <div style="color: #CBCBCB; font-size: 22px; font-weight: normal;"> Version <span id="version"></span></div>
+  <div id="version-container"><span id="version"></span></div>
 </div>
 
 <!-- Fork me on GitHub -->
