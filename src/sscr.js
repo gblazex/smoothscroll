@@ -322,7 +322,8 @@ function keydown(event) {
     
     // do nothing if user is editing text
     // or using a modifier key (except shift)
-    if ( /input|textarea|embed/i.test(target.nodeName) ||
+	// or on a dropdown
+    if ( /input|textarea|embed|select/i.test(target.nodeName) ||
          target.isContentEditable || 
          event.defaultPrevented   ||
          modifier ) {
