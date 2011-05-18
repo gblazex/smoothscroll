@@ -478,7 +478,7 @@ function removeEvent(type, fn, bubble) {
 }
 
 function isNodeName(el, tag) {
-    return el.nodeName.toLowerCase() === tag.toLowerCase();
+    return (el.nodeName||"").toLowerCase() === tag.toLowerCase();
 }
 
 function directionCheck(x, y) {
