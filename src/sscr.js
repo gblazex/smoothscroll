@@ -284,14 +284,14 @@ function scrollArray(elem, left, top, delay) {
         }
         
         if (que.length) { 
-            setTimeout(step, delay / framerate + 1);
+            requestFrame(step, elem, (delay / framerate + 1)); 
         } else { 
             pending = false;
         }
     }
     
     // start a new queue of actions
-    setTimeout(step, 0);
+    requestFrame(step, elem, 0);
     pending = true;
 }
 
@@ -356,7 +356,7 @@ function keydown(event) {
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     // or in a dropdown
-    if ( /input|textarea|embed|select/i.test(target.nodeName) ||
+    if ( /input|textarea|select|embed/i.test(target.nodeName) ||
          target.isContentEditable || 
          event.defaultPrevented   ||
          modifier ) {
@@ -491,6 +491,13 @@ function directionCheck(x, y) {
     }
 }
 
+var requestFrame = (function(){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              function(callback, element, delay){
+                window.setTimeout(callback, delay || (1000/60));
+              };
+})();
 
 /***********************************************
  * PULSE

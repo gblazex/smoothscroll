@@ -92,16 +92,16 @@ function mousedown(e) {
     var delay = 1000 / framerate;
     var finished = false;
     
-    setTimeout(function step(){
+    requestFrame(function step(){
         var now = +new Date;
         var elapsed = now - last;
         elem.scrollLeft += (speedX * elapsed) >> 0;
         elem.scrollTop  += (speedY * elapsed) >> 0;
         last = now;
         if (!finished) {
-            setTimeout(step, delay);
+            requestFrame(step, elem, delay);
         }
-    }, delay);
+    }, elem, delay);
     
     var first = true;
 
