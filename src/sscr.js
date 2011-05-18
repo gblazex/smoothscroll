@@ -141,7 +141,24 @@ function init() {
     else if (scrollHeight > windowHeight &&
             (body.offsetHeight <= windowHeight || 
              html.offsetHeight <= windowHeight)) {
-        root.style.height = "auto";
+                 
+        // DOMChange (throttle): fix height
+        var pending = false;
+        var refresh = function() {
+            if (!pending && html.scrollHeight != document.height) {
+                pending = true; // add a new pending action
+                setTimeout(function(){
+                    html.style.height = document.height + 'px';
+                    pending = false;
+                }, 500); // act rarely to stay fast
+            }
+        };
+        html.style.height = 'auto';
+        setTimeout(refresh, 10);
+        addEvent("DOMNodeInserted", refresh);
+        addEvent("DOMNodeRemoved",  refresh);  
+        
+        // clearfix
         if (root.offsetHeight <= windowHeight) {
             var underlay = document.createElement("div"); 	
             underlay.style.clear = "both";
