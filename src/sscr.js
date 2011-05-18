@@ -185,6 +185,10 @@ function scrollArray(elem, left, top, delay) {
         return;
     }
             
+    if (scrollWindow) {
+        window.scrollBy(scrollX, scrollY)
+    }     
+    
     var step = function() {
         
         var now = +new Date;
@@ -223,26 +227,13 @@ function scrollArray(elem, left, top, delay) {
             }           
         }
 
-        // scroll left
-        if (left) {
-            var lastLeft = elem.scrollLeft;
-            elem.scrollLeft += scrollX;
-            
-            // scroll left failed (edge)
-            ///if (scrollX && elem.scrollLeft === lastLeft) {
-            ///    left = 0;
-            ///}
-        }
-
-        // scroll top
-        if (top) {
-            var lastTop = elem.scrollTop; 
-            elem.scrollTop += scrollY;
-            
-            // scroll top failed (edge)
-            ///if (scrollY && elem.scrollTop === lastTop) {
-            ///    top = 0;
-            ///}            
+        // scroll left and top
+        if (scrollWindow) {
+            window.scrollBy(scrollX, scrollY)
+        } 
+        else {
+            if (scrollX) elem.scrollLeft += scrollX;
+            if (scrollY) elem.scrollTop  += scrollY;                    
         }
         
         // clean up if there's nothing left to do
@@ -322,7 +313,8 @@ function keydown(event) {
     
     // do nothing if user is editing text
     // or using a modifier key (except shift)
-    if ( /input|textarea|embed/i.test(target.nodeName) ||
+    // or in a dropdown
+    if ( /input|textarea|embed|select/i.test(target.nodeName) ||
          target.isContentEditable || 
          event.defaultPrevented   ||
          modifier ) {
