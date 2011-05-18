@@ -3,9 +3,9 @@
 // Licensed under the terms of the MIT license.
 
 // People involved
-// - Balazs Galambosi: maintainer (CHANGELOG.txt)
-// - Patrick Brunner (patrickb1991@gmail.com)
-// - Michael Herf: Pulse Algorithm
+//  - Balazs Galambosi (maintainer)  
+//  - Patrick Brunner  (original idea)
+//  - Michael Herf     (Pulse Algorithm)
 
 // Scroll Variables (tweakable)
 var framerate = 150; // [Hz]
@@ -17,6 +17,11 @@ var stepsize  = 120; // [px]
 var pulseAlgorithm = true;
 var pulseScale     = 8;
 var pulseNormalize = 1;
+
+// Acceleration
+var acceleration   = true;
+var accelDelta     = 20;  // 20
+var accelMax       = 1.5; // 1.5
 
 // Keyboard Settings
 var keyboardsupport = true;  // option
@@ -171,6 +176,7 @@ function init() {
  
 var que = [];
 var pending = false;
+var lastScroll = +new Date;
 
 /**
  * Pushes scroll actions to the scrolling queue.
@@ -179,6 +185,18 @@ function scrollArray(elem, left, top, delay) {
     
     delay || (delay = 1000);
     directionCheck(left, top);
+      
+    if (acceleration) {
+        var now = +new Date;
+        var elapsed = now - lastScroll;
+        if (elapsed < accelDelta) {
+            var factor = (1 + (30 / elapsed)) / 2;
+            factor = Math.max(factor, accelMax);
+            left *= factor;
+            top  *= factor;
+        }
+        lastScroll = +new Date;
+    }          
     
     // push a scroll command
     que.push({
@@ -192,11 +210,9 @@ function scrollArray(elem, left, top, delay) {
     // don't act if there's a pending queue
     if (pending) {
         return;
-    }
-            
-    if (scrollWindow) {
-        window.scrollBy(scrollX, scrollY)
-    }     
+    }  
+
+    var scrollWindow = (elem === document.body);
     
     var step = function() {
         
