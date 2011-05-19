@@ -21,7 +21,7 @@ var pulseNormalize = 1;
 // Acceleration
 var acceleration   = true;
 var accelDelta     = 20;  // 20
-var accelMax       = 1.5; // 1.5
+var accelMax       = 1;   // 1
 
 // Keyboard Settings
 var keyboardsupport = true;  // option
@@ -51,10 +51,12 @@ chrome.extension.connect({ name: "smoothscroll" }).
 onMessage.addListener(function (settings) {
     
     // NOTE: + converts to {Number}
-    framerate = +settings.framerate;
-    animtime  = +settings.animtime;
-    stepsize  = +settings.scrollsz;
-    exclude   = settings.exclude;
+    framerate  = +settings.framerate;
+    animtime   = +settings.animtime;
+    stepsize   = +settings.scrollsz;
+    accelMax   = +settings.accelMax;
+    accelDelta = +settings.accelDelta;
+    exclude    =  settings.exclude;
     pulseAlgorithm  = (settings.pulseAlgorithm == "true");
     pulseScale      = +settings.pulseScale;
     keyboardsupport = (settings.keyboardsupport == "true");
@@ -172,13 +174,6 @@ function init() {
         s.innerHTML = ".iu { visibility: hidden }";
         (document.getElementsByTagName("head")[0] || html).appendChild(s);
     }
-    // youtube shaking video fix 
-    else if (document.URL.indexOf("http://www.youtube.com") === 0) {
-        var player = document.getElementById("watch-player");
-        var embed = player.getElementsByTagName("embed");
-        embed[0].setAttribute("wmode", "opaque");
-        player.innerHTML = player.innerHTML;
-    }    
     // disable fixed background
     if (!fixedback && !disabled) {
         body.style.backgroundAttachment = "scroll";
@@ -202,7 +197,7 @@ function scrollArray(elem, left, top, delay) {
     
     delay || (delay = 1000);
     directionCheck(left, top);
-      
+
     if (acceleration) {
         var now = +new Date;
         var elapsed = now - lastScroll;
@@ -488,6 +483,7 @@ function directionCheck(x, y) {
         direction.x = x;
         direction.y = y;
         que = [];
+        lastScroll = 0;
     }
 }
 

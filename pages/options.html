@@ -183,11 +183,12 @@ label[title], .help  { cursor:help;  }
  * List of available options
  */
 var options = [
-  'framerate', 
   'animtime',
   'scrollsz',
   'arrscroll',
   'middlemouse',
+  'accelMax',
+  'accelDelta',
   'pulseAlgorithm',
   'pulseScale',
   'keyboardsupport',
@@ -410,12 +411,6 @@ window.set_profile = set_profile;
 
 <table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 6px">
  <tr>
-  <td class="setting-name"><label for="framerate" title="higher is smoother but more CPU intensive">Frames per second</label></td>
-  <td><input id="framerate" type="text" size="1" maxlength="3"> </td>
-   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 150</i></span></td>
-   <td class="note" title="higher is smoother but more CPU intensive">(<b>how</b> smooth)</td>
- </tr>
- <tr>
   <td class="setting-name"><label for="scrollsz" title="higher means more scrolling for each mouse event">Step size [px]</label></td>
   <td><input id="scrollsz" type="text" size="1" maxlength="3"> </td>
   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 120</i></span></td>
@@ -427,6 +422,18 @@ window.set_profile = set_profile;
   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 400</i></span></td>
   <td class="note" title="higher number stretches animation">(<b>how</b> quick)</td>
  </tr>
+ <tr>
+  <td class="setting-name"><label for="accelMax" title="how much scrolling can accelerate">Acceleration scale</label></td>
+  <td><input id="accelMax" type="text" size="1" maxlength="3"></td>
+  <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 1</i></span></td>
+  <td class="note" title="how much scrolling can accelerate">(<b>how </b>swift)</td>
+</tr>
+ <tr>
+  <td class="setting-name"><label for="accelDelta" title="lower means acceleration kicks in more frequently">Acceleration delta [ms]</label></td>
+  <td><input id="accelDelta" type="text" size="1" maxlength="2"></td>
+  <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 20</i></span></td>
+  <td class="note" title="lower means acceleration kicks in more frequently">(<b>time</b> between scroll events)</td>
+</tr>
  <tr>
   <td class="setting-name"><label for="pulseScale" title="it affects how long the decceleration part is">Pulse Scale</label></td>
   <td><input id="pulseScale" type="text" size="1" maxlength="2"></td>
