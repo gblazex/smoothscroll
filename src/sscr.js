@@ -203,9 +203,11 @@ function scrollArray(elem, left, top, delay) {
         var elapsed = now - lastScroll;
         if (elapsed < accelDelta) {
             var factor = (1 + (30 / elapsed)) / 2;
-            factor = Math.max(factor, accelMax);
-            left *= factor;
-            top  *= factor;
+            if (factor > 1) {
+              factor = Math.min(factor, accelMax);
+              left *= factor;
+              top  *= factor;
+            }
         }
         lastScroll = +new Date;
     }          
