@@ -263,14 +263,14 @@ function save() {
             // every <input> 
             if (isNodeName(elem, "input")) {
               // should be a number
-              opt = parseInt(opt, 10);
+              opt = parseFloat(opt, 10);
               if (isNaN(opt)) {
                   error = "Numeric Values Only!";
                   return; // stop iteration
                }
             }
             localStorage[key] = opt;
-        } else { // not a checkbox
+        } else { // checkbox
             localStorage[key] = byId(key).checked;
         }
     });
