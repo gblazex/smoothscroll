@@ -204,9 +204,9 @@ function scrollArray(elem, left, top, delay) {
         if (elapsed < accelDelta) {
             var factor = (1 + (30 / elapsed)) / 2;
             if (factor > 1) {
-              factor = Math.min(factor, accelMax);
-              left *= factor;
-              top  *= factor;
+                factor = Math.min(factor, accelMax);
+                left *= factor;
+                top  *= factor;
             }
         }
         lastScroll = +new Date;
@@ -268,7 +268,7 @@ function scrollArray(elem, left, top, delay) {
 
         // scroll left and top
         if (scrollWindow) {
-            window.scrollBy(scrollX, scrollY)
+            window.scrollBy(scrollX, scrollY);
         } 
         else {
             if (scrollX) elem.scrollLeft += scrollX;
@@ -285,7 +285,7 @@ function scrollArray(elem, left, top, delay) {
         } else { 
             pending = false;
         }
-    }
+    };
     
     // start a new queue of actions
     requestFrame(step, elem, 0);
@@ -493,7 +493,7 @@ var requestFrame = (function(){
       return  window.requestAnimationFrame       || 
               window.webkitRequestAnimationFrame || 
               function(callback, element, delay){
-                window.setTimeout(callback, delay || (1000/60));
+                  window.setTimeout(callback, delay || (1000/60));
               };
 })();
 

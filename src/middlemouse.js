@@ -56,7 +56,7 @@ function mousedown(e) {
         if (isLink) break;
     } while (elem = elem.parentNode);
         
-    var elem = overflowingAncestor(e.target);
+    elem = overflowingAncestor(e.target);
     
     // if it's not the middle button, or
     // it's being used on an <a> element
