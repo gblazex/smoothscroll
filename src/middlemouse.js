@@ -92,8 +92,8 @@ function mousedown(e) {
     var delay = 1000 / framerate;
     var finished = false;
     
-    requestFrame(function step(){
-        var now = +new Date;
+    requestFrame(function step(time){
+        var now = time || +new Date;
         var elapsed = now - last;
         elem.scrollLeft += (speedX * elapsed) >> 0;
         elem.scrollTop  += (speedY * elapsed) >> 0;

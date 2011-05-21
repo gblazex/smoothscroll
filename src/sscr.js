@@ -228,9 +228,9 @@ function scrollArray(elem, left, top, delay) {
 
     var scrollWindow = (elem === document.body);
     
-    var step = function() {
+    var step = function(time) {
         
-        var now = +new Date;
+        var now = time || +new Date;
         var scrollX = 0;
         var scrollY = 0; 
     
