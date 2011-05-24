@@ -174,6 +174,13 @@ function init() {
         s.innerHTML = ".iu { visibility: hidden }";
         (document.getElementsByTagName("head")[0] || html).appendChild(s);
     }
+    // youtube shaking video fix 
+    else if (document.URL.indexOf("http://www.youtube.com") === 0) {
+        var player = document.getElementById("watch-player");
+        var embed = player.getElementsByTagName("embed");
+        embed[0].setAttribute("wmode", "opaque");
+        player.innerHTML = player.innerHTML;
+    } 
     // disable fixed background
     if (!fixedback && !disabled) {
         body.style.backgroundAttachment = "scroll";
