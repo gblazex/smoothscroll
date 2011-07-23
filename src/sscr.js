@@ -41,14 +41,10 @@ var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pag
 
 
 /***********************************************
- * INITIALIZE
+ * SETTINGS
  ***********************************************/
 
-/**
- * Sets up scrolls array, determines if frames are involved.
- */
-function init(settings) {
-
+function initSettings(settings) {
     // disable everything if the page is blacklisted
     exclude = settings.exclude;
     if (exclude) {
@@ -59,8 +55,6 @@ function init(settings) {
             }
         }
     }
-
-    if (!document.body) return;
 
     // NOTE: + converts to {Number}
     framerate  = +settings.framerate;
@@ -78,6 +72,20 @@ function init(settings) {
     if (!framerate) {
         alert("SmoothScroll: Please restart Chrome");
     }
+
+    addEvent('load', init);
+}
+
+
+/***********************************************
+ * INITIALIZE
+ ***********************************************/
+
+/**
+ * Sets up scrolls array, determines if frames are involved.
+ */
+function init() {
+    if (!document.body) return;
 
     var body = document.body;
     var html = document.documentElement;
@@ -504,5 +512,5 @@ function pulse(x) {
 }
 
 (function() {
-  chrome.extension.connect({ name: "smoothscroll" }).onMessage.addListener(init);
+  chrome.extension.connect({ name: "smoothscroll" }).onMessage.addListener(initSettings);
 }).call(this);
