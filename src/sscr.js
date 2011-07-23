@@ -149,8 +149,9 @@ function init() {
         (document.getElementsByTagName("head")[0] || html).appendChild(s);
     }
     // youtube shaking video fix
-    else if (document.URL.indexOf("http://www.youtube.com") === 0) {
-        var player = document.getElementById("watch-player");
+    else if (location.host === 'www.youtube.com') {
+        var player =  document.getElementById("watch-player") ||
+                      document.getElementById("watch-player-div");
         var embed = player.getElementsByTagName("embed");
         embed[0].setAttribute("wmode", "opaque");
         player.innerHTML = player.innerHTML;
@@ -337,7 +338,7 @@ function keydown(event) {
       return true;
     }
     // spacebar should trigger button press
-    if (target.nodeName === 'BUTTON') &&
+    if (target.nodeName === 'BUTTON' &&
         event.keyCode === key.spacebar) {
       return true;
     }
