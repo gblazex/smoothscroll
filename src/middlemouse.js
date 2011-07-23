@@ -49,10 +49,10 @@ function mousedown(e) {
     var elem   = e.target;
 
     // linux middle mouse shouldn't be overwritten (paste)
-    var linux = (isLinux && /input|textarea/i.test(elem.nodeName));
+    var linux = (isLinux && /INPUT|TEXTAREA/.test(elem.nodeName));
 
     do {
-        isLink = isNodeName(elem, "a");
+        isLink = elem.nodeName === 'A';
         if (isLink) break;
     } while (elem = elem.parentNode);
 

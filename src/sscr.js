@@ -28,7 +28,7 @@ var keyboardsupport = true;  // option
 var arrowscroll     = 50;    // [px]
 
 // Excluded pages
-var exclude = null;
+var exclude;
 
 // Other Variables
 var frame = false;
@@ -290,8 +290,8 @@ function wheel(event) {
     // use default if there's no overflowing
     // element or default action is prevented
     if (!overflowing || event.defaultPrevented ||
-        isNodeName(activeElement, "embed") ||
-       (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
+        activeElement.nodeName === 'EMBED' ||
+       (target.nodeName === 'EMBED' && /\.pdf$/i.test(target.src))) {
         return true;
     }
 
@@ -330,14 +330,14 @@ function keydown(event) {
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     // or in a dropdown
-    if ( /input|textarea|select|embed/i.test(target.nodeName) ||
+    if ( /INPUT|TEXTAREA|SELECT|EMBED/.test(target.nodeName) ||
          target.isContentEditable ||
          event.defaultPrevented   ||
          modifier ) {
       return true;
     }
     // spacebar should trigger button press
-    if (isNodeName(target, "button") &&
+    if (target.nodeName === 'BUTTON') &&
         event.keyCode === key.spacebar) {
       return true;
     }
@@ -449,10 +449,6 @@ function addEvent(type, fn, bubble) {
 
 function removeEvent(type, fn, bubble) {
     window.removeEventListener(type, fn, (bubble||false));
-}
-
-function isNodeName(el, tag) {
-    return (el.nodeName||"").toLowerCase() === tag.toLowerCase();
 }
 
 function directionCheck(x, y) {
