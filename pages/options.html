@@ -20,12 +20,12 @@ h2      { font-size: 16px; color: #00CCFF; margin:20px 0 15px 0; }
 li      { padding: 2px 0; }
 
 #page {
-    /*border: 3px solid #28AEA8;*/ 
+    /*border: 3px solid #28AEA8;*/
     margin:0 auto 10px;
-    width: 800px; 
-    text-align: left; 
+    width: 800px;
+    text-align: left;
     padding: 30px;
-    -webkit-border-radius: 20px; 
+    -webkit-border-radius: 20px;
 
     /*-webkit-box-shadow: #BBB 0px 0px 20px;*/
     -webkit-box-shadow: #ddd -2px 2px 10px;
@@ -47,7 +47,7 @@ li      { padding: 2px 0; }
 #title a { color: #3c78d7; border:0; }
 #title a:hover { color:#0CF; }
 
-input[type=text] { 
+input[type=text] {
     color: #010101;
     background-color: transparent;
     padding: 3px;
@@ -55,9 +55,9 @@ input[type=text] {
     text-align: center;
     border: 1px solid #bbb;
     width: 38px;
-    margin-right:10px; 
+    margin-right:10px;
     -webkit-border-radius: 4px;
-    -webkit-box-shadow: #CCC 0px 0px 2px;  
+    -webkit-box-shadow: #CCC 0px 0px 2px;
 }
 
 textarea {
@@ -72,49 +72,49 @@ textarea:focus { color:#222; }
 
 
 #save {
-    font-size:16px; 
-    cursor:pointer; 
+    font-size:16px;
+    cursor:pointer;
     width:160px;
     margin:0 auto;
     display:block;
 }
 
-button { 
-    font-weight:bold; 
-    border:1px solid #ccc; 
-    background:#f6f6f6; 
+button {
+    font-weight:bold;
+    border:1px solid #ccc;
+    background:#f6f6f6;
     color:#777;
     text-shadow:1px 1px 0 white;
-    padding:5px 10px; 
+    padding:5px 10px;
     border-radius:5px;
-    background-image:-webkit-gradient(linear,left top,left bottom,from(white),to(#EFEFEF)); 
+    background-image:-webkit-gradient(linear,left top,left bottom,from(white),to(#EFEFEF));
     -webkit-transition: all 0.15s ease-out;
 }
 
-button:hover {  
-    color:#555; 
+button:hover {
+    color:#555;
     box-shadow:0 0 3px #999;
 }
 
-button:active { 
-    background: #DDD; 
-    background-image: -webkit-gradient(linear,left top,left bottom,from(#CCC),to(white)); 
+button:active {
+    background: #DDD;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#CCC),to(white));
 }
 
 
 /*.default_value { display:none; }*/
 
-.note { 
+.note {
     font-size: 80%;
-    color: #666; 
-    padding-left: 10px; 
-    cursor:help; 
+    color: #666;
+    padding-left: 10px;
+    cursor:help;
 }
 
 label[title], .help  { cursor:help;  }
 .setting-name { width: 150px; }
 
-.dialog { 
+.dialog {
     text-align:center;
     display:none;
     opacity: 0;
@@ -123,8 +123,8 @@ label[title], .help  { cursor:help;  }
     color: #fff;
     position: fixed;
     padding: 30px;
-    bottom: 0; 
-    left: 50%; 
+    bottom: 0;
+    left: 50%;
     margin-left:-260px;
     width:460px;
     border-radius: 8px 8px 0 0;
@@ -135,7 +135,7 @@ label[title], .help  { cursor:help;  }
     font: bold 20px 'arial black', arial;
 }
 
-.dialog a { 
+.dialog a {
     color: white;
     font-weight: bold;
     text-decoration: underline;
@@ -150,23 +150,23 @@ label[title], .help  { cursor:help;  }
 #test  { width:800px; margin:0 auto; }
 #test div { margin:20px 0; }
 
-#version-container { 
-    color: #222; 
+#version-container {
+    color: #222;
     font-size: 22px;
-    font-weight: normal; 
+    font-weight: normal;
     margin-top: 5px; font-style:italic;
-    width:300px;                     
+    width:300px;
     height:10px;
-    background:#ececec; 
+    background:#ececec;
     text-align:center;
 }
 
-#version  { 
-    background:#fff; 
+#version  {
+    background:#fff;
     color:#999;
     padding:0 8px;
     position:relative;
-    top:-8px; 
+    top:-8px;
 }
 </style>
 <script src="../src/sscr.js"></script>
@@ -236,7 +236,7 @@ function init() {
 
     // updated complete
     localStorage.saved = 'false';
-        
+
     // fill the form fields from localStorage
     options.forEach(function(key, i) {
         if (/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
@@ -260,7 +260,7 @@ function save() {
         if (!/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
             elem = byId(key);
             opt = elem.value;
-            // every <input> 
+            // every <input>
             if (isNodeName(elem, "input")) {
               // should be a number
               opt = parseFloat(opt, 10);
@@ -283,7 +283,7 @@ function save() {
     // error message
     else {
         alert(error);
-    } 
+    }
 }
 
 function get_manifest(callback) {
@@ -327,13 +327,13 @@ var profiles = {
     'pulseAlgorithm': 'true',
     'pulseScale': 4
   },
-  
+
   '_opera': {
     'animtime': 120,
     'scrollsz': 120,
     'pulseAlgorithm': 'false'
   },
-  
+
   '_ie9': {
     'animtime': 60,
     'scrollsz': 120,
@@ -347,7 +347,7 @@ function set_profile(profile) {
     if ('custom' == profile){
       init();
       return;
-    }  
+    }
 
     profile = profiles['_'+profile];
 
@@ -388,7 +388,7 @@ window.set_profile = set_profile;
 <body>
 
 <div id="title">
-  <a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn" target="_blank">SmoothScroll</a> 
+  <a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn" target="_blank">SmoothScroll</a>
   <div id="version-container"><span id="version"></span></div>
 </div>
 
@@ -472,7 +472,7 @@ window.set_profile = set_profile;
 <br>
 
 <h2><label for="exclude">Excluded pages</label></h2>
-<textarea id="exclude" cols="70" rows="5"></textarea> 
+<textarea id="exclude" cols="70" rows="5"></textarea>
 
 <br><br>
 
