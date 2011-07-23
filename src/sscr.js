@@ -25,17 +25,14 @@ var accelMax       = 1;   // 1
 
 // Keyboard Settings
 var keyboardsupport = true;  // option
-var disableKeyboard = false; // other reasons
 var arrowscroll     = 50;    // [px]
 
 // Excluded pages
-var exclude = "";
-var disabled = false;
+var exclude = null;
 
 // Other Variables
 var frame = false;
 var direction = { x: 0, y: 0 };
-var initdone  = false;
 var fixedback = true;
 var root = document.documentElement;
 var activeElement;
@@ -44,11 +41,26 @@ var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pag
 
 
 /***********************************************
- * SETTINGS
+ * INITIALIZE
  ***********************************************/
 
-chrome.extension.connect({ name: "smoothscroll" }).
-onMessage.addListener(function (settings) {
+/**
+ * Sets up scrolls array, determines if frames are involved.
+ */
+function init(settings) {
+
+    // disable everything if the page is blacklisted
+    exclude = settings.exclude;
+    if (exclude) {
+        var domains = exclude.split(/[,\n] ?/);
+        for (var i = domains.length; i--;) {
+            if (document.URL.indexOf(domains[i]) > -1) {
+                return;
+            }
+        }
+    }
+
+    if (!document.body) return;
 
     // NOTE: + converts to {Number}
     framerate  = +settings.framerate;
@@ -56,79 +68,33 @@ onMessage.addListener(function (settings) {
     stepsize   = +settings.scrollsz;
     accelMax   = +settings.accelMax;
     accelDelta = +settings.accelDelta;
-    exclude    =  settings.exclude;
     pulseAlgorithm  = (settings.pulseAlgorithm == "true");
     pulseScale      = +settings.pulseScale;
     keyboardsupport = (settings.keyboardsupport == "true");
     arrowscroll     = +settings.arrscroll;
     fixedback       = (settings.fixedback == "true");
 
-    // it seems that sometimes settings come late
-    // and we need to test again for excluded pages
-    initTest();
-
-    if (keyboardsupport && !disableKeyboard) {
-        addEvent("keydown", keydown);
-    }
-
     // If extension settings were deleted somehow
     if (!framerate) {
         alert("SmoothScroll: Please restart Chrome");
     }
-});
-
-
-/***********************************************
- * INITIALIZE
- ***********************************************/
-
-/**
- * Tests if smooth scrolling is allowed. Shuts down everything if not.
- */
-function initTest() {
-
-    // disable keys for google reader (spacebar conflict)
-    if (document.URL.indexOf("google.com/reader/view") > -1) {
-        disableKeyboard = true;
-    }
-
-    // disable everything if the page is blacklisted
-    if (exclude) {
-        var domains = exclude.split(/[,\n] ?/);
-        for (var i = domains.length; i--;) {
-            if (document.URL.indexOf(domains[i]) > -1) {
-                removeEvent("mousewheel", wheel);
-                disableKeyboard = true;
-                disabled = true;
-                break;
-            }
-        }
-    }
-
-    // disable keyboard support if anything above requested it
-    if (disableKeyboard) {
-        removeEvent("keydown", keydown);
-    }
-}
-
-/**
- * Sets up scrolls array, determines if frames are involved.
- */
-function init() {
-
-    if (!document.body) return;
 
     var body = document.body;
     var html = document.documentElement;
     var windowHeight = window.innerHeight;
     var scrollHeight = body.scrollHeight;
 
+    addEvent("mousedown", mousedown);
+    addEvent("mousewheel", wheel);
+    // disable keyboard support if anything above requested it
+    // disable keys for google reader (spacebar conflict)
+    if (keyboardsupport && document.URL.indexOf("google.com/reader/view") === -1) {
+        addEvent("keydown", keydown);
+    }
+
     // check compat mode for root element
     root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
     activeElement = body;
-
-    initTest();
-    initdone = true;
 
     // Checks if this script is running in a frame
     if (top != self) {
@@ -182,7 +148,7 @@ function init() {
         player.innerHTML = player.innerHTML;
     }
     // disable fixed background
-    if (!fixedback && !disabled) {
+    if (!fixedback) {
         body.style.backgroundAttachment = "scroll";
         html.style.backgroundAttachment = "scroll";
     }
@@ -309,10 +275,6 @@ function scrollArray(elem, left, top, delay) {
  * @param {Object} event
  */
 function wheel(event) {
-
-    if (!initdone) {
-        init();
-    }
 
     var target = event.target;
     var overflowing = overflowingAncestor(target);
@@ -541,6 +503,6 @@ function pulse(x) {
     return pulse_(x);
 }
 
-addEvent("mousedown", mousedown);
-addEvent("mousewheel", wheel);
-addEvent("load", init);
+(function() {
+  chrome.extension.connect({ name: "smoothscroll" }).onMessage.addListener(init);
+}).call(this);
