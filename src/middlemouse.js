@@ -11,7 +11,6 @@
 // local settings
 var img = document.createElement("div"); // img at the reference point
 var scrolling = false; // guards one phase
-var enabled   = false; // from settings
 var framerate = 200;
 
 // we check the OS for default middlemouse behavior only!
@@ -20,8 +19,13 @@ var isLinux   = (navigator.platform.indexOf("Linux") != -1);
 // get global settings
 chrome.extension.connect({ name: "smoothscroll"}).
 onMessage.addListener(function (settings) {
-    enabled   = (settings.middlemouse == "true") && !disabled;
+    if (disabled || settings.middlemouse === 'false') {
+        return;
+    }
     framerate = +settings.framerate + 50;
+
+    addEvent("mousedown", mousedown);
+    addEvent("DOMContentLoaded", init);
 });
 
 /**
@@ -61,7 +65,7 @@ function mousedown(e) {
     // if it's not the middle button, or
     // it's being used on an <a> element
     // take the default action
-    if (!elem || !enabled || e.button !== 1 || isLink || linux) {
+    if (!elem || e.button !== 1 || isLink || linux) {
         return true;
     }
 
@@ -128,8 +132,5 @@ function mousedown(e) {
     addEvent("mousedown", remove);
     addEvent("keydown", remove);
 }
-
-addEvent("mousedown", mousedown);
-addEvent("DOMContentLoaded", init);
 
 })(window);

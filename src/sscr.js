@@ -29,6 +29,7 @@ var arrowscroll     = 50;    // [px]
 
 // Excluded pages
 var exclude;
+var disabled = false;
 
 // Other Variables
 var frame = false;
@@ -51,6 +52,7 @@ function initSettings(settings) {
         var domains = exclude.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
+                disabled = true;
                 return;
             }
         }
