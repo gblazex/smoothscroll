@@ -106,6 +106,8 @@ function init() {
     root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
     activeElement = body;
 
+    setInterval(function(){ cache = {}; }, 10 * 1000);
+
     // Checks if this script is running in a frame
     if (top != self) {
         frame = true;
@@ -404,7 +406,6 @@ function mousedown(event) {
  ***********************************************/
 
 var cache = {}; // cleared out every once in while
-setInterval(function(){ cache = {}; }, 10 * 1000);
 
 var uniqueID = (function() {
     var i = 0;
