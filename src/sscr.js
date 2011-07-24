@@ -156,9 +156,11 @@ function init() {
     else if (location.host === 'www.youtube.com') {
         var player =  document.getElementById("watch-player") ||
                       document.getElementById("watch-player-div");
-        var embed = player.getElementsByTagName("embed");
-        embed[0].setAttribute("wmode", "opaque");
-        player.innerHTML = player.innerHTML;
+        if (player) {
+            var embed = player.getElementsByTagName("embed");
+            embed[0].setAttribute("wmode", "opaque");
+            player.innerHTML = player.innerHTML;
+        }
     }
     // disable fixed background
     if (!fixedback) {
