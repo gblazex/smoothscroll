@@ -47,8 +47,7 @@ var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pag
 
 function initSettings(settings) {
     // disable everything if the page is blacklisted
-    exclude = settings.exclude;
-    if (exclude) {
+    if (exclude = settings.exclude) {
         var domains = exclude.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
@@ -513,6 +512,4 @@ function pulse(x) {
     return pulse_(x);
 }
 
-(function() {
-  chrome.extension.connect({ name: "smoothscroll" }).onMessage.addListener(initSettings);
-}).call(this);
+chrome.extension.connect({ name: "smoothscroll" }).onMessage.addListener(initSettings);
