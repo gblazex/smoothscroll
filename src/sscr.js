@@ -3,7 +3,7 @@
 // Licensed under the terms of the MIT license.
 
 // People involved
-//  - Balazs Galambosi (maintainer)  
+//  - Balazs Galambosi (maintainer)
 //  - Patrick Brunner  (original idea)
 //  - Michael Herf     (Pulse Algorithm)
 
@@ -25,17 +25,15 @@ var accelMax       = 1;   // 1
 
 // Keyboard Settings
 var keyboardsupport = true;  // option
-var disableKeyboard = false; // other reasons
 var arrowscroll     = 50;    // [px]
 
 // Excluded pages
-var exclude = "";
+var exclude;
 var disabled = false;
 
 // Other Variables
 var frame = false;
 var direction = { x: 0, y: 0 };
-var initdone  = false;
 var fixedback = true;
 var root = document.documentElement;
 var activeElement;
@@ -47,35 +45,37 @@ var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pag
  * SETTINGS
  ***********************************************/
 
-chrome.extension.connect({ name: "smoothscroll" }).
-onMessage.addListener(function (settings) {
-    
+function initSettings(settings) {
+    // disable everything if the page is blacklisted
+    if (exclude = settings.exclude) {
+        var domains = exclude.split(/[,\n] ?/);
+        for (var i = domains.length; i--;) {
+            if (document.URL.indexOf(domains[i]) > -1) {
+                disabled = true;
+                return;
+            }
+        }
+    }
+
     // NOTE: + converts to {Number}
     framerate  = +settings.framerate;
     animtime   = +settings.animtime;
     stepsize   = +settings.scrollsz;
     accelMax   = +settings.accelMax;
     accelDelta = +settings.accelDelta;
-    exclude    =  settings.exclude;
     pulseAlgorithm  = (settings.pulseAlgorithm == "true");
     pulseScale      = +settings.pulseScale;
     keyboardsupport = (settings.keyboardsupport == "true");
     arrowscroll     = +settings.arrscroll;
     fixedback       = (settings.fixedback == "true");
-    
-    // it seems that sometimes settings come late
-    // and we need to test again for excluded pages
-    initTest();
-
-    if (keyboardsupport && !disableKeyboard) {
-        addEvent("keydown", keydown);
-    }
 
     // If extension settings were deleted somehow
     if (!framerate) {
         alert("SmoothScroll: Please restart Chrome");
     }
-});
+
+    addEvent('load', init);
+}
 
 
 /***********************************************
@@ -83,52 +83,29 @@ onMessage.addListener(function (settings) {
  ***********************************************/
 
 /**
- * Tests if smooth scrolling is allowed. Shuts down everything if not.
- */
-function initTest() {
-
-    // disable keys for google reader (spacebar conflict)
-    if (document.URL.indexOf("google.com/reader/view") > -1) {
-        disableKeyboard = true;
-    }
-    
-    // disable everything if the page is blacklisted
-    if (exclude) {
-        var domains = exclude.split(/[,\n] ?/);
-        for (var i = domains.length; i--;) {
-            if (document.URL.indexOf(domains[i]) > -1) {
-                removeEvent("mousewheel", wheel);
-                disableKeyboard = true;
-                disabled = true;
-                break;
-            }
-        }
-    }
-    
-    // disable keyboard support if anything above requested it
-    if (disableKeyboard) {
-        removeEvent("keydown", keydown);
-    }
-}
-
-/**
  * Sets up scrolls array, determines if frames are involved.
  */
 function init() {
-  
     if (!document.body) return;
 
     var body = document.body;
     var html = document.documentElement;
-    var windowHeight = window.innerHeight; 
+    var windowHeight = window.innerHeight;
     var scrollHeight = body.scrollHeight;
-    
+
+    addEvent("mousedown", mousedown);
+    addEvent("mousewheel", wheel);
+    // disable keyboard support if anything above requested it
+    // disable keys for google reader (spacebar conflict)
+    if (keyboardsupport && document.URL.indexOf("google.com/reader/view") === -1) {
+        addEvent("keydown", keydown);
+    }
+
     // check compat mode for root element
     root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
     activeElement = body;
-    
-    initTest();
-    initdone = true;
+
+    setInterval(function(){ cache = {}; }, 10 * 1000);
 
     // Checks if this script is running in a frame
     if (top != self) {
@@ -136,14 +113,14 @@ function init() {
     }
 
     /**
-     * This fixes a bug where the areas left and right to 
+     * This fixes a bug where the areas left and right to
      * the content does not trigger the onmousewheel event
      * on some pages. e.g.: html, body { height: 100% }
      */
     else if (scrollHeight > windowHeight &&
-            (body.offsetHeight <= windowHeight || 
+            (body.offsetHeight <= windowHeight ||
              html.offsetHeight <= windowHeight)) {
-                 
+
         // DOMChange (throttle): fix height
         var pending = false;
         var refresh = function() {
@@ -158,31 +135,34 @@ function init() {
         html.style.height = 'auto';
         setTimeout(refresh, 10);
         addEvent("DOMNodeInserted", refresh);
-        addEvent("DOMNodeRemoved",  refresh);  
-        
+        addEvent("DOMNodeRemoved",  refresh);
+
         // clearfix
         if (root.offsetHeight <= windowHeight) {
-            var underlay = document.createElement("div"); 	
+            var underlay = document.createElement("div");
             underlay.style.clear = "both";
             body.appendChild(underlay);
         }
     }
-    
+
     // gmail performance fix
     if (document.URL.indexOf("mail.google.com") > -1) {
         var s = document.createElement("style");
         s.innerHTML = ".iu { visibility: hidden }";
         (document.getElementsByTagName("head")[0] || html).appendChild(s);
     }
-    // youtube shaking video fix 
-    else if (document.URL.indexOf("http://www.youtube.com") === 0) {
-        var player = document.getElementById("watch-player");
-        var embed = player.getElementsByTagName("embed");
-        embed[0].setAttribute("wmode", "opaque");
-        player.innerHTML = player.innerHTML;
-    } 
+    // youtube shaking video fix
+    else if (location.host === 'www.youtube.com') {
+        var player =  document.getElementById("watch-player") ||
+                      document.getElementById("watch-player-div");
+        if (player) {
+            var embed = player.getElementsByTagName("embed");
+            embed[0].setAttribute("wmode", "opaque");
+            player.innerHTML = player.innerHTML;
+        }
+    }
     // disable fixed background
-    if (!fixedback && !disabled) {
+    if (!fixedback) {
         body.style.backgroundAttachment = "scroll";
         html.style.backgroundAttachment = "scroll";
     }
@@ -190,9 +170,9 @@ function init() {
 
 
 /************************************************
- * SCROLLING 
+ * SCROLLING
  ************************************************/
- 
+
 var que = [];
 var pending = false;
 var lastScroll = +new Date;
@@ -201,7 +181,7 @@ var lastScroll = +new Date;
  * Pushes scroll actions to the scrolling queue.
  */
 function scrollArray(elem, left, top, delay) {
-    
+
     delay || (delay = 1000);
     directionCheck(left, top);
 
@@ -217,83 +197,83 @@ function scrollArray(elem, left, top, delay) {
             }
         }
         lastScroll = +new Date;
-    }          
-    
+    }
+
     // push a scroll command
     que.push({
-        x: left, 
-        y: top, 
+        x: left,
+        y: top,
         lastX: (left < 0) ? 0.99 : -0.99,
-        lastY: (top  < 0) ? 0.99 : -0.99, 
+        lastY: (top  < 0) ? 0.99 : -0.99,
         start: +new Date
     });
-        
+
     // don't act if there's a pending queue
     if (pending) {
         return;
-    }  
+    }
 
     var scrollWindow = (elem === document.body);
-    
+
     var step = function(time) {
-        
+
         var now = time || +new Date;
         var scrollX = 0;
-        var scrollY = 0; 
-    
+        var scrollY = 0;
+
         for (var i = 0; i < que.length; i++) {
-            
+
             var item = que[i];
             var elapsed  = now - item.start;
             var finished = (elapsed >= animtime);
-            
+
             // scroll position: [0, 1]
             var position = (finished) ? 1 : elapsed / animtime;
-            
+
             // easing [optional]
             if (pulseAlgorithm) {
                 position = pulse(position);
             }
-            
+
             // only need the difference
             var x = (item.x * position - item.lastX) >> 0;
             var y = (item.y * position - item.lastY) >> 0;
-            
+
             // add this to the total scrolling
             scrollX += x;
-            scrollY += y;            
-            
+            scrollY += y;
+
             // update last values
             item.lastX += x;
             item.lastY += y;
-        
+
             // delete and step back if it's over
             if (finished) {
                 que.splice(i, 1); i--;
-            }           
+            }
         }
 
         // scroll left and top
         if (scrollWindow) {
             window.scrollBy(scrollX, scrollY);
-        } 
+        }
         else {
             if (scrollX) elem.scrollLeft += scrollX;
-            if (scrollY) elem.scrollTop  += scrollY;                    
+            if (scrollY) elem.scrollTop  += scrollY;
         }
-        
+
         // clean up if there's nothing left to do
         if (!left && !top) {
             que = [];
         }
-        
-        if (que.length) { 
-            requestFrame(step, elem, (delay / framerate + 1)); 
-        } else { 
+
+        if (que.length) {
+            requestFrame(step, elem, (delay / framerate + 1));
+        } else {
             pending = false;
         }
     };
-    
+
     // start a new queue of actions
     requestFrame(step, elem, 0);
     pending = true;
@@ -310,24 +290,20 @@ function scrollArray(elem, left, top, delay) {
  */
 function wheel(event) {
 
-    if (!initdone) {
-        init();
-    }
-    
     var target = event.target;
     var overflowing = overflowingAncestor(target);
-    
+
     // use default if there's no overflowing
-    // element or default action is prevented    
+    // element or default action is prevented
     if (!overflowing || event.defaultPrevented ||
-        isNodeName(activeElement, "embed") ||
-       (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
+        activeElement.nodeName === 'EMBED' ||
+       (target.nodeName === 'EMBED' && /\.pdf$/i.test(target.src))) {
         return true;
     }
 
     var deltaX = event.wheelDeltaX || 0;
     var deltaY = event.wheelDeltaY || 0;
-    
+
     // use wheelDelta if deltaX/Y is not available
     if (!deltaX && !deltaY) {
         deltaY = event.wheelDelta || 0;
@@ -342,7 +318,7 @@ function wheel(event) {
     if (Math.abs(deltaY) > 1.2) {
         deltaY *= stepsize / 120;
     }
-    
+
     scrollArray(overflowing, -deltaX, -deltaY);
     event.preventDefault();
 }
@@ -354,24 +330,24 @@ function wheel(event) {
 function keydown(event) {
 
     var target   = event.target;
-    var modifier = event.ctrlKey || event.altKey || event.metaKey || 
+    var modifier = event.ctrlKey || event.altKey || event.metaKey ||
                   (event.shiftKey && event.keyCode !== key.spacebar);
-    
+
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     // or in a dropdown
-    if ( /input|textarea|select|embed/i.test(target.nodeName) ||
-         target.isContentEditable || 
+    if ( /INPUT|TEXTAREA|SELECT|EMBED/.test(target.nodeName) ||
+         target.isContentEditable ||
          event.defaultPrevented   ||
          modifier ) {
       return true;
     }
     // spacebar should trigger button press
-    if (isNodeName(target, "button") &&
+    if (target.nodeName === 'BUTTON' &&
         event.keyCode === key.spacebar) {
       return true;
     }
-    
+
     var shift, x = 0, y = 0;
     var elem = overflowingAncestor(activeElement);
     var clientHeight = elem.clientHeight;
@@ -386,7 +362,7 @@ function keydown(event) {
             break;
         case key.down:
             y = arrowscroll;
-            break;         
+            break;
         case key.spacebar: // (+ shift)
             shift = event.shiftKey ? 1 : -1;
             y = -shift * clientHeight * 0.9;
@@ -409,7 +385,7 @@ function keydown(event) {
             break;
         case key.right:
             x = arrowscroll;
-            break;            
+            break;
         default:
             return true; // a key we don't care about
     }
@@ -429,9 +405,8 @@ function mousedown(event) {
 /***********************************************
  * OVERFLOW
  ***********************************************/
- 
+
 var cache = {}; // cleared out every once in while
-setInterval(function(){ cache = {}; }, 10 * 1000);
 
 var uniqueID = (function() {
     var i = 0;
@@ -478,11 +453,7 @@ function addEvent(type, fn, bubble) {
 }
 
 function removeEvent(type, fn, bubble) {
-    window.removeEventListener(type, fn, (bubble||false));  
-}
-
-function isNodeName(el, tag) {
-    return (el.nodeName||"").toLowerCase() === tag.toLowerCase();
+    window.removeEventListener(type, fn, (bubble||false));
 }
 
 function directionCheck(x, y) {
@@ -497,8 +468,8 @@ function directionCheck(x, y) {
 }
 
 var requestFrame = (function(){
-      return  window.requestAnimationFrame       || 
-              window.webkitRequestAnimationFrame || 
+      return  window.requestAnimationFrame       ||
+              window.webkitRequestAnimationFrame ||
               function(callback, element, delay){
                   window.setTimeout(callback, delay || (1000/60));
               };
@@ -507,7 +478,7 @@ var requestFrame = (function(){
 /***********************************************
  * PULSE
  ***********************************************/
- 
+
 /**
  * Viscous fluid with a pulse for part and decay for the rest.
  * - Applies a fixed force over an interval (a damped acceleration), and
@@ -541,6 +512,4 @@ function pulse(x) {
     return pulse_(x);
 }
 
-addEvent("mousedown", mousedown);
-addEvent("mousewheel", wheel);
-addEvent("load", init);
+chrome.extension.connect({ name: "smoothscroll" }).onMessage.addListener(initSettings);
