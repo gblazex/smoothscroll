@@ -1,5 +1,5 @@
 {
-   "background_page": "pages/background.html",
+   "background": { "page": "pages/background.html" },
    "content_scripts": [ {
       "all_frames": true,
       "js": [ "src/sscr.js", "src/middlemouse.js" ],
@@ -15,5 +15,6 @@
    },
    "name": "SmoothScroll",
    "options_page": "pages/options.html",
-   "version": "1.0.1"
+   "version": "1.2.0",
+   "manifest_version": 2
 }
