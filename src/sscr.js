@@ -237,7 +237,7 @@ function scrollArray(elem, left, top, delay) {
     
     var step = function(time) {
         
-        var now = time || +new Date;
+        var now = +new Date;
         var scrollX = 0;
         var scrollY = 0; 
     

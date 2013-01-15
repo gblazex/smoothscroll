@@ -201,7 +201,7 @@ function generate_test() {
 
 
 byId('profiles').onclick = function(e) {
-  if (e.target.id && e.nodeName == 'BUTTON') {
+  if (e.target.id && e.target.nodeName == 'BUTTON') {
     set_profile(e.target.id);
   }
 };

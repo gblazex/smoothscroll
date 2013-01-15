@@ -16,5 +16,6 @@
    "name": "SmoothScroll",
    "options_page": "pages/options.html",
    "version": "1.2.0",
-   "manifest_version": 2
-}
+   "manifest_version": 2,
+   "web_accessible_resources": [ "img/cursor.png" ]
+} 
