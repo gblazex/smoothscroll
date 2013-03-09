@@ -176,7 +176,7 @@ label[title], .help  { cursor:help;  }
 <body>
 
 <div id="title">
-  <a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn" target="_blank">SmoothScroll</a> 
+  <a href="https://chrome.google.com/webstore/detail/smoothscroll/nbokbjkabcmbfdlbddjidfmibcpneigj" target="_blank">SmoothScroll</a> 
   <div id="version-container"><span id="version"></span></div>
 </div>
 
@@ -201,26 +201,26 @@ label[title], .help  { cursor:help;  }
 
 <table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; margin-left: 6px">
  <tr>
-  <td class="setting-name"><label for="scrollsz" title="higher means more scrolling for each mouse event">Step size [px]</label></td>
-  <td><input id="scrollsz" type="text" size="1" maxlength="3"> </td>
+  <td class="setting-name"><label for="stepSize" title="higher means more scrolling for each mouse event">Step size [px]</label></td>
+  <td><input id="stepSize" type="text" size="1" maxlength="3"> </td>
   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 120</i></span></td>
   <td class="note" title="higher means more scrolling for each mouse event">(<b>how</b> much)</td>
  </tr>
  <tr>
-  <td class="setting-name"><label for="animtime" title="higher number stretches animation">Animation time [ms]</label></td>
-  <td><input id="animtime" type="text" size="1" maxlength="3"> </td>
+  <td class="setting-name"><label for="animationTime" title="higher number stretches animation">Animation time [ms]</label></td>
+  <td><input id="animationTime" type="text" size="1" maxlength="3"> </td>
   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 400</i></span></td>
   <td class="note" title="higher number stretches animation">(<b>how</b> quick)</td>
  </tr>
  <tr>
-  <td class="setting-name"><label for="accelMax" title="how much scrolling can accelerate">Acceleration scale</label></td>
-  <td><input id="accelMax" type="text" size="1" maxlength="3"></td>
+  <td class="setting-name"><label for="accelerationMax" title="how much scrolling can accelerate">Acceleration scale</label></td>
+  <td><input id="accelerationMax" type="text" size="1" maxlength="3"></td>
   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 1</i></span></td>
   <td class="note" title="how much scrolling can accelerate">(<b>how </b>swift)</td>
 </tr>
  <tr>
-  <td class="setting-name"><label for="accelDelta" title="lower means acceleration kicks in more frequently">Acceleration delta [ms]</label></td>
-  <td><input id="accelDelta" type="text" size="1" maxlength="2"></td>
+  <td class="setting-name"><label for="accelerationDelta" title="lower means acceleration kicks in more frequently">Acceleration delta [ms]</label></td>
+  <td><input id="accelerationDelta" type="text" size="1" maxlength="2"></td>
   <td class="default_value"><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 20</i></span></td>
   <td class="note" title="lower means acceleration kicks in more frequently">(<b>time</b> between scroll events)</td>
 </tr>
@@ -231,8 +231,8 @@ label[title], .help  { cursor:help;  }
   <td class="note" title="it affects how long the decceleration part is">(<b>ratio </b>of "tail" to "acceleration")</td>
 </tr>
  <tr>
-  <td style="width:180px;"><label for="arrscroll" title="higher means more scrolling for each arrow key press">Arrow key step size [px]</label></td>
-  <td><input id="arrscroll" type="text" size="1" maxlength="3"> </td>
+  <td style="width:180px;"><label for="arrowScroll" title="higher means more scrolling for each arrow key press">Arrow key step size [px]</label></td>
+  <td><input id="arrowScroll" type="text" size="1" maxlength="3"> </td>
   <td class="default_value" ><span style="color: #00CCFF; font-size: 12px;"> <i>Default value: 50</i></span></td>
  </tr>
 </table>
@@ -240,13 +240,13 @@ label[title], .help  { cursor:help;  }
 
 <h2>Features</h2>
 
-<input type="checkbox" id="keyboardsupport"><label for="keyboardsupport">Enable <b>keyboard support</b></label><br><br>
+<input type="checkbox" id="keyboardSupport"><label for="keyboardSupport">Enable <b>keyboard support</b></label><br><br>
 
 <input type="checkbox" id="pulseAlgorithm"><label for="pulseAlgorithm" title="adds easing to the animations">Enable <b>pulse algorithm</b></label><br><br>
 
-<input type="checkbox" id="middlemouse"><label for="middlemouse" title="scroll smooth with the middle mouse button">Enable <b>middle mouse</b> scrolling</label><br><br>
+<input type="checkbox" id="middleMouse"><label for="middleMouse" title="scroll smooth with the middle mouse button">Enable <b>middle mouse</b> scrolling</label><br><br>
 
-<input type="checkbox" id="fixedback"><label for="fixedback" title="disabling it improves performance on sites like twitter.com">Enable <b>fixed backgrounds</b></label><br><br>
+<input type="checkbox" id="fixedBackground"><label for="fixedBackground" title="disabling it improves performance on sites like twitter.com">Enable <b>fixed backgrounds</b></label><br><br>
 
 <table border="0" cellpadding="0" cellspacing="2" style="font-size: 12px; ">
 
@@ -261,8 +261,8 @@ label[title], .help  { cursor:help;  }
 
 <br>
 
-<h2><label for="exclude">Excluded pages</label></h2>
-<textarea id="exclude" cols="70" rows="5"></textarea> 
+<h2><label for="excluded">Excluded pages</label></h2>
+<textarea id="excluded" cols="70" rows="5"></textarea> 
 
 <br><br>
 
@@ -280,7 +280,7 @@ label[title], .help  { cursor:help;  }
   <h2>Links</h2>
   <ul>
    <li><a href="https://github.com/galambalazs/smoothscroll/">Source Code, Known Issues, Bug Report, ...</a></li>
-   <li><a href="https://chrome.google.com/extensions/detail/cccpiddacjljmfbbgeimpelpndgpoknn">Extension Homepage</a></li>
+   <li><a href="ttps://chrome.google.com/webstore/detail/smoothscroll/nbokbjkabcmbfdlbddjidfmibcpneigj">Extension Homepage</a></li>
   </ul>
 </div>
 

@@ -1,5 +1,5 @@
 
-// SmoothScroll v1.0.1
+// SmoothScroll v1.2.1
 // Licensed under the terms of the MIT license.
 
 // People involved
@@ -8,73 +8,58 @@
 //  - Michael Herf     (Pulse Algorithm)
 
 // Scroll Variables (tweakable)
-var framerate = 150; // [Hz]
-var animtime  = 400; // [px]
-var stepsize  = 120; // [px]
+var defaultOptions = {
 
-// Pulse (less tweakable)
-// ratio of "tail" to "acceleration"
-var pulseAlgorithm = true;
-var pulseScale     = 8;
-var pulseNormalize = 1;
+    // Scrolling Core
+    frameRate        : 150, // [Hz]
+    animationTime    : 400, // [px]
+    stepSize         : 120, // [px]
 
-// Acceleration
-var acceleration   = true;
-var accelDelta     = 20;  // 20
-var accelMax       = 1;   // 1
+    // Pulse (less tweakable)
+    // ratio of "tail" to "acceleration"
+    pulseAlgorithm   : true,
+    pulseScale       : 8,
+    pulseNormalize   : 1,
 
-// Keyboard Settings
-var keyboardsupport = true;  // option
-var disableKeyboard = false; // other reasons
-var arrowscroll     = 50;    // [px]
+    // Acceleration
+    accelerationDelta : 20,  // 20
+    accelerationMax   : 1,   // 1
 
-// Excluded pages
-var exclude = "";
-var disabled = false;
+    // Keyboard Settings
+    keyboardSupport   : true,  // option
+    arrowScroll       : 50,     // [px]
+
+    // Other
+    fixedBackground   : true, 
+    excluded          : ""    
+};
+
+var options = defaultOptions;
+
 
 // Other Variables
-var frame = false;
+var isExcluded = false;
+var isFrame = false;
 var direction = { x: 0, y: 0 };
-var initdone  = false;
-var fixedback = true;
+var initDone  = false;
 var root = document.documentElement;
 var activeElement;
 
-var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36 };
+var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, 
+            pageup: 33, pagedown: 34, end: 35, home: 36 };
 
 
 /***********************************************
  * SETTINGS
  ***********************************************/
 
-chrome.extension.connect({ name: "smoothscroll" }).
-onMessage.addListener(function (settings) {
-    
-    // NOTE: + converts to {Number}
-    framerate  = +settings.framerate;
-    animtime   = +settings.animtime;
-    stepsize   = +settings.scrollsz;
-    accelMax   = +settings.accelMax;
-    accelDelta = +settings.accelDelta;
-    exclude    =  settings.exclude;
-    pulseAlgorithm  = (settings.pulseAlgorithm == "true");
-    pulseScale      = +settings.pulseScale;
-    keyboardsupport = (settings.keyboardsupport == "true");
-    arrowscroll     = +settings.arrscroll;
-    fixedback       = (settings.fixedback == "true");
-    
+chrome.storage.sync.get(defaultOptions, function (syncedOptions) {
+
+    options = syncedOptions;
+
     // it seems that sometimes settings come late
     // and we need to test again for excluded pages
     initTest();
-
-    if (keyboardsupport && !disableKeyboard) {
-        addEvent("keydown", keydown);
-    }
-
-    // If extension settings were deleted somehow
-    if (!framerate) {
-        alert("SmoothScroll: Please restart Chrome");
-    }
 });
 
 
@@ -87,19 +72,21 @@ onMessage.addListener(function (settings) {
  */
 function initTest() {
 
+    var disableKeyboard = false; 
+
     // disable keys for google reader (spacebar conflict)
     if (document.URL.indexOf("google.com/reader/view") > -1) {
         disableKeyboard = true;
     }
     
     // disable everything if the page is blacklisted
-    if (exclude) {
-        var domains = exclude.split(/[,\n] ?/);
+    if (options.excluded) {
+        var domains = options.excluded.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
                 removeEvent("mousewheel", wheel);
                 disableKeyboard = true;
-                disabled = true;
+                isExcluded = true;
                 break;
             }
         }
@@ -108,6 +95,10 @@ function initTest() {
     // disable keyboard support if anything above requested it
     if (disableKeyboard) {
         removeEvent("keydown", keydown);
+    }
+
+    if (options.keyboardSupport && !disableKeyboard) {
+        addEvent("keydown", keydown);
     }
 }
 
@@ -128,11 +119,11 @@ function init() {
     activeElement = body;
     
     initTest();
-    initdone = true;
+    initDone = true;
 
     // Checks if this script is running in a frame
     if (top != self) {
-        frame = true;
+        isFrame = true;
     }
 
     /**
@@ -182,7 +173,7 @@ function init() {
         player.innerHTML = player.innerHTML;
     } 
     // disable fixed background
-    if (!fixedback && !disabled) {
+    if (!options.fixedBackground && !isExcluded) {
         body.style.backgroundAttachment = "scroll";
         html.style.backgroundAttachment = "scroll";
     }
@@ -205,13 +196,13 @@ function scrollArray(elem, left, top, delay) {
     delay || (delay = 1000);
     directionCheck(left, top);
 
-    if (acceleration) {
+    if (options.acceleration) {
         var now = +new Date;
         var elapsed = now - lastScroll;
-        if (elapsed < accelDelta) {
+        if (elapsed < options.accelDelta) {
             var factor = (1 + (30 / elapsed)) / 2;
             if (factor > 1) {
-                factor = Math.min(factor, accelMax);
+                factor = Math.min(factor, options.accelMax);
                 left *= factor;
                 top  *= factor;
             }
@@ -245,13 +236,13 @@ function scrollArray(elem, left, top, delay) {
             
             var item = que[i];
             var elapsed  = now - item.start;
-            var finished = (elapsed >= animtime);
+            var finished = (elapsed >= options.animationTime);
             
             // scroll position: [0, 1]
-            var position = (finished) ? 1 : elapsed / animtime;
+            var position = (finished) ? 1 : elapsed / options.animationTime;
             
             // easing [optional]
-            if (pulseAlgorithm) {
+            if (options.pulseAlgorithm) {
                 position = pulse(position);
             }
             
@@ -288,7 +279,7 @@ function scrollArray(elem, left, top, delay) {
         }
         
         if (que.length) { 
-            requestFrame(step, elem, (delay / framerate + 1)); 
+            requestFrame(step, elem, (delay / options.frameRate + 1)); 
         } else { 
             pending = false;
         }
@@ -310,7 +301,7 @@ function scrollArray(elem, left, top, delay) {
  */
 function wheel(event) {
 
-    if (!initdone) {
+    if (!initDone) {
         init();
     }
     
@@ -337,10 +328,10 @@ function wheel(event) {
     // delta is 120 most of the time
     // synaptics seems to send 1 sometimes
     if (Math.abs(deltaX) > 1.2) {
-        deltaX *= stepsize / 120;
+        deltaX *= options.stepSize / 120;
     }
     if (Math.abs(deltaY) > 1.2) {
-        deltaY *= stepsize / 120;
+        deltaY *= options.stepSize / 120;
     }
     
     scrollArray(overflowing, -deltaX, -deltaY);
@@ -382,10 +373,10 @@ function keydown(event) {
 
     switch (event.keyCode) {
         case key.up:
-            y = -arrowscroll;
+            y = -options.arrowScroll;
             break;
         case key.down:
-            y = arrowscroll;
+            y = options.arrowScroll;
             break;         
         case key.spacebar: // (+ shift)
             shift = event.shiftKey ? 1 : -1;
@@ -405,10 +396,10 @@ function keydown(event) {
             y = (damt > 0) ? damt+10 : 0;
             break;
         case key.left:
-            x = -arrowscroll;
+            x = -options.arrowScroll;
             break;
         case key.right:
-            x = arrowscroll;
+            x = options.arrowScroll;
             break;            
         default:
             return true; // a key we don't care about
@@ -456,7 +447,7 @@ function overflowingAncestor(el) {
         }
         elems.push(el);
         if (rootScrollHeight === el.scrollHeight) {
-            if (!frame || root.clientHeight + 10 < rootScrollHeight) {
+            if (!isFrame || root.clientHeight + 10 < rootScrollHeight) {
                 return setCache(elems, document.body); // scrolling root in WebKit
             }
         } else if (el.clientHeight + 10 < el.scrollHeight) {
@@ -510,14 +501,14 @@ var requestFrame = (function(){
  
 /**
  * Viscous fluid with a pulse for part and decay for the rest.
- * - Applies a fixed force over an interval (a damped acceleration), and
+ * - Applies a fixed force over an interval (a damped options.acceleration), and
  * - Lets the exponential bleed away the velocity over a longer interval
  * - Michael Herf, http://stereopsis.com/stopping/
  */
 function pulse_(x) {
     var val, start, expx;
     // test
-    x = x * pulseScale;
+    x = x * options.pulseScale;
     if (x < 1) { // acceleartion
         val = x - (1 - Math.exp(-x));
     } else {     // tail
@@ -528,15 +519,15 @@ function pulse_(x) {
         expx = 1 - Math.exp(-x);
         val = start + (expx * (1 - start));
     }
-    return val * pulseNormalize;
+    return val * options.pulseNormalize;
 }
 
 function pulse(x) {
     if (x >= 1) return 1;
     if (x <= 0) return 0;
 
-    if (pulseNormalize == 1) {
-        pulseNormalize /= pulse_(1);
+    if (options.pulseNormalize == 1) {
+        options.pulseNormalize /= pulse_(1);
     }
     return pulse_(x);
 }

@@ -7,19 +7,21 @@
 /**
  * List of available options
  */
-var options = [
-  'animtime',
-  'scrollsz',
-  'arrscroll',
-  'middlemouse',
-  'accelMax',
-  'accelDelta',
+var optionsList = [
+  'animationTime',
+  'stepSize',
+  'arrowScroll',
+  'middleMouse',
+  'accelerationMax',
+  'accelerationDelta',
   'pulseAlgorithm',
   'pulseScale',
-  'keyboardsupport',
-  'exclude',
-  'fixedback'
+  'keyboardSupport',
+  'excluded',
+  'fixedBackground'
 ];
+
+var options = {};
 
 function byId(id) { return document.getElementById(id); }
 function byClass(cname) { return document.getElementsByClassName(cname); }
@@ -45,10 +47,16 @@ function hide(elem, newop) {
     }, 1000);
 }
 
+function isCheckbox(key) {
+  return /^(?:keyboardSupport|middleMouse|pulseAlgorithm|fixedBackground)$/.test(key);
+}
+
 /**
  * Fills up the form with the saved values from local storage.
  */
-function init() {
+function init(optionsSynced) {
+
+    options = optionsSynced;
 
     // settings were updated -> show dialog
     if (localStorage.saved == 'true') {
@@ -62,14 +70,14 @@ function init() {
     // updated complete
     localStorage.saved = 'false';
         
-    // fill the form fields from localStorage
-    options.forEach(function(key, i) {
-        if (/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
-            byId(key).checked = (localStorage[key] == "true");
-        } else if (localStorage[key]) {
-            byId(key).value = localStorage[key];
-        }
-    });
+    // fill the form fields from storage
+    for (var key in options) {
+      if (isCheckbox(key)) {
+          byId(key).checked = options[key];
+      } else if (options[key]) {
+          byId(key).value = options[key];
+      }
+    }
 }
 
 /**
@@ -77,12 +85,12 @@ function init() {
  */
 function save() {
 
-    var i, key, opt, elem, error;
+    var i, key, opt, elem, error, options = {};
 
     // save options to the local storage
-    options.forEach(function(key, i) {
+    optionsList.forEach(function(key, i) {
         // <input type="text"> and <textarea>
-        if (!/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
+        if (!isCheckbox(key)) {
             elem = byId(key);
             opt = elem.value;
             // every <input> 
@@ -94,16 +102,18 @@ function save() {
                   return; // stop iteration
                }
             }
-            localStorage[key] = opt;
+            options[key] = opt;
         } else { // checkbox
-            localStorage[key] = byId(key).checked;
+            options[key] = byId(key).checked;
         }
     });
 
     // update message
     if (!error) {
-        localStorage.saved = 'true';
-        reload();
+        chrome.storage.sync.set(options, function(){
+            localStorage.saved = 'true';
+            reload();   
+        });
     }
     // error message
     else {
@@ -133,41 +143,41 @@ function reload() {
 var profiles = {
 
   '_custom': {
-    'animtime': 160,
-    'scrollsz': 120,
+    'animationTime': 160,
+    'stepSize': 120,
     'pulseAlgorithm': 'true',
     'pulseScale': 4
   },
 
   '_default': {
-    'animtime': 400,
-    'scrollsz': 120,
+    'animationTime': 400,
+    'stepSize': 120,
     'pulseAlgorithm': 'true',
     'pulseScale': 8
   },
 
   '_iphone': {
-    'animtime': 400,
-    'scrollsz': 120,
+    'animationTime': 400,
+    'stepSize': 120,
     'pulseAlgorithm': 'true',
     'pulseScale': 4
   },
   
   '_opera': {
-    'animtime': 120,
-    'scrollsz': 120,
+    'animationTime': 120,
+    'stepSize': 120,
     'pulseAlgorithm': 'false'
   },
   
   '_ie9': {
-    'animtime': 60,
-    'scrollsz': 120,
+    'animationTime': 60,
+    'stepSize': 120,
     'pulseAlgorithm': 'false'
   }
 };
 
 // TODO: merge with init
-function set_profile(profile) {
+function setProfile(profile) {
 
     if ('custom' == profile){
       init();
@@ -178,19 +188,18 @@ function set_profile(profile) {
 
     // set
     for (var key in profile) {
-        if (/keyboardsupport|middlemouse|pulseAlgorithm|fixedback/.test(key)) {
+        if (isCheckbox(key)) {
             byId(key).checked = (profile[key] == "true");
-        } else if (localStorage[key]) {
+        } else if (options[key]) {
             byId(key).value = profile[key];
         }
     };
 }
 
-// Restores select box state to saved value from localStorage.
-//function restore_options() {
-//}
+// Restores select box state to saved value from storage.
+// function restore_options() {}
 
-function generate_test() {
+function generateTest() {
     var test = byId('test');
     var el = byTag('div', test)[0];
     for (var i = 5; i--;) {
@@ -198,21 +207,19 @@ function generate_test() {
     }
 }
 
-
-
 byId('profiles').onclick = function(e) {
   if (e.target.id && e.target.nodeName == 'BUTTON') {
-    set_profile(e.target.id);
+    setProfile(e.target.id);
   }
 };
 
 byId('save').onclick = save;
 
 // public interface
-window.addEventListener("DOMContentLoaded", init, false);
-window.addEventListener("DOMContentLoaded", generate_test, false);
+chrome.storage.sync.get(optionsList, init);
+window.addEventListener("DOMContentLoaded", generateTest, false);
 window.reload = reload;
 window.save = save;
-window.set_profile = set_profile;
+window.setProfile = setProfile;
 
 })(window);

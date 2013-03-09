@@ -1,93 +1,39 @@
 
-// Fetch version number of SmoothScroll
-function get_manifest(callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.onload = function () {
-    callback(JSON.parse(xhr.responseText));
-  };
-  xhr.open('GET', '../manifest.json', true);
-  xhr.send(null);
+var defaultOptions = {
+
+    // Plugin
+    middleMouse       : true, 
+
+    // Scrolling Core
+    framerate         : 150, // [Hz]
+    animationTime     : 400, // [px]
+    stepSize          : 120, // [px]
+
+    // Pulse (less tweakable)
+    // ratio of "tail" to "acceleration"
+    pulseAlgorithm    : true,
+    pulseScale        : 8,
+    pulseNormalize    : 1,
+
+    // Acceleration
+    accelerationDelta : 20,  // 20
+    accelerationMax   : 1,   // 1
+
+    // Keyboard Settings
+    keyboardSupport   : true,  // option
+    arrowScroll       : 50,     // [px]
+
+    // Other
+    fixedBackground   : true, 
+    excluded          : "example.com, another.example.com"    
 }
 
-get_manifest(function (manifest) {
-  version = manifest.version;
-  init();
-});
 
-function setDefault(key, value) {
-  if (localStorage[key] == null) {
-    localStorage[key] = value;
-  }
-}
+// Fired when the extension is first installed, 
+// when the extension is updated to a new version, 
+// and when Chrome is updated to a new version.
+chrome.runtime.onInstalled.addListener(init);
 
 function init() {
-
-  // TODO: store the defaults in the localStorage so
-  // they are available for sscr.js and on options.html
-
-  // Set the default settings
-  setDefault("version", version);
-  // general & mouse
-  setDefault("framerate", 150);
-  setDefault("animtime",  400);
-  setDefault("scrollsz",  120);
-  setDefault("middlemouse", true);
-  // accel
-  setDefault("accelMax",   1);
-  setDefault("accelDelta", 20);
-  // pulse
-  setDefault("pulseAlgorithm", true);
-  setDefault("pulseScale", 8);
-  setDefault("pulseNormalize", 1);
-  // keyboard
-  setDefault("keyboardsupport", true);
-  setDefault("arrscroll", 50);
-  // exlude page
-  setDefault("fixedback", true);
-  setDefault("exclude", "example.com, another.example.com");
-  
-  /**
-   * NOTE: It's easier if we give an example 
-   * how to format the excluded pages list,
-   */
-
-  var store = localStorage;
-
-  // Fresh install
-  if (!store.version) {
-    // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});
-  }
-
-  // If updated do something
-  if (store.version != version) {
-
-    store.version = version;
-
-    if (store.framerate == "50") {
-      store.framerate = 150;
-    }
-
-    store.exclude = store.exclude.replace(/ /g, "");
-
-    var list = [];
-    var domains = store.exclude.split(/[,\n] ?/);
-    for (var i = 0; i < domains.length; i++) {
-        if (domains[i] === "twitter.com")
-           store.fixedback = false;
-        else if (domains[i] && domains[i] !== "mail.google.com")
-           list.push(domains[i]);
-    }
-
-    store.exclude = list.join(", ");
-    
-    // This should be replaced by an infobar once the API is ready
-    // chrome.tabs.create({url: "chrome-extension://cccpiddacjljmfbbgeimpelpndgpoknn/options_page/options.html"});
-  }
+  chrome.storage.sync.set(defaultOptions);
 }
-
-// If content scripts connect send the settings
-chrome.extension.onConnect.addListener(function (port) {
-  if (port.name == 'smoothscroll') {
-    port.postMessage(localStorage);
-  }
-});

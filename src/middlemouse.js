@@ -1,28 +1,35 @@
 
-// SmoothScroll v1.0.1
+// SmoothScroll v1.2.1
 // Licensed under the terms of the MIT license.
-// Balázs Galambosi (c) 2011
+// Balázs Galambosi (c) 2013
 
 /**
  * A module for middle mouse scrolling.
  */
 (function(window){
 
-// local settings
+var defaultOptions = {
+    middleMouse : false,
+    frameRate   : 200
+};
+
+var options = defaultOptions;
+
 var img = document.createElement("div"); // img at the reference point
 var scrolling = false; // guards one phase
-var enabled   = false; // from settings
-var framerate = 200;
 
-// we check the OS for default middlemouse behavior only!
-var isLinux   = (navigator.platform.indexOf("Linux") != -1); 
+
+// we check the OS for default middle mouse behavior only!
+var isLinux = (navigator.platform.indexOf("Linux") != -1); 
 
 // get global settings
-chrome.extension.connect({ name: "smoothscroll"}).
-onMessage.addListener(function (settings) {
-    enabled   = (settings.middlemouse == "true") && !disabled;
-    framerate = +settings.framerate + 50;
-});   
+chrome.storage.sync.get(defaultOptions, function (syncedOptions) {
+    options = syncedOptions;
+    if ('undefined' != typeof isExcluded && isExcluded) {
+        options.middleMouse = false;
+    }
+});
+
  
 /**
  * Initializes the image at the reference point.
@@ -61,7 +68,7 @@ function mousedown(e) {
     // if it's not the middle button, or
     // it's being used on an <a> element
     // take the default action
-    if (!elem || !enabled || e.button !== 1 || isLink || linux) {
+    if (!elem || !options.middleMouse || e.button !== 1 || isLink || linux) {
         return true;
     }
     
@@ -89,7 +96,7 @@ function mousedown(e) {
     
     // animation loop
     var last = +new Date;
-    var delay = 1000 / framerate;
+    var delay = 1000 / options.frameRate;
     var finished = false;
     
     requestFrame(function step(time){
