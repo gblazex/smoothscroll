@@ -196,13 +196,13 @@ function scrollArray(elem, left, top, delay) {
     delay || (delay = 1000);
     directionCheck(left, top);
 
-    if (options.acceleration) {
+    if (options.accelerationMax != 1) {
         var now = +new Date;
         var elapsed = now - lastScroll;
-        if (elapsed < options.accelDelta) {
+        if (elapsed < options.accelerationDelta) {
             var factor = (1 + (30 / elapsed)) / 2;
             if (factor > 1) {
-                factor = Math.min(factor, options.accelMax);
+                factor = Math.min(factor, options.accelerationMax);
                 left *= factor;
                 top  *= factor;
             }
@@ -501,7 +501,7 @@ var requestFrame = (function(){
  
 /**
  * Viscous fluid with a pulse for part and decay for the rest.
- * - Applies a fixed force over an interval (a damped options.acceleration), and
+ * - Applies a fixed force over an interval (a damped acceleration), and
  * - Lets the exponential bleed away the velocity over a longer interval
  * - Michael Herf, http://stereopsis.com/stopping/
  */
