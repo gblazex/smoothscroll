@@ -141,10 +141,10 @@ function init() {
 
         // DOMChange (throttle): fix height
         var pending = false;
-        var refresh = function() {
+        var refresh = function () {
             if (!pending && html.scrollHeight != document.height) {
                 pending = true; // add a new pending action
-                setTimeout(function(){
+                setTimeout(function () {
                     html.style.height = document.height + 'px';
                     pending = false;
                 }, 500); // act rarely to stay fast
@@ -237,7 +237,7 @@ function scrollArray(elem, left, top, delay) {
 
     var scrollWindow = (elem === document.body);
     
-    var step = function(time) {
+    var step = function (time) {
         
         var now = +new Date;
         var scrollX = 0;
@@ -438,9 +438,9 @@ function mousedown(event) {
  ***********************************************/
  
 var cache = {}; // cleared out every once in while
-setInterval(function(){ cache = {}; }, 10 * 1000);
+setInterval(function () { cache = {}; }, 10 * 1000);
 
-var uniqueID = (function() {
+var uniqueID = (function () {
     var i = 0;
     return function (el) {
         return el.uniqueID || (el.uniqueID = i++);
@@ -511,7 +511,7 @@ function isTouchpad(deltaY) {
     deltaBuffer.push(deltaY);
     deltaBuffer.shift();
     clearTimeout(deltaBufferTimer);
-    deltaBufferTimer = setTimeout(function(){
+    deltaBufferTimer = setTimeout(function () {
         chrome.storage.local.set({ deltaBuffer: deltaBuffer });
     }, 1000);
     var allEquals    = (deltaBuffer[0] == deltaBuffer[1] && 
@@ -532,10 +532,10 @@ chrome.storage.local.get('deltaBuffer', function (stored) {
     }
 });
 
-var requestFrame = (function(){
+var requestFrame = (function () {
       return  window.requestAnimationFrame       || 
               window.webkitRequestAnimationFrame || 
-              function(callback, element, delay){
+              function (callback, element, delay) {
                   window.setTimeout(callback, delay || (1000/60));
               };
 })();

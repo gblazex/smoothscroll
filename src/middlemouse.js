@@ -6,7 +6,7 @@
 /**
  * A module for middle mouse scrolling.
  */
-(function(window){
+(function (window) {
 
 var defaultOptions = {
     middleMouse : false,
@@ -99,7 +99,7 @@ function mousedown(e) {
     var delay = 1000 / options.frameRate;
     var finished = false;
     
-    requestFrame(function step(time){
+    requestFrame(function step(time) {
         var now = time || +new Date;
         var elapsed = now - last;
         elem.scrollLeft += (speedX * elapsed) >> 0;

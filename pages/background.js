@@ -35,7 +35,7 @@ var defaultOptions = {
 // and when Chrome is updated to a new version.
 chrome.runtime.onInstalled.addListener(init);
 
-function init(details ) {
+function init(details) {
   if (details.reason == "install") {
     chrome.storage.sync.set(defaultOptions);
   }
