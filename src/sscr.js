@@ -44,6 +44,7 @@ var direction = { x: 0, y: 0 };
 var initDone  = false;
 var root = document.documentElement;
 var activeElement;
+var observer;
 
 var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, 
             pageup: 33, pagedown: 34, end: 35, home: 36 };
@@ -84,6 +85,7 @@ function initTest() {
         var domains = options.excluded.split(/[,\n] ?/);
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
+                observer && observer.disconnect();
                 removeEvent("mousewheel", wheel);
                 disableKeyboard = true;
                 isExcluded = true;
@@ -134,7 +136,7 @@ function init() {
     else if (scrollHeight > windowHeight &&
             (body.offsetHeight <= windowHeight || 
              html.offsetHeight <= windowHeight)) {
-                 
+
         // DOMChange (throttle): fix height
         var pending = false;
         var refresh = function() {
@@ -148,9 +150,16 @@ function init() {
         };
         html.style.height = 'auto';
         setTimeout(refresh, 10);
-        addEvent("DOMNodeInserted", refresh);
-        addEvent("DOMNodeRemoved",  refresh);  
-        
+
+        var config = {
+            attributes: true, 
+            childList: true, 
+            characterData: false 
+        };
+
+        observer = new MutationObserver(refresh);
+        observer.observe(body, config);
+
         // clearfix
         if (root.offsetHeight <= windowHeight) {
             var underlay = document.createElement("div"); 	
@@ -494,6 +503,9 @@ var requestFrame = (function(){
                   window.setTimeout(callback, delay || (1000/60));
               };
 })();
+
+var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;  
+
 
 /***********************************************
  * PULSE
