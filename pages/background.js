@@ -24,6 +24,7 @@ var defaultOptions = {
     arrowScroll       : 50,     // [px]
 
     // Other
+    touchpadSupport   : true,
     fixedBackground   : true, 
     excluded          : "example.com, another.example.com"    
 }

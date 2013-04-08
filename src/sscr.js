@@ -30,6 +30,7 @@ var defaultOptions = {
     arrowScroll       : 50,     // [px]
 
     // Other
+    touchpadSupport   : true,
     fixedBackground   : true, 
     excluded          : ""    
 };
@@ -45,6 +46,7 @@ var initDone  = false;
 var root = document.documentElement;
 var activeElement;
 var observer;
+var deltaBuffer = [ 120, 120, 120 ];
 
 var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, 
             pageup: 33, pagedown: 34, end: 35, home: 36 };
@@ -333,6 +335,11 @@ function wheel(event) {
         deltaY = event.wheelDelta || 0;
     }
 
+    // check if it's a touchpad scroll that should be ignored
+    if (!options.touchpadSupport && isTouchpad(deltaY)) {
+        return true;
+    }
+
     // scale by step size
     // delta is 120 most of the time
     // synaptics seems to send 1 sometimes
@@ -495,6 +502,35 @@ function directionCheck(x, y) {
         lastScroll = 0;
     }
 }
+
+var deltaBufferTimer;
+
+function isTouchpad(deltaY) {
+    if (!deltaY) return;
+    deltaY = Math.abs(deltaY)
+    deltaBuffer.push(deltaY);
+    deltaBuffer.shift();
+    clearTimeout(deltaBufferTimer);
+    deltaBufferTimer = setTimeout(function(){
+        chrome.storage.local.set({ deltaBuffer: deltaBuffer });
+    }, 1000);
+    var allEquals    = (deltaBuffer[0] == deltaBuffer[1] && 
+                        deltaBuffer[1] == deltaBuffer[2]);
+    var allDivisable = (isDivisible(deltaBuffer[0], 120) &&
+                        isDivisible(deltaBuffer[1], 120) &&
+                        isDivisible(deltaBuffer[2], 120));
+    return !(allEquals || allDivisable);
+} 
+
+function isDivisible(n, divisor) {
+    return (Math.floor(n / divisor) == n / divisor);
+}
+
+chrome.storage.local.get('deltaBuffer', function (stored) {
+    if (stored.deltaBuffer) {
+        deltaBuffer = stored.deltaBuffer;
+    }
+});
 
 var requestFrame = (function(){
       return  window.requestAnimationFrame       || 

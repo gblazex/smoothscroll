@@ -17,6 +17,7 @@ var optionsList = [
   'pulseAlgorithm',
   'pulseScale',
   'keyboardSupport',
+  'touchpadSupport',
   'excluded',
   'fixedBackground'
 ];
@@ -48,7 +49,8 @@ function hide(elem, newop) {
 }
 
 function isCheckbox(key) {
-  return /^(?:keyboardSupport|middleMouse|pulseAlgorithm|fixedBackground)$/.test(key);
+  var re = /^(?:keyboardSupport|touchpadSupport|middleMouse|pulseAlgorithm|fixedBackground)$/;
+  return re.test(key);
 }
 
 /**
