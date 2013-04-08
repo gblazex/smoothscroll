@@ -113,7 +113,10 @@ function mousedown(e) {
     var first = true;
 
     function mousemove(e) {
-        if (first) {
+        var deltaX = Math.abs(refereceX - e.clientX);
+        var deltaY = Math.abs(refereceY - e.clientY);
+        var movedEnough = Math.max(deltaX, deltaY) > 10; 
+        if (first && movedEnough) {
             addEvent("mouseup", remove);
             first = false;
         }
