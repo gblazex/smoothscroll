@@ -177,11 +177,17 @@ function init() {
         (document.getElementsByTagName("head")[0] || html).appendChild(s);
     }
     // youtube shaking video fix 
-    else if (document.URL.indexOf("http://www.youtube.com") === 0) {
+    else if (document.URL.indexOf("www.youtube.com") > -1) {
         var player = document.getElementById("watch-player");
         var embed = player.getElementsByTagName("embed");
         embed[0].setAttribute("wmode", "opaque");
         player.innerHTML = player.innerHTML;
+    } 
+    // facebook better home timeline performance
+    // all the HTML resized images make rendering CPU intensive
+    else if (document.URL.indexOf("www.facebook.com") > -1) {
+        var home_stream = document.getElementById("home_stream");
+        home_stream && home_stream.style.webkitTransform = "translateZ(0)";
     } 
     // disable fixed background
     if (!options.fixedBackground && !isExcluded) {
