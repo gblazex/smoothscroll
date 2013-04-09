@@ -81,10 +81,11 @@ function initTest() {
     if (document.URL.indexOf("google.com/reader/view") > -1) {
         disableKeyboard = true;
     }
-    
+
     // disable everything if the page is blacklisted
     if (options.excluded) {
         var domains = options.excluded.split(/[,\n] ?/);
+        domains.push("mail.google.com"); // exclude Gmail for now
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
                 observer && observer.disconnect();
