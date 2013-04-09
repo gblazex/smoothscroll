@@ -176,13 +176,6 @@ function init() {
         s.innerHTML = ".iu { visibility: hidden }";
         (document.getElementsByTagName("head")[0] || html).appendChild(s);
     }
-    // youtube shaking video fix 
-    else if (document.URL.indexOf("www.youtube.com") > -1) {
-        var player = document.getElementById("watch-player");
-        var embed = player.getElementsByTagName("embed");
-        embed[0].setAttribute("wmode", "opaque");
-        player.innerHTML = player.innerHTML;
-    } 
     // facebook better home timeline performance
     // all the HTML resized images make rendering CPU intensive
     else if (document.URL.indexOf("www.facebook.com") > -1) {
