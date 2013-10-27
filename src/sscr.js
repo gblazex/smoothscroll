@@ -136,9 +136,9 @@ function init() {
      * the content does not trigger the onmousewheel event
      * on some pages. e.g.: html, body { height: 100% }
      */
-    else if (scrollHeight > windowHeight &&
+    else if (!isExcluded && (scrollHeight > windowHeight &&
             (body.offsetHeight <= windowHeight || 
-             html.offsetHeight <= windowHeight)) {
+             html.offsetHeight <= windowHeight))) {
 
         // DOMChange (throttle): fix height
         var pending = false;
