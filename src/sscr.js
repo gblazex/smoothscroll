@@ -580,6 +580,9 @@ function pulse(x) {
     return pulse_(x);
 }
 
+// new standard wheel event from Chrome 31+
+var wheelEvent = "onwheel" in document.createElement("div") ? "wheel" : "mousewheel"; 
+
 addEvent("mousedown", mousedown);
-addEvent("mousewheel", wheel);
+addEvent(wheelEvent, wheel);
 addEvent("load", init);
