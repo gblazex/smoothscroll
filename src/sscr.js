@@ -225,9 +225,9 @@ function scrollArray(elem, left, top, delay) {
     que.push({
         x: left, 
         y: top, 
+        now: 0,
         lastX: (left < 0) ? 0.99 : -0.99,
         lastY: (top  < 0) ? 0.99 : -0.99, 
-        start: +new Date
     });
         
     // don't act if there's a pending queue
@@ -246,7 +246,9 @@ function scrollArray(elem, left, top, delay) {
         for (var i = 0; i < que.length; i++) {
             
             var item = que[i];
-            var elapsed  = now - item.start;
+            
+            elapsed = item.now;
+            item.now += 16; 
             var finished = (elapsed >= options.animationTime);
             
             // scroll position: [0, 1]
@@ -580,6 +582,9 @@ function pulse(x) {
     return pulse_(x);
 }
 
+// new standard wheel event from Chrome 31+
+var wheelEvent = "onwheel" in document.createElement("div") ? "wheel" : "mousewheel"; 
+
 addEvent("mousedown", mousedown);
-addEvent("mousewheel", wheel);
+addEvent(wheelEvent, wheel);
 addEvent("load", init);
