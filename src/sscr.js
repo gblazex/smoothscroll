@@ -172,14 +172,7 @@ function init() {
     }
     
     // gmail performance fix
-    if (document.URL.indexOf("mail.google.com") > -1) {
-        var s = document.createElement("style");
-        s.innerHTML = ".iu { visibility: hidden }";
-        (document.getElementsByTagName("head")[0] || html).appendChild(s);
-    }
-    // facebook better home timeline performance
-    // all the HTML resized images make rendering CPU intensive
-    else if (document.URL.indexOf("www.facebook.com") > -1) {
+    if (document.URL.indexOf("www.facebook.com") > -1) {
         var home_stream = document.getElementById("home_stream");
         home_stream && (home_stream.style.webkitTransform = "translateZ(0)");
     } 
