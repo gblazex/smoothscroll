@@ -75,11 +75,14 @@ chrome.storage.sync.get(defaultOptions, function (syncedOptions) {
  */
 function initTest() {
 
-    var disableKeyboard = false; 
+    // disable keyboard support if the user says so
+    if (!options.keyboardSupport) {
+        removeEvent("keydown", keydown);
+    }
 
     // disable keys for google reader (spacebar conflict)
     if (document.URL.indexOf("google.com/reader/view") > -1) {
-        disableKeyboard = true;
+        removeEvent("keydown", keydown);
     }
 
     // disable everything if the page is blacklisted
@@ -88,22 +91,11 @@ function initTest() {
         domains.push("mail.google.com"); // exclude Gmail for now
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
-                observer && observer.disconnect();
-                removeEvent("mousewheel", wheel);
-                disableKeyboard = true;
                 isExcluded = true;
-                break;
+                cleanup();
+                return;
             }
         }
-    }
-    
-    // disable keyboard support if anything above requested it
-    if (disableKeyboard) {
-        removeEvent("keydown", keydown);
-    }
-
-    if (options.keyboardSupport && !disableKeyboard) {
-        addEvent("keydown", keydown);
     }
 }
 
@@ -111,9 +103,11 @@ function initTest() {
  * Sets up scrolls array, determines if frames are involved.
  */
 function init() {
-  
-    if (!document.body) return;
 
+    if (initDone || isExcluded || !document.body) {
+        return;
+    }
+ 
     var body = document.body;
     var html = document.documentElement;
     var windowHeight = window.innerHeight; 
@@ -123,7 +117,6 @@ function init() {
     root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
     activeElement = body;
     
-    initTest();
     initDone = true;
 
     // Checks if this script is running in a frame
@@ -146,11 +139,13 @@ function init() {
             if (!pending && html.scrollHeight != document.height) {
                 pending = true; // add a new pending action
                 setTimeout(function () {
+                    if (isExcluded) return; // could be running after cleanup
                     html.style.height = document.height + 'px';
                     pending = false;
                 }, 500); // act rarely to stay fast
             }
         };
+        html.style.oldHeight = html.style.height;
         html.style.height = 'auto';
         setTimeout(refresh, 10);
 
@@ -165,7 +160,7 @@ function init() {
 
         // clearfix
         if (root.offsetHeight <= windowHeight) {
-            var underlay = document.createElement("div"); 	
+            var underlay = document.createElement("div");   
             underlay.style.clear = "both";
             body.appendChild(underlay);
         }
@@ -181,6 +176,18 @@ function init() {
         body.style.backgroundAttachment = "scroll";
         html.style.backgroundAttachment = "scroll";
     }
+}
+
+/**
+ * Removes event listeners and other traces left on the page.
+ */
+function cleanup() {
+    observer && observer.disconnect();
+    removeEvent(wheelEvent, wheel);
+    removeEvent("mousedown", mousedown);
+    removeEvent("keydown", keydown);
+    var html = document.documentElement;
+    html.style.height = html.style.oldHeight;
 }
 
 
@@ -316,7 +323,7 @@ function wheel(event) {
     // element or default action is prevented   
     // or it's a zooming event with CTRL 
     if (!overflowing || event.defaultPrevented || event.ctrlKey) {
-    	return true;
+        return true;
     }
     
     // leave embedded content alone (flash & pdf)
@@ -579,6 +586,7 @@ function pulse(x) {
 // new standard wheel event from Chrome 31+
 var wheelEvent = "onwheel" in document.createElement("div") ? "wheel" : "mousewheel"; 
 
-addEvent("mousedown", mousedown);
 addEvent(wheelEvent, wheel);
+addEvent("mousedown", mousedown);
+addEvent("keydown", keydown);
 addEvent("load", init);
