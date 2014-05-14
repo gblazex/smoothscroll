@@ -318,11 +318,16 @@ function wheel(event) {
     
     var target = event.target;
     var overflowing = overflowingAncestor(target);
-    
+
     // use default if there's no overflowing
-    // element or default action is prevented    
-    if (!overflowing || event.defaultPrevented ||
-        isNodeName(activeElement, "embed") ||
+    // element or default action is prevented   
+    // or it's a zooming event with CTRL 
+    if (!overflowing || event.defaultPrevented || event.ctrlKey) {
+    	return true;
+    }
+    
+    // leave embedded content alone (flash & pdf)
+    if (isNodeName(activeElement, "embed") || 
        (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
         return true;
     }
