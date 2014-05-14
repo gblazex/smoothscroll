@@ -211,7 +211,7 @@ function scrollArray(elem, left, top, delay) {
         var now = +new Date;
         var elapsed = now - lastScroll;
         if (elapsed < options.accelerationDelta) {
-            var factor = (1 + (30 / elapsed)) / 2;
+            var factor = (1 + (50 / elapsed)) / 2;
             if (factor > 1) {
                 factor = Math.min(factor, options.accelerationMax);
                 left *= factor;
