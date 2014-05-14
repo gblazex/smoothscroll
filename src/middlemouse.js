@@ -111,12 +111,12 @@ function mousedown(e) {
     var speedY = 0;
     
     // animation loop
-    var last = +new Date;
+    var last = Date.now();
     var delay = 1000 / options.frameRate;
     var finished = false;
     
     requestFrame(function step(time) {
-        var now = time || +new Date;
+        var now = time || Date.now();
         var elapsed = now - last;
         elem.scrollLeft += (speedX * elapsed) >> 0;
         elem.scrollTop  += (speedY * elapsed) >> 0;
