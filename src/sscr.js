@@ -514,12 +514,10 @@ function isTouchpad(deltaY) {
     deltaBufferTimer = setTimeout(function () {
         chrome.storage.local.set({ deltaBuffer: deltaBuffer });
     }, 1000);
-    var allEquals    = (deltaBuffer[0] == deltaBuffer[1] && 
-                        deltaBuffer[1] == deltaBuffer[2]);
     var allDivisable = (isDivisible(deltaBuffer[0], 120) &&
                         isDivisible(deltaBuffer[1], 120) &&
                         isDivisible(deltaBuffer[2], 120));
-    return !(allEquals || allDivisable);
+    return !allDivisable;
 } 
 
 function isDivisible(n, divisor) {
