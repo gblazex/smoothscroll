@@ -25,9 +25,13 @@ var isLinux = (navigator.platform.indexOf("Linux") != -1);
 // get global settings
 chrome.storage.sync.get(defaultOptions, function (syncedOptions) {
     options = syncedOptions;
-    if ('undefined' != typeof isExcluded && isExcluded) {
-        options.middleMouse = false;
-    }
+    // leave time for the main script to check excluded pages
+    setTimeout(function() {
+        // if we shouldn't run, stop listening to events
+        if (isExcluded && !options.middleMouse) {
+            cleanup();
+        }
+    }, 10);
 });
 
  
@@ -46,18 +50,31 @@ function init() {
 }
 
 /**
+ * Removes event listeners and other traces left on the page.
+ */
+function cleanup() {
+    removeEvent("mousedown", mousedown);
+}
+
+/**
  * Shows the reference image, and binds event listeners for scrolling.
  * It also manages the animation.
  * @param {Object} event
  */
 function mousedown(e) {
 
+    // use default action if we're disabled
+    // or it's not the midde mouse button
+    if (!options.middleMouse || e.button !== 1) {
+        return true;
+    }
+
     var isLink = false;
     var elem   = e.target;
     
     // linux middle mouse shouldn't be overwritten (paste)
-    var linux = (isLinux && /input|textarea/i.test(elem.nodeName));
-   
+    var isLinuxInput = (isLinux && /input|textarea/i.test(elem.nodeName));
+
     do {
         isLink = isNodeName(elem, "a");
         if (isLink) break;
@@ -65,10 +82,9 @@ function mousedown(e) {
         
     elem = overflowingAncestor(e.target);
     
-    // if it's not the middle button, or
-    // it's being used on an <a> element
+    // if it's being used on an <a> element
     // take the default action
-    if (!elem || !options.middleMouse || e.button !== 1 || isLink || linux) {
+    if (!elem || isLink || isLinuxInput) {
         return true;
     }
     
@@ -110,15 +126,15 @@ function mousedown(e) {
         }
     }, elem, delay);
     
-    var first = true;
+    var firstMove = true;
 
     function mousemove(e) {
         var deltaX = Math.abs(refereceX - e.clientX);
         var deltaY = Math.abs(refereceY - e.clientY);
         var movedEnough = Math.max(deltaX, deltaY) > 10; 
-        if (first && movedEnough) {
+        if (firstMove && movedEnough) {
             addEvent("mouseup", remove);
-            first = false;
+            firstMove = false;
         }
         speedX = (e.clientX - refereceX) * 10 / 1000;
         speedY = (e.clientY - refereceY) * 10 / 1000;
