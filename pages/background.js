@@ -36,7 +36,7 @@ var defaultOptions = {
 chrome.runtime.onInstalled.addListener(init);
 
 function init(details) {
-    if (details.reason == "install") {console.log('INSTALL');
+    if (details.reason == "install") {
         chrome.storage.sync.set(defaultOptions);
         chrome.tabs.query({}, function (tabs) {
             tabs.forEach(addSmoothScrollToTab);
