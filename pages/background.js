@@ -36,7 +36,21 @@ var defaultOptions = {
 chrome.runtime.onInstalled.addListener(init);
 
 function init(details) {
-  if (details.reason == "install") {
-    chrome.storage.sync.set(defaultOptions);
-  }
+    if (details.reason == "install") {console.log('INSTALL');
+        chrome.storage.sync.set(defaultOptions);
+        chrome.tabs.query({}, function (tabs) {
+            tabs.forEach(addSmoothScrollToTab);
+        });
+    }
+}
+
+function addSmoothScrollToTab(tab) {
+    chrome.tabs.executeScript(tab.id, {
+        file: "src/sscr.js",
+        allFrames: true
+    });
+    chrome.tabs.executeScript(tab.id, {
+        file: "src/middlemouse.js",
+        allFrames: true
+    });
 }
