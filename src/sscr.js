@@ -165,7 +165,7 @@ function init() {
 
         // clearfix
         if (root.offsetHeight <= windowHeight) {
-            var underlay = document.createElement("div"); 	
+            var underlay = document.createElement("div");   
             underlay.style.clear = "both";
             body.appendChild(underlay);
         }
@@ -195,21 +195,23 @@ function init() {
  * SCROLLING 
  ************************************************/
  
-var que = [];
-var pending = false;
-var lastScroll = +new Date;
+var scrollDict = {};
 
 /**
  * Pushes scroll actions to the scrolling queue.
  */
 function scrollArray(elem, left, top, delay) {
+    var uid = uniqueID(elem);
+    var scrollDictItem = scrollDict[uid];
+    if(!scrollDictItem)
+        scrollDict[uid] = scrollDictItem = { que: [], pending: false, lastScroll: Date.now() };
     
     delay || (delay = 1000);
-    directionCheck(left, top);
+    directionCheck(left, top, scrollDictItem);
 
     if (options.accelerationMax != 1) {
         var now = +new Date;
-        var elapsed = now - lastScroll;
+        var elapsed = now - scrollDictItem.lastScroll;
         if (elapsed < options.accelerationDelta) {
             var factor = (1 + (30 / elapsed)) / 2;
             if (factor > 1) {
@@ -218,11 +220,11 @@ function scrollArray(elem, left, top, delay) {
                 top  *= factor;
             }
         }
-        lastScroll = +new Date;
+        scrollDictItem.lastScroll = +new Date;
     }          
     
     // push a scroll command
-    que.push({
+    scrollDictItem.que.push({
         x: left, 
         y: top, 
         lastX: (left < 0) ? 0.99 : -0.99,
@@ -231,7 +233,7 @@ function scrollArray(elem, left, top, delay) {
     });
         
     // don't act if there's a pending queue
-    if (pending) {
+    if (scrollDictItem.pending) {
         return;
     }  
 
@@ -243,9 +245,9 @@ function scrollArray(elem, left, top, delay) {
         var scrollX = 0;
         var scrollY = 0; 
     
-        for (var i = 0; i < que.length; i++) {
+        for (var i = 0; i < scrollDictItem.que.length; i++) {
             
-            var item = que[i];
+            var item = scrollDictItem.que[i];
             var elapsed  = now - item.start;
             var finished = (elapsed >= options.animationTime);
             
@@ -271,7 +273,7 @@ function scrollArray(elem, left, top, delay) {
         
             // delete and step back if it's over
             if (finished) {
-                que.splice(i, 1); i--;
+                scrollDictItem.que.splice(i, 1); i--;
             }           
         }
 
@@ -286,19 +288,19 @@ function scrollArray(elem, left, top, delay) {
         
         // clean up if there's nothing left to do
         if (!left && !top) {
-            que = [];
+            scrollDictItem.que = [];
         }
         
-        if (que.length) { 
+        if (scrollDictItem.que.length) { 
             requestFrame(step, elem, (delay / options.frameRate + 1)); 
         } else { 
-            pending = false;
+            scrollDictItem.pending = false;
         }
     };
     
     // start a new queue of actions
     requestFrame(step, elem, 0);
-    pending = true;
+    scrollDictItem.pending = true;
 }
 
 
@@ -462,7 +464,7 @@ function overflowingAncestor(el) {
             return setCache(elems, cached);
         }
         elems.push(el);
-        if (rootScrollHeight === el.scrollHeight) {
+        if (rootScrollHeight !== 0 && rootScrollHeight === el.scrollHeight) {
             if (!isFrame || root.clientHeight + 10 < rootScrollHeight) {
                 return setCache(elems, document.body); // scrolling root in WebKit
             }
@@ -492,14 +494,14 @@ function isNodeName(el, tag) {
     return (el.nodeName||"").toLowerCase() === tag.toLowerCase();
 }
 
-function directionCheck(x, y) {
+function directionCheck(x, y, scrollDictItem) {
     x = (x > 0) ? 1 : -1;
     y = (y > 0) ? 1 : -1;
     if (direction.x !== x || direction.y !== y) {
         direction.x = x;
         direction.y = y;
-        que = [];
-        lastScroll = 0;
+        scrollDictItem.que = [];
+        scrollDictItem.lastScroll = 0;
     }
 }
 
