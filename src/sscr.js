@@ -462,7 +462,7 @@ function overflowingAncestor(el) {
             return setCache(elems, cached);
         }
         elems.push(el);
-        if (rootScrollHeight === el.scrollHeight) {
+        if (rootScrollHeight !== 0 && rootScrollHeight === el.scrollHeight) {
             if (!isFrame || root.clientHeight + 10 < rootScrollHeight) {
                 return setCache(elems, document.body); // scrolling root in WebKit
             }
