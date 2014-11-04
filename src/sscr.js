@@ -16,7 +16,7 @@ var defaultOptions = {
     stepSize         : 120, // [px]
 
     // Pulse (less tweakable)
-    // ratio of "tail" to "acceleration"
+    // ratio of 'tail' to 'acceleration'
     pulseAlgorithm   : true,
     pulseScale       : 8,
     pulseNormalize   : 1,
@@ -32,7 +32,7 @@ var defaultOptions = {
     // Other
     touchpadSupport   : true,
     fixedBackground   : true, 
-    excluded          : ""    
+    excluded          : ''    
 };
 
 var options = defaultOptions;
@@ -77,18 +77,18 @@ function initTest() {
 
     // disable keyboard support if the user says so
     if (!options.keyboardSupport) {
-        removeEvent("keydown", keydown);
+        removeEvent('keydown', keydown);
     }
 
     // disable keys for google reader (spacebar conflict)
-    if (document.URL.indexOf("google.com/reader/view") > -1) {
-        removeEvent("keydown", keydown);
+    if (document.URL.indexOf('google.com/reader/view') > -1) {
+        removeEvent('keydown', keydown);
     }
 
     // disable everything if the page is blacklisted
     if (options.excluded) {
         var domains = options.excluded.split(/[,\n] ?/);
-        domains.push("mail.google.com"); // exclude Gmail for now
+        domains.push('mail.google.com'); // exclude Gmail for now
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
                 isExcluded = true;
@@ -166,21 +166,21 @@ function init() {
 
         // clearfix
         if (root.offsetHeight <= windowHeight) {
-            var underlay = document.createElement("div");   
-            underlay.style.clear = "both";
+            var underlay = document.createElement('');   
+            underlay.style.clear = 'both';
             body.appendChild(underlay);
         }
     }
     
     // gmail performance fix
-    if (document.URL.indexOf("www.facebook.com") > -1) {
-        var home_stream = document.getElementById("home_stream");
-        home_stream && (home_stream.style.webkitTransform = "translateZ(0)");
+    if (document.URL.indexOf('www.facebook.com') > -1) {
+        var home_stream = document.getElementById('home_stream');
+        home_stream && (home_stream.style.webkitTransform = 'translateZ(0)');
     } 
     // disable fixed background
     if (!options.fixedBackground && !isExcluded) {
-        body.style.backgroundAttachment = "scroll";
-        html.style.backgroundAttachment = "scroll";
+        body.style.backgroundAttachment = 'scroll';
+        html.style.backgroundAttachment = 'scroll';
     }
 }
 
@@ -190,8 +190,8 @@ function init() {
 function cleanup() {
     observer && observer.disconnect();
     removeEvent(wheelEvent, wheel);
-    removeEvent("mousedown", mousedown);
-    removeEvent("keydown", keydown);
+    removeEvent('mousedown', mousedown);
+    removeEvent('keydown', keydown);
     var html = document.documentElement;
     html.style.height = html.style.oldHeight;
 }
@@ -333,8 +333,8 @@ function wheel(event) {
     }
     
     // leave embedded content alone (flash & pdf)
-    if (isNodeName(activeElement, "embed") || 
-       (isNodeName(target, "embed") && /\.pdf/i.test(target.src))) {
+    if (isNodeName(activeElement, 'embed') || 
+       (isNodeName(target, 'embed') && /\.pdf/i.test(target.src))) {
         return true;
     }
 
@@ -385,7 +385,7 @@ function keydown(event) {
       return true;
     }
     // spacebar should trigger button press
-    if (isNodeName(target, "button") &&
+    if (isNodeName(target, 'button') &&
         event.keyCode === key.spacebar) {
       return true;
     }
@@ -478,8 +478,8 @@ function overflowingAncestor(el) {
                 return setCache(elems, document.body); // scrolling root in WebKit
             }
         } else if (el.clientHeight + 10 < el.scrollHeight) {
-            overflow = getComputedStyle(el, "").getPropertyValue("overflow-y");
-            if (overflow === "scroll" || overflow === "auto") {
+            overflow = getComputedStyle(el, '').getPropertyValue('overflow-y');
+            if (overflow === 'scroll' || overflow === 'auto') {
                 return setCache(elems, el);
             }
         }
@@ -500,7 +500,7 @@ function removeEvent(type, fn, bubble) {
 }
 
 function isNodeName(el, tag) {
-    return (el.nodeName||"").toLowerCase() === tag.toLowerCase();
+    return (el.nodeName||'').toLowerCase() === tag.toLowerCase();
 }
 
 function directionCheck(x, y) {
@@ -590,9 +590,9 @@ function pulse(x) {
 }
 
 // new standard wheel event from Chrome 31+
-var wheelEvent = "onwheel" in document.createElement("div") ? "wheel" : "mousewheel"; 
+var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel'; 
 
 addEvent(wheelEvent, wheel);
-addEvent("mousedown", mousedown);
-addEvent("keydown", keydown);
-addEvent("load", init);
+addEvent('mousedown', mousedown);
+addEvent('keydown', keydown);
+addEvent('load', init);
