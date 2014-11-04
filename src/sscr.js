@@ -130,23 +130,29 @@ function init() {
      * on some pages. e.g.: html, body { height: 100% }
      */
     else if (scrollHeight > windowHeight &&
-            (body.offsetHeight <= windowHeight || 
-             html.offsetHeight <= windowHeight)) {
+            (body.clientHeight <= windowHeight + 1 || 
+             html.clientHeight <= windowHeight + 1)) {
 
+        var fullPageElem = document.createElement('div');
+        //fullPageElem.style.cssText = 'position:fixed;top:0;bottom:0;' +
+        //                             'left:0;right:0;z-index:-1';
+        fullPageElem.style.cssText = 'position:absolute;z-index:-1;' +
+                                     'top:0;left:0;right:0;height:' + 
+                                      root.scrollHeight + 'px';
+        document.body.appendChild(fullPageElem);
+        
         // DOMChange (throttle): fix height
         var pending = false;
         var refresh = function () {
-            if (!pending && html.scrollHeight != document.height) {
+            if (!pending && root.scrollHeight != fullPageElem.scrollHeight) {
                 pending = true; // add a new pending action
                 setTimeout(function () {
                     if (isExcluded) return; // could be running after cleanup
-                    html.style.height = document.height + 'px';
+                    fullPageElem.style.height = root.scrollHeight + 'px';
                     pending = false;
                 }, 500); // act rarely to stay fast
             }
         };
-        html.style.oldHeight = html.style.height;
-        html.style.height = 'auto';
         setTimeout(refresh, 10);
 
         var config = {
