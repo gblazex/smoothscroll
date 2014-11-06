@@ -166,7 +166,7 @@ function init() {
 
         // clearfix
         if (root.offsetHeight <= windowHeight) {
-            var underlay = document.createElement('');   
+            var underlay = document.createElement('div');   
             underlay.style.clear = 'both';
             body.appendChild(underlay);
         }
