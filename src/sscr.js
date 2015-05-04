@@ -334,7 +334,8 @@ function wheel(event) {
     
     // leave embedded content alone (flash & pdf)
     if (isNodeName(activeElement, 'embed') || 
-       (isNodeName(target, 'embed') && /\.pdf/i.test(target.src))) {
+       (isNodeName(target, 'embed') && /\.pdf/i.test(target.src)) ||
+       isNodeName(activeElement, 'object')) {
         return true;
     }
 
@@ -378,7 +379,10 @@ function keydown(event) {
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     // or in a dropdown
-    if ( /input|textarea|select|embed/i.test(target.nodeName) ||
+    // or inside interactive elements
+    if ( /input|textarea|select|embed|object/i.test(target.nodeName) ||
+         isNodeName(activeElement, 'video') ||
+         isInsideYoutubeVideo(event) ||
          target.isContentEditable || 
          event.defaultPrevented   ||
          modifier ) {
@@ -540,6 +544,19 @@ chrome.storage.local.get('deltaBuffer', function (stored) {
         deltaBuffer = stored.deltaBuffer;
     }
 });
+
+function isInsideYoutubeVideo(event) {
+    var elem = event.target;
+    var isControl = false;
+    if (document.URL.indexOf ('www.youtube.com/watch') != -1) {
+        do {
+            isControl = (elem.classList && 
+                         elem.classList.contains('html5-video-controls'));
+            if (isControl) break;
+        } while (elem = elem.parentNode);
+    }
+    return isControl;
+}
 
 var requestFrame = (function () {
       return  window.requestAnimationFrame       || 
