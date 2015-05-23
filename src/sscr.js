@@ -89,6 +89,7 @@ function initTest() {
     if (options.excluded) {
         var domains = options.excluded.split(/[,\n] ?/);
         domains.push('mail.google.com'); // exclude Gmail for now
+        domains.push('play.google.com/music'); // problem with Polymer elements
         for (var i = domains.length; i--;) {
             if (document.URL.indexOf(domains[i]) > -1) {
                 isExcluded = true;
