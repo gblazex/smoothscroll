@@ -365,6 +365,7 @@ function wheel(event) {
     
     scrollArray(overflowing, -deltaX, -deltaY);
     event.preventDefault();
+    scheduleClearCache();
 }
 
 /**
@@ -439,6 +440,7 @@ function keydown(event) {
 
     scrollArray(elem, x, y);
     event.preventDefault();
+    scheduleClearCache();
 }
 
 /**
@@ -453,15 +455,22 @@ function mousedown(event) {
  * OVERFLOW
  ***********************************************/
  
-var cache = {}; // cleared out every once in while
-setInterval(function () { cache = {}; }, 10 * 1000);
-
 var uniqueID = (function () {
     var i = 0;
     return function (el) {
         return el.uniqueID || (el.uniqueID = i++);
     };
 })();
+
+var cache = {}; // cleared out after a scrolling session
+var clearCacheTimer;
+
+//setInterval(function () { cache = {}; }, 10 * 1000);
+
+function scheduleClearCache() {
+    clearTimeout(clearCacheTimer);
+    clearCacheTimer = setInterval(function () { cache = {}; }, 1*1000);
+}
 
 function setCache(elems, overflowing) {
     for (var i = elems.length; i--;)
@@ -471,6 +480,7 @@ function setCache(elems, overflowing) {
 
 function overflowingAncestor(el) {
     var elems = [];
+    var body = document.body;
     var rootScrollHeight = root.scrollHeight;
     do {
         var cached = cache[uniqueID(el)];
@@ -479,16 +489,27 @@ function overflowingAncestor(el) {
         }
         elems.push(el);
         if (rootScrollHeight === el.scrollHeight) {
-            if (!isFrame || root.clientHeight + 10 < rootScrollHeight) {
-                return setCache(elems, document.body); // scrolling root in WebKit
+            var isOverflowingIframe  = (isFrame && isContentOverflowing(root));
+            var isOverflowAllowedCSS = (hasOverflowCSS(body) && hasOverflowCSS(root));
+            if (isOverflowingIframe || isOverflowAllowedCSS) {
+                return setCache(elems, body); // scrolling root in WebKit
             }
-        } else if (el.clientHeight + 10 < el.scrollHeight) {
-            overflow = getComputedStyle(el, '').getPropertyValue('overflow-y');
-            if (overflow === 'scroll' || overflow === 'auto') {
-                return setCache(elems, el);
-            }
+        } else if (isContentOverflowing(el) && hasOverflowCSS(el)) {
+            return setCache(elems, el);
         }
-    } while (el = el.parentNode);
+    } while (el = el.parentElement);
+}
+
+function isContentOverflowing(el) {
+    return (el.clientHeight + 10 < el.scrollHeight);
+}
+
+function hasOverflowCSS(el) {
+    var overflow = getComputedStyle(el, '').getPropertyValue('overflow-y');
+    if (el.nodeName === 'BODY' || el.nodeName === 'HTML')
+        return (overflow !== 'hidden');
+    else 
+        return (overflow === 'scroll' || overflow === 'auto');
 }
 
 
