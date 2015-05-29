@@ -46,7 +46,8 @@ var initDone  = false;
 var root = document.documentElement;
 var activeElement;
 var observer;
-var deltaBuffer = [ 120, 120, 120 ];
+var deltaBuffer = [];
+var isMac = /^Mac/.test(navigator.platform);
 
 var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, 
             pageup: 33, pagedown: 34, end: 35, home: 36 };
@@ -336,8 +337,17 @@ function wheel(event) {
         return true;
     }
 
-    var deltaX = event.deltaX || -event.wheelDeltaX || 0;
-    var deltaY = event.deltaY || -event.wheelDeltaY || 0;
+    var deltaX = -event.wheelDeltaX || event.deltaX || 0;
+    var deltaY = -event.wheelDeltaY || event.deltaY || 0;
+
+    if (isMac) {
+        if (event.wheelDeltaX && isDivisible(event.wheelDeltaX, 120)) {
+            deltaX = -120 * (event.wheelDeltaX / Math.abs(event.wheelDeltaX));
+        }
+        if (event.wheelDeltaY && isDivisible(event.wheelDeltaY, 120)) {
+            deltaY = -120 * (event.wheelDeltaY / Math.abs(event.wheelDeltaY));
+        }
+    }
     
     // use wheelDelta if deltaX/Y is not available
     if (!deltaX && !deltaY) {
@@ -547,6 +557,9 @@ var deltaBufferTimer;
 
 function isTouchpad(deltaY) {
     if (!deltaY) return;
+    if (!deltaBuffer.length) {
+        deltaBuffer = [deltaY, deltaY, deltaY];
+    }
     deltaY = Math.abs(deltaY)
     deltaBuffer.push(deltaY);
     deltaBuffer.shift();
@@ -554,14 +567,17 @@ function isTouchpad(deltaY) {
     deltaBufferTimer = setTimeout(function () {
         chrome.storage.local.set({ deltaBuffer: deltaBuffer });
     }, 1000);
-    var allDivisable = (isDivisible(deltaBuffer[0], 120) &&
-                        isDivisible(deltaBuffer[1], 120) &&
-                        isDivisible(deltaBuffer[2], 120));
-    return !allDivisable;
+    return !allDeltasDivisableBy(120) && !allDeltasDivisableBy(100);
 } 
 
 function isDivisible(n, divisor) {
     return (Math.floor(n / divisor) == n / divisor);
+}
+
+function allDeltasDivisableBy(divisor) {
+    return (isDivisible(deltaBuffer[0], divisor) &&
+            isDivisible(deltaBuffer[1], divisor) &&
+            isDivisible(deltaBuffer[2], divisor));
 }
 
 chrome.storage.local.get('deltaBuffer', function (stored) {
