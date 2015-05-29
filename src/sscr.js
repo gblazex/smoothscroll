@@ -80,11 +80,6 @@ function initTest() {
         removeEvent('keydown', keydown);
     }
 
-    // disable keys for google reader (spacebar conflict)
-    if (document.URL.indexOf('google.com/reader/view') > -1) {
-        removeEvent('keydown', keydown);
-    }
-
     // disable everything if the page is blacklisted
     if (options.excluded) {
         var domains = options.excluded.split(/[,\n] ?/);
@@ -108,6 +103,8 @@ function init() {
     if (initDone || isExcluded || !document.body) {
         return;
     }
+
+    initDone = true;
  
     var body = document.body;
     var html = document.documentElement;
@@ -118,8 +115,6 @@ function init() {
     root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
     activeElement = body;
     
-    initDone = true;
-
     // Checks if this script is running in a frame
     if (top != self) {
         isFrame = true;
@@ -154,6 +149,7 @@ function init() {
                 }, 500); // act rarely to stay fast
             }
         };
+
         setTimeout(refresh, 10);
 
         var config = {
@@ -193,8 +189,8 @@ function cleanup() {
     removeEvent(wheelEvent, wheel);
     removeEvent('mousedown', mousedown);
     removeEvent('keydown', keydown);
-    var html = document.documentElement;
-    html.style.height = html.style.oldHeight;
+    //var html = document.documentElement;
+    //html.style.height = html.style.oldHeight;
 }
 
 
@@ -390,6 +386,7 @@ function keydown(event) {
          modifier ) {
       return true;
     }
+
     // spacebar should trigger button press
     if (isNodeName(target, 'button') &&
         event.keyCode === key.spacebar) {
@@ -581,11 +578,11 @@ function isInsideYoutubeVideo(event) {
 }
 
 var requestFrame = (function () {
-      return  window.requestAnimationFrame       || 
+      return (window.requestAnimationFrame       || 
               window.webkitRequestAnimationFrame || 
               function (callback, element, delay) {
-                  window.setTimeout(callback, delay || (1000/60));
-              };
+                 window.setTimeout(callback, delay || (1000/60));
+             });
 })();
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;  
