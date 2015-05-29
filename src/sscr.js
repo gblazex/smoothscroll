@@ -1,11 +1,11 @@
 
-// SmoothScroll v1.2.1
+//
+// SmoothScroll v1.3.7 (Balazs Galambosi)
 // Licensed under the terms of the MIT license.
-
-// People involved
-//  - Balazs Galambosi (maintainer)  
-//  - Patrick Brunner  (original idea)
-//  - Michael Herf     (Pulse Algorithm)
+// The only restriction would be not to publish any  
+// extension for browsers or native application
+// without getting a written permission first.
+//
 
 // Scroll Variables (tweakable)
 var defaultOptions = {
@@ -348,7 +348,7 @@ function wheel(event) {
             deltaY = -120 * (event.wheelDeltaY / Math.abs(event.wheelDeltaY));
         }
     }
-    
+
     // use wheelDelta if deltaX/Y is not available
     if (!deltaX && !deltaY) {
         deltaY = -event.wheelDelta || 0;
@@ -614,7 +614,7 @@ function getScrollRoot() {
 }
 
 /***********************************************
- * PULSE
+ * PULSE (by Michael Herf)
  ***********************************************/
  
 /**
