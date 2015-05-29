@@ -336,12 +336,18 @@ function wheel(event) {
         return true;
     }
 
-    var deltaX = event.wheelDeltaX || 0;
-    var deltaY = event.wheelDeltaY || 0;
+    var deltaX = event.deltaX || -event.wheelDeltaX || 0;
+    var deltaY = event.deltaY || -event.wheelDeltaY || 0;
     
     // use wheelDelta if deltaX/Y is not available
     if (!deltaX && !deltaY) {
-        deltaY = event.wheelDelta || 0;
+        deltaY = -event.wheelDelta || 0;
+    }
+
+    // line based scrolling
+    if (event.deltaMode === 1) {
+        deltaX *= 40;
+        deltaY *= 40;
     }
 
     // check if it's a touchpad scroll that should be ignored
@@ -359,7 +365,7 @@ function wheel(event) {
         deltaY *= options.stepSize / 120;
     }
     
-    scrollArray(overflowing, -deltaX, -deltaY);
+    scrollArray(overflowing, deltaX, deltaY);
     event.preventDefault();
     scheduleClearCache();
 }
@@ -489,7 +495,7 @@ function overflowingAncestor(el) {
             var isOverflowingIframe  = (isFrame && isContentOverflowing(root));
             var isOverflowAllowedCSS = (hasOverflowCSS(body) && hasOverflowCSS(root));
             if (isOverflowingIframe || isOverflowAllowedCSS) {
-                return setCache(elems, body); // scrolling root in WebKit
+                return setCache(elems, getScrollRoot()); 
             }
         } else if (isContentOverflowing(el) && hasOverflowCSS(el)) {
             return setCache(elems, el);
@@ -587,6 +593,9 @@ var requestFrame = (function () {
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;  
 
+function getScrollRoot() {
+    return document.body; // scrolling root in WebKit
+}
 
 /***********************************************
  * PULSE
