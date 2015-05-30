@@ -502,9 +502,9 @@ function overflowingAncestor(el) {
         }
         elems.push(el);
         if (rootScrollHeight === el.scrollHeight) {
-            var isOverflowingIframe  = (isFrame && isContentOverflowing(root));
-            var isOverflowAllowedCSS = (hasOverflowCSS(body) && hasOverflowCSS(root));
-            if (isOverflowingIframe || isOverflowAllowedCSS) {
+            var isOverflowCSS = (hasOverflowCSS(body) && hasOverflowCSS(root));
+            if (isFrame && isContentOverflowing(root) || 
+               !isFrame && isOverflowCSS) {
                 return setCache(elems, getScrollRoot()); 
             }
         } else if (isContentOverflowing(el) && hasOverflowCSS(el)) {
