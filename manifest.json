@@ -19,7 +19,7 @@
    "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD1YCUodXSIZuDNa4PJGDCzSWnJAsPymJLQNj+fbxNHbE8BJ4x062dCB0rg0ovXXjNjGJW5FUX+aIEdhh1oNpouWkfu0GP6D6VXCrArXS1hKa7mV8jrBSuMLQo/aU3X7iieqkDzeSFRwUaAEp54C62J22sJ06EHI1QMLuCJ6C9lVQIDAQAB",
    "name": "SmoothScroll",
    "options_page": "pages/options.html",
-   "version": "1.3.7",
+   "version": "1.3.8",
    "manifest_version": 2,
    "permissions": ["storage", "http://*/*", "https://*/*"],
    "web_accessible_resources": [ "img/cursor.png" ]
