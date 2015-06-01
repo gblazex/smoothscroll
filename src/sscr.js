@@ -502,12 +502,12 @@ function overflowingAncestor(el) {
         }
         elems.push(el);
         if (rootScrollHeight === el.scrollHeight) {
-            var isOverflowCSS = (hasOverflowCSS(body) && hasOverflowCSS(root));
+            var isOverflowCSS = (overflowNotHidden(body) && overflowNotHidden(root));
             if (isFrame && isContentOverflowing(root) || 
                !isFrame && isOverflowCSS) {
                 return setCache(elems, getScrollRoot()); 
             }
-        } else if (isContentOverflowing(el) && hasOverflowCSS(el)) {
+        } else if (isContentOverflowing(el) && overflowAutoOrScroll(el)) {
             return setCache(elems, el);
         }
     } while (el = el.parentElement);
@@ -517,12 +517,16 @@ function isContentOverflowing(el) {
     return (el.clientHeight + 10 < el.scrollHeight);
 }
 
-function hasOverflowCSS(el) {
+// typically for <body> and <html>
+function overflowNotHidden(el) {
     var overflow = getComputedStyle(el, '').getPropertyValue('overflow-y');
-    if (el.nodeName === 'BODY' || el.nodeName === 'HTML')
-        return (overflow !== 'hidden');
-    else 
-        return (overflow === 'scroll' || overflow === 'auto');
+    return (overflow !== 'hidden');
+}
+
+// for all other elements
+function overflowAutoOrScroll(el) {
+    var overflow = getComputedStyle(el, '').getPropertyValue('overflow-y');
+    return (overflow === 'scroll' || overflow === 'auto');
 }
 
 
