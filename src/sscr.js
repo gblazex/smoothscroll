@@ -318,6 +318,8 @@ function wheel(event) {
         init();
     }
 
+    var target = event.target;
+
     // leave early if default action is prevented   
     // or it's a zooming event with CTRL 
     if (event.defaultPrevented || event.ctrlKey) {
@@ -354,7 +356,6 @@ function wheel(event) {
         deltaY *= 40;
     }
 
-    var target = event.target;
     var xOnly = (deltaX && !deltaY);
     var overflowing = overflowingAncestor(target, xOnly);
 
@@ -397,7 +398,8 @@ function keydown(event) {
     // or using a modifier key (except shift)
     // or in a dropdown
     // or inside interactive elements
-    if ( /input|textarea|select|embed|object/i.test(target.nodeName) ||
+    if ( /textarea|select|embed|object/i.test(target.nodeName) ||
+         isNodeName(target, 'input') && target.type !== 'button' ||
          isNodeName(activeElement, 'video') ||
          isInsideYoutubeVideo(event) ||
          target.isContentEditable || 
