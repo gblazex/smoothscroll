@@ -200,14 +200,13 @@ function cleanup() {
  ************************************************/
  
 var que = [];
-var pending = false;
+var pending = null;
 var lastScroll = Date.now();
 
 /**
  * Pushes scroll actions to the scrolling queue.
  */
 function scrollArray(elem, left, top, delay) {
-    
     delay || (delay = 1000);
     directionCheck(left, top);
 
@@ -234,7 +233,7 @@ function scrollArray(elem, left, top, delay) {
         start: Date.now()
     });
         
-    // don't act if there's a pending queue
+    // don't act if there's a pending frame loop
     if (pending) {
         return;
     }  
@@ -294,15 +293,14 @@ function scrollArray(elem, left, top, delay) {
         }
         
         if (que.length) { 
-            requestFrame(step, elem, (delay / options.frameRate + 1)); 
+            pending = requestFrame(step, elem, (delay / options.frameRate + 1)); 
         } else { 
-            pending = false;
+            pending = null;
         }
     };
     
     // start a new queue of actions
-    requestFrame(step, elem, 0);
-    pending = true;
+    pending = requestFrame(step, elem, 0);
 }
 
 
@@ -319,14 +317,10 @@ function wheel(event) {
     if (!initDone) {
         init();
     }
-    
-    var target = event.target;
-    var overflowing = overflowingAncestor(target);
 
-    // use default if there's no overflowing
-    // element or default action is prevented   
+    // leave early if default action is prevented   
     // or it's a zooming event with CTRL 
-    if (!overflowing || event.defaultPrevented || event.ctrlKey) {
+    if (event.defaultPrevented || event.ctrlKey) {
         return true;
     }
     
@@ -358,6 +352,15 @@ function wheel(event) {
     if (event.deltaMode === 1) {
         deltaX *= 40;
         deltaY *= 40;
+    }
+
+    var target = event.target;
+    var xOnly = (deltaX && !deltaY);
+    var overflowing = overflowingAncestor(target, xOnly);
+
+    // nothing to do if there's no element that's scrollable
+    if (!overflowing) {
+        return true;
     }
 
     // check if it's a touchpad scroll that should be ignored
@@ -410,7 +413,8 @@ function keydown(event) {
     }
     
     var shift, x = 0, y = 0;
-    var elem = overflowingAncestor(activeElement);
+    var xOnly = (event.keyCode == key.left || event.keyCode == key.right)
+    var elem = overflowingAncestor(activeElement, xOnly);
     var clientHeight = elem.clientHeight;
 
     if (elem == document.body) {
@@ -475,58 +479,73 @@ var uniqueID = (function () {
     };
 })();
 
-var cache = {}; // cleared out after a scrolling session
+var cacheX = {}; // cleared out after a scrolling session
+var cacheY = {}; // cleared out after a scrolling session
 var clearCacheTimer;
 
 //setInterval(function () { cache = {}; }, 10 * 1000);
 
 function scheduleClearCache() {
     clearTimeout(clearCacheTimer);
-    clearCacheTimer = setInterval(function () { cache = {}; }, 1*1000);
+    clearCacheTimer = setInterval(function () { 
+        cacheX = cacheY = {}; 
+    }, 1*1000);
 }
 
-function setCache(elems, overflowing) {
+function setCache(elems, overflowing, x) {
+    var cache = x ? cacheX : cacheY;
     for (var i = elems.length; i--;)
         cache[uniqueID(elems[i])] = overflowing;
     return overflowing;
 }
 
-function overflowingAncestor(el) {
+function getCache(el, x) {
+    return (x ? cacheX : cacheY)[uniqueID(el)];
+}
+
+function overflowingAncestor(el, x) {
     var elems = [];
     var body = document.body;
     var rootScrollHeight = root.scrollHeight;
+    var rootScrollWidth  = root.scrollWidth;
     do {
-        var cached = cache[uniqueID(el)];
+        var cached = getCache(el, x);
         if (cached) {
-            return setCache(elems, cached);
+            return setCache(elems, cached, x);
         }
         elems.push(el);
-        if (rootScrollHeight === el.scrollHeight) {
-            var isOverflowCSS = (overflowNotHidden(body) && overflowNotHidden(root));
-            if (isFrame && isContentOverflowing(root) || 
+        if (x && rootScrollWidth  === el.scrollWidth ||
+           !x && rootScrollHeight === el.scrollHeight) {
+            var topOverflowsNotHidden = overflowNotHidden(root, x) && overflowNotHidden(body, x);
+            var isOverflowCSS = topOverflowsNotHidden || overflowAutoOrScroll(root, x);
+            if (isFrame && isContentOverflowing(root, x) || 
                !isFrame && isOverflowCSS) {
-                return setCache(elems, getScrollRoot()); 
+                return setCache(elems, getScrollRoot(), x); 
             }
-        } else if (isContentOverflowing(el) && overflowAutoOrScroll(el)) {
-            return setCache(elems, el);
+        } else if (isContentOverflowing(el, x) && overflowAutoOrScroll(el, x)) {
+            return setCache(elems, el, x);
         }
     } while (el = el.parentElement);
 }
 
-function isContentOverflowing(el) {
-    return (el.clientHeight + 10 < el.scrollHeight);
+function isContentOverflowing(el, x) {
+    return x ? (el.clientWidth  + 10 < el.scrollWidth) 
+             : (el.clientHeight + 10 < el.scrollHeight);
+}
+
+function computedOverflow(el, x) {
+    var property = x ? 'overflow-x' : 'overflow-y';
+    return getComputedStyle(el, '').getPropertyValue(property);
 }
 
 // typically for <body> and <html>
-function overflowNotHidden(el) {
-    var overflow = getComputedStyle(el, '').getPropertyValue('overflow-y');
-    return (overflow !== 'hidden');
+function overflowNotHidden(el, x) {
+    return (computedOverflow(el, x) != 'hidden');
 }
 
 // for all other elements
-function overflowAutoOrScroll(el) {
-    var overflow = getComputedStyle(el, '').getPropertyValue('overflow-y');
-    return (overflow === 'scroll' || overflow === 'auto');
+function overflowAutoOrScroll(el, x) {
+    return /^(scroll|auto)$/.test(computedOverflow(el, x));
 }
 
 
@@ -554,6 +573,8 @@ function directionCheck(x, y) {
         direction.y = y;
         que = [];
         lastScroll = 0;
+        cancelFrame(pending);
+        pending = null;
     }
 }
 
@@ -607,8 +628,16 @@ var requestFrame = (function () {
       return (window.requestAnimationFrame       || 
               window.webkitRequestAnimationFrame || 
               function (callback, element, delay) {
-                 window.setTimeout(callback, delay || (1000/60));
-             });
+                 setTimeout(callback, delay || (1000/60));
+              });
+})();
+
+var cancelFrame = (function () {
+      return (window.cancelAnimationFrame       || 
+              window.webkitCancelAnimationFrame || 
+              function (callback, element, delay) {
+                 clearTimeout(callback);
+              });
 })();
 
 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;  
