@@ -503,6 +503,13 @@ function getCache(el, x) {
     return (x ? cacheX : cacheY)[uniqueID(el)];
 }
 
+//  (body)                (root)
+//         | hidden | visible | scroll |  auto  |
+// hidden  |   no   |    no   |   YES  |   YES  |
+// visible |   no   |   YES   |   YES  |   YES  |
+// scroll  |   no   |   YES   |   YES  |   YES  |
+// auto    |   no   |   YES   |   YES  |   YES  |
+
 function overflowingAncestor(el, x) {
     var elems = [];
     var body = document.body;
