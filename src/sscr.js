@@ -398,8 +398,10 @@ function keydown(event) {
     // or using a modifier key (except shift)
     // or in a dropdown
     // or inside interactive elements
-    if ( /textarea|select|embed|object/i.test(target.nodeName) ||
-         isNodeName(target, 'input') && target.type !== 'button' ||
+    var inputNodeNames = /^(textarea|select|embed|object)$/i;
+    var buttonTypes = /^(button|submit|radio|checkbox|file|color|image)$/i;
+    if ( inputNodeNames.test(target.nodeName) ||
+         isNodeName(target, 'input') && !buttonTypes.test(target.type) ||
          isNodeName(activeElement, 'video') ||
          isInsideYoutubeVideo(event) ||
          target.isContentEditable || 
