@@ -76,7 +76,7 @@ chrome.storage.sync.get(defaultOptions, function (syncedOptions) {
  */
 function initTest() {
 
-    // disable keyboard support if the user says so
+    // disable keyboard support if the user said so
     if (!options.keyboardSupport) {
         removeEvent('keydown', keydown);
     }
@@ -183,8 +183,20 @@ function cleanup() {
     removeEvent(wheelEvent, wheel);
     removeEvent('mousedown', mousedown);
     removeEvent('keydown', keydown);
-    //var html = document.documentElement;
-    //html.style.height = html.style.oldHeight;
+}
+
+/**
+ * Make sure we are the last listener on the page so special 
+ * key event handlers (e.g for <video>) can come before us
+ */
+function loaded() {
+    setTimeout(function () {
+        init();
+        if (options.keyboardSupport) {
+            removeEvent('keydown', keydown);
+            addEvent('keydown', keydown);
+        }
+    }, 1);
 }
 
 
@@ -703,4 +715,4 @@ var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewh
 addEvent(wheelEvent, wheel);
 addEvent('mousedown', mousedown);
 addEvent('keydown', keydown);
-addEvent('load', init);
+addEvent('load', loaded);
