@@ -418,7 +418,8 @@ function keydown(event) {
     }
 
     // spacebar should trigger button press
-    if (isNodeName(target, 'button') &&
+    if ((isNodeName(target, 'button') ||
+         isNodeName(target, 'input') && buttonTypes.test(target.type)) &&
         event.keyCode === key.spacebar) {
       return true;
     }
