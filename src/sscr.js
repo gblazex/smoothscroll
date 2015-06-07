@@ -127,8 +127,8 @@ function init() {
      * on some pages. e.g.: html, body { height: 100% }
      */
     else if (scrollHeight > windowHeight &&
-            (body.clientHeight <= windowHeight + 1 || 
-             html.clientHeight <= windowHeight + 1)) {
+            (body.clientHeight + 1 < body.scrollHeight && 
+             html.clientHeight + 1 < html.scrollHeight)) {
 
         var fullPageElem = document.createElement('div');
         fullPageElem.style.cssText = 'position:absolute; z-index:-10000; ' +
