@@ -386,6 +386,9 @@ function keydown(event) {
     var modifier = event.ctrlKey || event.altKey || event.metaKey || 
                   (event.shiftKey && event.keyCode !== key.spacebar);
 
+    // use default active element instead of our custom here
+    activeElement = document.activeElement;
+
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     // or in a dropdown
