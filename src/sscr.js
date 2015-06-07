@@ -199,8 +199,7 @@ var lastScroll = Date.now();
 /**
  * Pushes scroll actions to the scrolling queue.
  */
-function scrollArray(elem, left, top, delay) {
-    delay || (delay = 1000);
+function scrollArray(elem, left, top) {
     directionCheck(left, top);
 
     if (options.accelerationMax != 1) {
@@ -286,7 +285,7 @@ function scrollArray(elem, left, top, delay) {
         }
         
         if (que.length) { 
-            pending = requestFrame(step, elem, (delay / options.frameRate + 1)); 
+            pending = requestFrame(step, elem, (1000 / options.frameRate + 1)); 
         } else { 
             pending = null;
         }
@@ -557,12 +556,12 @@ function overflowAutoOrScroll(el, x) {
  * HELPERS
  ***********************************************/
 
-function addEvent(type, fn, bubble) {
-    window.addEventListener(type, fn, (bubble||false));
+function addEvent(type, fn) {
+    window.addEventListener(type, fn, false);
 }
 
-function removeEvent(type, fn, bubble) {
-    window.removeEventListener(type, fn, (bubble||false));  
+function removeEvent(type, fn) {
+    window.removeEventListener(type, fn, false);  
 }
 
 function isNodeName(el, tag) {
@@ -639,7 +638,7 @@ var requestFrame = (function () {
 var cancelFrame = (function () {
       return (window.cancelAnimationFrame       || 
               window.webkitCancelAnimationFrame || 
-              function (callback, element, delay) {
+              function (callback, element) {
                  clearTimeout(callback);
               });
 })();
