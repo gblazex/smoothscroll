@@ -115,7 +115,7 @@ function init() {
     // check compat mode for root element
     root = (document.compatMode.indexOf('CSS') >= 0) ? html : body;
     activeElement = body;
-    
+
     // Checks if this script is running in a frame
     if (top != self) {
         isFrame = true;
@@ -123,7 +123,7 @@ function init() {
 
     /**
      * This fixes a bug where the areas left and right to 
-     * the content does not trigger the onmousewheel event
+     * the content does not trigger the wheel event
      * on some pages. e.g.: html, body { height: 100% }
      */
     else if (scrollHeight > windowHeight &&
@@ -131,50 +131,43 @@ function init() {
              html.clientHeight <= windowHeight + 1)) {
 
         var fullPageElem = document.createElement('div');
-        //fullPageElem.style.cssText = 'position:fixed;top:0;bottom:0;' +
-        //                             'left:0;right:0;z-index:-1';
-        fullPageElem.style.cssText = 'position:absolute;z-index:-1;' +
-                                     'top:0;left:0;right:0;height:' + 
+        fullPageElem.style.cssText = 'position:absolute; z-index:-10000; ' +
+                                     'top:0; left:0; right:0; height:' + 
                                       root.scrollHeight + 'px';
         document.body.appendChild(fullPageElem);
         
-        // DOMChange (throttle): fix height
-        var pending = false;
+        // DOM changed (throttled) to fix height
+        var pendingRefresh;
         var refresh = function () {
-            if (!pending && root.scrollHeight != fullPageElem.scrollHeight) {
-                pending = true; // add a new pending action
-                setTimeout(function () {
-                    if (isExcluded) return; // could be running after cleanup
-                    fullPageElem.style.height = root.scrollHeight + 'px';
-                    pending = false;
-                }, 500); // act rarely to stay fast
-            }
+            if (pendingRefresh) return; // could also be: clearTimeout(pendingRefresh);
+            pendingRefresh = setTimeout(function () {
+                if (isExcluded) return; // could be running after cleanup
+                fullPageElem.style.height = '0';
+                fullPageElem.style.height = root.scrollHeight + 'px';
+                pendingRefresh = null;
+            }, 500); // act rarely to stay fast
         };
-
+  
         setTimeout(refresh, 10);
 
+        // TODO: attributeFilter?
         var config = {
             attributes: true, 
             childList: true, 
             characterData: false 
+            // subtree: true
         };
 
         observer = new MutationObserver(refresh);
         observer.observe(body, config);
 
-        // clearfix
         if (root.offsetHeight <= windowHeight) {
-            var underlay = document.createElement('div');   
-            underlay.style.clear = 'both';
-            body.appendChild(underlay);
+            var clearfix = document.createElement('div');   
+            clearfix.style.clear = 'both';
+            body.appendChild(clearfix);
         }
     }
-    
-    // gmail performance fix
-    if (document.URL.indexOf('www.facebook.com') > -1) {
-        var home_stream = document.getElementById('home_stream');
-        home_stream && (home_stream.style.webkitTransform = 'translateZ(0)');
-    } 
+
     // disable fixed background
     if (!options.fixedBackground && !isExcluded) {
         body.style.backgroundAttachment = 'scroll';
