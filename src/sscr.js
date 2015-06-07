@@ -385,7 +385,7 @@ function keydown(event) {
     var target   = event.target;
     var modifier = event.ctrlKey || event.altKey || event.metaKey || 
                   (event.shiftKey && event.keyCode !== key.spacebar);
-    
+
     // do nothing if user is editing text
     // or using a modifier key (except shift)
     // or in a dropdown
@@ -408,12 +408,19 @@ function keydown(event) {
       return true;
     }
     
-    var shift, x = 0, y = 0;
     var xOnly = (event.keyCode == key.left || event.keyCode == key.right)
-    var elem = overflowingAncestor(activeElement, xOnly);
-    var clientHeight = elem.clientHeight;
+    var overflowing = overflowingAncestor(activeElement, xOnly);
 
-    if (elem == document.body) {
+    if (!overflowing) {
+        // iframes seem to eat key events, which we need to propagate up
+        // if the iframe has nothing overflowing to scroll
+        return isFrame ? parent.keydown(event) : true;
+    }
+
+    var clientHeight = overflowing.clientHeight;
+    var shift, x = 0, y = 0;
+
+    if (overflowing == document.body) {
         clientHeight = window.innerHeight;
     }
 
@@ -435,11 +442,12 @@ function keydown(event) {
             y = clientHeight * 0.9;
             break;
         case key.home:
-            y = -elem.scrollTop;
+            y = -overflowing.scrollTop;
             break;
         case key.end:
-            var damt = elem.scrollHeight - elem.scrollTop - clientHeight;
-            y = (damt > 0) ? damt+10 : 0;
+            var scroll = overflowing.scrollHeight - overflowing.scrollTop;
+            var scrollRemaining = scroll - clientHeight;
+            y = (scrollRemaining > 0) ? scrollRemaining+10 : 0;
             break;
         case key.left:
             x = -options.arrowScroll;
@@ -451,7 +459,7 @@ function keydown(event) {
             return true; // a key we don't care about
     }
 
-    scrollArray(elem, x, y);
+    scrollArray(overflowing, x, y);
     event.preventDefault();
     scheduleClearCache();
 }
