@@ -3,6 +3,9 @@ A Google Chrome extension for smooth scrolling with the mouse wheel and keyboard
 Extension homepage
  https://chrome.google.com/extensions/detail/nbokbjkabcmbfdlbddjidfmibcpneigj
 
+Embedding it into your website
+  https://gist.github.com/galambalazs/6477177
+
 Features
 - Picasa-like smooth scrolling
 - Mouse wheel, middle mouse and keyboard support
@@ -13,6 +16,5 @@ Features
 - Excluded pages list
 
 People involved
- - Patrick Brunner  (original idea)
  - Balazs Galambosi (maintainer)
  - Michael Herf     (pulse algorithm)
