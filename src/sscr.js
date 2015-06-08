@@ -18,7 +18,7 @@ var defaultOptions = {
     // Pulse (less tweakable)
     // ratio of 'tail' to 'acceleration'
     pulseAlgorithm   : true,
-    pulseScale       : 8,
+    pulseScale       : 4,
     pulseNormalize   : 1,
 
     // Acceleration
@@ -282,6 +282,11 @@ function scrollArray(elem, left, top) {
             }           
         }
 
+        if (window.devicePixelRatio) {
+            //scrollX /= (window.devicePixelRatio;
+            //scrollY /= window.devicePixelRatio;
+        }
+
         // scroll left and top
         if (scrollWindow) {
             window.scrollBy(scrollX, scrollY);
@@ -398,8 +403,10 @@ function keydown(event) {
     var modifier = event.ctrlKey || event.altKey || event.metaKey || 
                   (event.shiftKey && event.keyCode !== key.spacebar);
 
-    // use default active element instead of our custom here
-    activeElement = document.activeElement;
+    // our own tracked active element could've been removed from the DOM
+    if (!document.contains(activeElement)) {
+        activeElement = document.activeElement;
+    }
 
     // do nothing if user is editing text
     // or using a modifier key (except shift)
@@ -407,12 +414,12 @@ function keydown(event) {
     // or inside interactive elements
     var inputNodeNames = /^(textarea|select|embed|object)$/i;
     var buttonTypes = /^(button|submit|radio|checkbox|file|color|image)$/i;
-    if ( inputNodeNames.test(target.nodeName) ||
+    if ( event.defaultPrevented ||
+         inputNodeNames.test(target.nodeName) ||
          isNodeName(target, 'input') && !buttonTypes.test(target.type) ||
          isNodeName(activeElement, 'video') ||
          isInsideYoutubeVideo(event) ||
          target.isContentEditable || 
-         event.defaultPrevented   ||
          modifier ) {
       return true;
     }
