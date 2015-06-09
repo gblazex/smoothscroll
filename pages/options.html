@@ -5,7 +5,7 @@
 <style type="text/css">
 
 body {
-    background:#fff;
+    background:#fdfdfd;
     font-size: 13.4px;
     font-family: Verdana, sans-serif;
     color: #333333;
@@ -21,6 +21,7 @@ li      { padding: 2px 0; }
 
 #page {
     /*border: 3px solid #28AEA8;*/ 
+    background: #fff;
     margin:0 auto 10px;
     width: 800px; 
     text-align: left; 
@@ -44,7 +45,7 @@ li      { padding: 2px 0; }
     text-shadow: transparent 0 0 1px; /*anit-alias*/
 }
 
-#title a { color: #3c78d7; border:0; }
+#title a { color: #30BCFF /*#3c78d7*/; border:0; }
 #title a:hover { color:#0CF; }
 
 input[type=text] { 
@@ -143,8 +144,12 @@ label[title], .help  { cursor:help;  }
 }
 
 #footer {
-  margin-top: 50px;
+  margin-top: 40px;
   border-top: 20px solid #f6f6f6;
+}
+
+#footer li { 
+  margin:5px 0;
 }
 
 #test  { width:800px; margin:0 auto; }
@@ -162,11 +167,16 @@ label[title], .help  { cursor:help;  }
 }
 
 #version  { 
-    background:#fff; 
+    background:#fdfcfc; 
     color:#999;
     padding:0 8px;
     position:relative;
     top:-8px; 
+}
+
+#thanks {
+  text-align: center;
+  margin: 30px 0 0;
 }
 </style>
 <script src="../src/sscr.js"></script>
@@ -269,6 +279,11 @@ label[title], .help  { cursor:help;  }
 <br><br>
 
 <button id="save">Save Settings</button>
+
+<div id="thanks">If you <strong><i>love</i></strong> this extension please consider 
+      <a href="https://chrome.google.com/webstore/detail/smoothscroll/nbokbjkabcmbfdlbddjidfmibcpneigj/reviews" style="color:#00CCFF;font-weight:bold" target="_blank">writing a great review</a>
+</div>
+
 <!--
 <div style="text-align:center; height: 30px;margin:20px 0 5px;">
   <div id="saving"  style="color: #00CCFF; font-size: 12px; font-weight: bold;">&nbsp;</div>
@@ -281,11 +296,8 @@ label[title], .help  { cursor:help;  }
 <div>
   <h2>Links</h2>
   <ul>
-   <li>If you <strong><i>love</i></strong> this extension please consider 
-      <a href="https://chrome.google.com/webstore/detail/smoothscroll/nbokbjkabcmbfdlbddjidfmibcpneigj/reviews" 
-         style="color:#00CCFF;font-weight:bold" target="_blank">writing a great review</a></li>
    <li><a href="https://github.com/galambalazs/smoothscroll/"
-          target="_blank">Source Code, Known Issues, Bug Report, ...</a></li>
+          target="_blank">Bug Report, Known Issues, Source Code...</a></li>
    <li><a href="https://chrome.google.com/webstore/detail/smoothscroll/nbokbjkabcmbfdlbddjidfmibcpneigj" 
           target="_blank"> Extension Homepage</a></li>
   </ul>
@@ -294,9 +306,8 @@ label[title], .help  { cursor:help;  }
 <div>
   <h2>People involved</h2>
   <ul>
-   <li><a href="mailto:galambalazs@yahoo.co.uk">Balázs Galambosi: maintainer</a></li>
-   <li><a href="mailto:patrickb1991@gmail.com">Patrick Brunner: orginal idea</a></li>
-   <li><a href="http://stereopsis.com/stopping/">Michael Herf: Pulse Algorithm</a></li>
+   <li><a href="mailto:galambalazs@yahoo.co.uk">Balázs Galambosi <b>(</b>developer<b>)</b></a></li>
+   <li><a href="http://stereopsis.com/stopping/">Michael Herf's pulse algorithm is used</a></li>
   </ul>
 </div>
 
@@ -314,14 +325,12 @@ label[title], .help  { cursor:help;  }
   <div class="dialog-content">You can now test the new scroll settings!</div>
 </div>
 
-
-
 <div id="test">
 
-<h1>Test your settings</h1>
+<h1>Test your settings!</h1>
 
 <div>
-<h2>Lorem ipsum dolor sit amet</h2>
+<h2>By scrolling on this long page.</h2>
 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non orci ipsum, eu laoreet nisl. Suspendisse ut dictum neque. Pellentesque nulla ipsum, posuere ut mattis vel, dapibus fringilla arcu. Donec fermentum purus in risus convallis semper. Nullam tempor urna eu libero vulputate vitae pulvinar enim accumsan. Donec vitae leo a enim faucibus consectetur. Nullam lectus justo, eleifend quis condimentum ut, pharetra et risus. Ut luctus molestie nibh sit amet vestibulum. Vestibulum tempor luctus scelerisque. Duis posuere elementum mollis. Cras sit amet varius massa. Nulla condimentum feugiat aliquam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean id ante et diam lacinia convallis vel eu magna.</p>
 
 <p>In congue, risus sed commodo molestie, tortor sem dictum neque, in viverra sapien arcu vulputate velit. Pellentesque nec dignissim neque. Proin non felis quis lectus fermentum lobortis ut nec purus. Nam quam turpis, sodales in pellentesque vel, tempor gravida lacus. Pellentesque euismod aliquet pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed tempus velit in lacus tristique facilisis. Mauris commodo, nunc et tempor pharetra, lectus dui posuere odio, eu auctor lorem augue non neque. Aenean auctor velit ac erat lobortis iaculis. Nullam in nibh et sem porttitor malesuada non non urna. Nulla lacus est, aliquet vel egestas a, accumsan a ante. Sed semper molestie dictum. Morbi at quam non enim porttitor varius. Vivamus ut metus et enim egestas ornare malesuada at augue.</p>

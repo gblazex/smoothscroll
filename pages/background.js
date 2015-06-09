@@ -12,7 +12,7 @@ var defaultOptions = {
     // Pulse (less tweakable)
     // ratio of "tail" to "acceleration"
     pulseAlgorithm    : true,
-    pulseScale        : 8,
+    pulseScale        : 4,
     pulseNormalize    : 1,
 
     // Acceleration
@@ -38,6 +38,8 @@ chrome.runtime.onInstalled.addListener(init);
 function init(details) {
     if (details.reason == "install") {
         chrome.storage.sync.set(defaultOptions);
+        var optionsPage = chrome.runtime.getURL("pages/options.html");
+        chrome.tabs.create({ url: optionsPage });
         chrome.tabs.query({}, function (tabs) {
             tabs.forEach(addSmoothScrollToTab);
         });
