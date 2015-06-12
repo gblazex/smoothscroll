@@ -155,14 +155,14 @@ var profiles = {
     'animationTime': 400,
     'stepSize': 120,
     'pulseAlgorithm': 'true',
-    'pulseScale': 8
+    'pulseScale': 4
   },
 
   '_iphone': {
-    'animationTime': 400,
+    'animationTime': 600,
     'stepSize': 120,
     'pulseAlgorithm': 'true',
-    'pulseScale': 4
+    'pulseScale': 3
   },
   
   '_opera': {
