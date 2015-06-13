@@ -20,7 +20,7 @@ var scrolling = false; // guards one phase
 
 
 // we check the OS for default middle mouse behavior only!
-var isLinux = (navigator.platform.indexOf("Linux") != -1); 
+var isLinux = (navigator.platform.indexOf("Linux") != -1);
 
 // get global settings
 chrome.storage.sync.get(defaultOptions, function (syncedOptions) {
@@ -34,7 +34,7 @@ chrome.storage.sync.get(defaultOptions, function (syncedOptions) {
     }, 10);
 });
 
- 
+
 /**
  * Initializes the image at the reference point.
  */
@@ -71,7 +71,7 @@ function mousedown(e) {
 
     var isLink = false;
     var elem   = e.target;
-    
+
     // linux middle mouse shouldn't be overwritten (paste)
     var isLinuxInput = (isLinux && /input|textarea/i.test(elem.nodeName));
 
@@ -79,44 +79,44 @@ function mousedown(e) {
         isLink = isNodeName(elem, "a");
         if (isLink) break;
     } while (elem = elem.parentNode);
-        
+
     elem = overflowingAncestor(e.target);
-    
+
     // if it's being used on an <a> element
     // take the default action
     if (!elem || isLink || isLinuxInput) {
         return true;
     }
-    
+
     // we don't want the default by now
     e.preventDefault();
-    
+
     // quit if there's an ongoing scrolling
     if (scrolling) {
         return false;
     }
-    
+
     // set up a new scrolling phase
     scrolling = true;
- 
+
     // reference point
     img.style.left = e.clientX - 10 + "px";
     img.style.top  = e.clientY - 10 + "px";
     document.body.appendChild(img);
-    
+
     var refereceX = e.clientX;
     var refereceY = e.clientY;
 
     var speedX = 0;
     var speedY = 0;
-    
+
     // animation loop
-    var last = Date.now();
+    var last = performance.now();
     var delay = 1000 / options.frameRate;
     var finished = false;
-    
+
     requestFrame(function step(time) {
-        var now = time || Date.now();
+        var now = time || performance.now();
         var elapsed = now - last;
         elem.scrollLeft += (speedX * elapsed) >> 0;
         elem.scrollTop  += (speedY * elapsed) >> 0;
@@ -125,13 +125,13 @@ function mousedown(e) {
             requestFrame(step, elem, delay);
         }
     }, elem, delay);
-    
+
     var firstMove = true;
 
     function mousemove(e) {
         var deltaX = Math.abs(refereceX - e.clientX);
         var deltaY = Math.abs(refereceY - e.clientY);
-        var movedEnough = Math.max(deltaX, deltaY) > 10; 
+        var movedEnough = Math.max(deltaX, deltaY) > 10;
         if (firstMove && movedEnough) {
             addEvent("mouseup", remove);
             firstMove = false;
@@ -139,7 +139,7 @@ function mousedown(e) {
         speedX = (e.clientX - refereceX) * 10 / 1000;
         speedY = (e.clientY - refereceY) * 10 / 1000;
     }
-    
+
     function remove(e) {
         removeEvent("mousemove", mousemove);
         removeEvent("mousedown", remove);
@@ -149,7 +149,7 @@ function mousedown(e) {
         scrolling = false;
         finished  = true;
     }
-    
+
     addEvent("mousemove", mousemove);
     addEvent("mousedown", remove);
     addEvent("keydown", remove);
