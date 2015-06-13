@@ -111,12 +111,12 @@ function mousedown(e) {
     var speedY = 0;
     
     // animation loop
-    var last = Date.now();
+    var last = dateNow();
     var delay = 1000 / options.frameRate;
     var finished = false;
     
     requestFrame(function step(time) {
-        var now = time || Date.now();
+        var now = dateNow();
         var elapsed = now - last;
         elem.scrollLeft += (speedX * elapsed) >> 0;
         elem.scrollTop  += (speedY * elapsed) >> 0;
@@ -154,6 +154,15 @@ function mousedown(e) {
     addEvent("mousedown", remove);
     addEvent("keydown", remove);
 }
+
+/**
+ * performance.now with fallback
+ */
+var dateNow = (function () {
+  return (window.performance && performance.now) 
+        ? function () { return performance.now(); }
+        : function () { return Date.now(); };
+})()
 
 addEvent("mousedown", mousedown);
 addEvent("DOMContentLoaded", init);
