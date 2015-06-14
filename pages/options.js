@@ -153,7 +153,7 @@ var profiles = {
 
   '_default': {
     'animationTime': 400,
-    'stepSize': 120,
+    'stepSize': 100,
     'pulseAlgorithm': 'true',
     'pulseScale': 4
   },
