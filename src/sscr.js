@@ -14,6 +14,7 @@ var defaultOptions = {
     frameRate        : 150, // [Hz]
     animationTime    : 400, // [px]
     stepSize         : 100, // [px]
+    naturalScroll    : false,
 
     // Pulse (less tweakable)
     // ratio of 'tail' to 'acceleration'
@@ -388,11 +389,15 @@ function wheel(event) {
     // scale by step size
     // delta is 120 most of the time
     // synaptics seems to send 1 sometimes
+    var stepSize = options.stepSize / 120;
+    if (options.naturalScroll) {
+        stepSize *= -1;
+    }
     if (Math.abs(deltaX) > 1.2) {
-        deltaX *= options.stepSize / 120;
+        deltaX *= stepSize;
     }
     if (Math.abs(deltaY) > 1.2) {
-        deltaY *= options.stepSize / 120;
+        deltaY *= stepSize;
     }
     
     scrollArray(overflowing, deltaX, deltaY);

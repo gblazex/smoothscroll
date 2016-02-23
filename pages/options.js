@@ -14,6 +14,7 @@ var optionsList = [
   'middleMouse',
   'accelerationMax',
   'accelerationDelta',
+  'naturalScroll',
   'pulseAlgorithm',
   'pulseScale',
   'keyboardSupport',
@@ -49,7 +50,7 @@ function hide(elem, newop) {
 }
 
 function isCheckbox(key) {
-  var re = /^(?:keyboardSupport|touchpadSupport|middleMouse|pulseAlgorithm|fixedBackground)$/;
+  var re = /^(?:keyboardSupport|touchpadSupport|middleMouse|pulseAlgorithm|fixedBackground|naturalScroll)$/;
   return re.test(key);
 }
 
