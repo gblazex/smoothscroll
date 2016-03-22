@@ -30,7 +30,7 @@ var defaultOptions = {
     arrowScroll       : 50,     // [px]
 
     // Other
-    touchpadSupport   : true,
+    touchpadSupport   : false,
     fixedBackground   : true, 
     excluded          : ''    
 };
