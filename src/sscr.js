@@ -121,53 +121,10 @@ function init() {
         isFrame = true;
     }
 
-    /**
-     * This fixes a bug where the areas left and right to 
-     * the content does not trigger the wheel event
-     * on some pages. e.g.: html, body { height: 100% }
-     */
+    // TODO: check if clearfix is still needed
     else if (scrollHeight > windowHeight &&
             (body.clientHeight + 1 < body.scrollHeight &&
              html.clientHeight + 1 < html.scrollHeight)) {
-
-        var fullPageElem = document.createElement('div');
-        fullPageElem.style.cssText = 'position:absolute; z-index:-10000; ' +
-                                     'top:0; left:0; right:0; height:' + 
-                                      body.scrollHeight + 'px;';
-        document.body.appendChild(fullPageElem);
-
-        // body.scrollHeight is increased if an element inside has a top margin,
-        // we calculate how much body is pushed down and offset its scrollHeight
-        var bodyTopToViewport = body.getBoundingClientRect().top;
-        var bodyTopToDocument = (bodyTopToViewport + body.scrollTop) >> 0;
-        
-        // DOM changed (throttled) to fix height
-        var pendingRefresh;
-        var refresh = function () {
-            if (pendingRefresh) return; // could also be: clearTimeout(pendingRefresh);
-            pendingRefresh = setTimeout(function () {
-                if (isExcluded) return; // could be running after cleanup
-                observer.disconnect();
-                fullPageElem.style.height = '0';
-                fullPageElem.style.height = (body.scrollHeight - bodyTopToDocument) + 'px';
-                observer.observe(body, config);
-                pendingRefresh = null;
-            }, 500); // act rarely to stay fast
-        };
-  
-        setTimeout(refresh, 10);
-
-        // TODO: attributeFilter?
-        // var attributes = 'style className id width height'.split(' ');
-        var config = {
-            attributes: true, 
-            subtree: true,
-            characterData: false
-        };
-
-        observer = new MutationObserver(refresh);
-        observer.observe(body, config);
-
         if (root.offsetHeight <= windowHeight) {
             var clearfix = document.createElement('div');   
             clearfix.style.clear = 'both';
