@@ -1,7 +1,11 @@
 
-// SmoothScroll v1.2.1
+//
+// SmoothScroll (Balazs Galambosi)
 // Licensed under the terms of the MIT license.
-// Balázs Galambosi (c) 2013
+// The only restriction would be not to publish any  
+// extension for browsers or native application
+// without getting a written permission first.
+//
 
 /**
  * A module for middle mouse scrolling.
@@ -162,7 +166,7 @@ var dateNow = (function () {
   return (window.performance && performance.now) 
         ? function () { return performance.now(); }
         : function () { return Date.now(); };
-})()
+})();
 
 addEvent("mousedown", mousedown);
 addEvent("DOMContentLoaded", init);
