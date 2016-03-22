@@ -1,6 +1,6 @@
 
 //
-// SmoothScroll v1.3.7 (Balazs Galambosi)
+// SmoothScroll (Balazs Galambosi)
 // Licensed under the terms of the MIT license.
 // The only restriction would be not to publish any  
 // extension for browsers or native application
