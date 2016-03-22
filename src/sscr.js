@@ -345,7 +345,7 @@ function wheel(event) {
     // leave embedded content alone (flash & pdf)
     if (isNodeName(activeElement, 'embed') || 
        (isNodeName(target, 'embed') && /\.pdf/i.test(target.src)) ||
-       isNodeName(activeElement, 'object')) {
+        isNodeName(activeElement, 'object')) {
         return true;
     }
 
@@ -423,7 +423,7 @@ function keydown(event) {
     var buttonTypes = /^(button|submit|radio|checkbox|file|color|image)$/i;
     if ( event.defaultPrevented ||
          inputNodeNames.test(target.nodeName) ||
-         isNodeName(target, 'input') && !buttonTypes.test(target.type) ||
+         isNodeName(target, 'input') && buttonTypes.test(target.type) ||
          isNodeName(activeElement, 'video') ||
          isInsideYoutubeVideo(event) ||
          target.isContentEditable || 
@@ -438,7 +438,7 @@ function keydown(event) {
       return true;
     }
     
-    var xOnly = (event.keyCode == key.left || event.keyCode == key.right)
+    var xOnly = (event.keyCode == key.left || event.keyCode == key.right);
     var overflowing = overflowingAncestor(activeElement, xOnly);
 
     if (!overflowing) {
@@ -626,7 +626,7 @@ function isTouchpad(deltaY) {
     if (!deltaBuffer.length) {
         deltaBuffer = [deltaY, deltaY, deltaY];
     }
-    deltaY = Math.abs(deltaY)
+    deltaY = Math.abs(deltaY);
     deltaBuffer.push(deltaY);
     deltaBuffer.shift();
     clearTimeout(deltaBufferTimer);
