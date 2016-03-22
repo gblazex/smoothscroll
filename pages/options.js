@@ -53,10 +53,14 @@ function isCheckbox(key) {
   return re.test(key);
 }
 
+function init() {
+  chrome.storage.sync.get(optionsList, initWithOptions);
+}
+
 /**
  * Fills up the form with the saved values from local storage.
  */
-function init(optionsSynced) {
+function initWithOptions(optionsSynced) {
 
     options = optionsSynced;
 
@@ -218,7 +222,7 @@ byId('profiles').onclick = function(e) {
 byId('save').onclick = save;
 
 // public interface
-chrome.storage.sync.get(optionsList, init);
+init();
 window.addEventListener("DOMContentLoaded", generateTest, false);
 window.reload = reload;
 window.save = save;
