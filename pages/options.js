@@ -11,6 +11,7 @@ var optionsList = [
   'animationTime',
   'stepSize',
   'arrowScroll',
+  'spaceScroll',
   'middleMouse',
   'accelerationMax',
   'accelerationDelta',

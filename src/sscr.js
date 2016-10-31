@@ -28,6 +28,7 @@ var defaultOptions = {
     // Keyboard Settings
     keyboardSupport   : true,  // option
     arrowScroll       : 50,     // [px]
+    spaceScroll       : 0.9,    // decimal
 
     // Other
     touchpadSupport   : false,
@@ -427,7 +428,7 @@ function keydown(event) {
             break;         
         case key.spacebar: // (+ shift)
             shift = event.shiftKey ? 1 : -1;
-            y = -shift * clientHeight * 0.9;
+            y = -shift * clientHeight * options.spaceScroll;
             break;
         case key.pageup:
             y = -clientHeight * 0.9;
