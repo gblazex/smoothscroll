@@ -77,12 +77,13 @@ function mousedown(e) {
     var elem   = e.target;
     
     // linux middle mouse shouldn't be overwritten (paste)
-    var isLinuxInput = (isLinux && /input|textarea/i.test(elem.nodeName));
+    var isLinuxInput = (isLinux && (/input|textarea/i.test(elem.nodeName) || 
+                                    elem.isContentEditable));
 
     do {
         isLink = isNodeName(elem, "a");
         if (isLink) break;
-    } while (elem = elem.parentNode);
+    } while ((elem = elem.parentNode));
         
     elem = overflowingAncestor(e.target);
     
