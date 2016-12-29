@@ -47,7 +47,9 @@ var root = document.documentElement;
 var activeElement;
 var observer;
 var deltaBuffer = [];
+var deltaBufferTimer;
 var isMac = /^Mac/.test(navigator.platform);
+var isWin = /Windows/i.test(navigator.userAgent);
 
 var key = { left: 37, up: 38, right: 39, down: 40, spacebar: 32, 
             pageup: 33, pagedown: 34, end: 35, home: 36 };
@@ -266,14 +268,14 @@ function scrollArray(elem, left, top) {
         }
         
         if (que.length) { 
-            pending = requestFrame(step, elem, (1000 / options.frameRate + 1)); 
+            pending = window.requestAnimationFrame(step); 
         } else { 
             pending = null;
         }
     };
     
     // start a new queue of actions
-    pending = requestFrame(step, elem, 0);
+    pending = window.requestAnimationFrame(step);
 }
 
 
@@ -335,6 +337,13 @@ function wheel(event) {
 
     // nothing to do if there's no element that's scrollable
     if (!overflowing) {
+        // Chrome iframes seem to eat wheel events, which we need to 
+        // propagate up if the iframe has nothing overflowing to scroll
+        if (isFrame && isWin)  {
+            // change target to iframe element itself for the parent frame
+            Object.defineProperty(event, "target", {value: window.frameElement});
+            return parent.wheel(event);
+        }
         return true;
     }
 
@@ -530,7 +539,7 @@ function overflowingAncestor(el, x) {
         } else if (isContentOverflowing(el, x) && overflowAutoOrScroll(el, x)) {
             return setCache(elems, el, x);
         }
-    } while (el = el.parentElement);
+    } while ((el = el.parentElement));
 }
 
 function isContentOverflowing(el, x) {
@@ -567,7 +576,7 @@ function removeEvent(type, fn) {
 }
 
 function isNodeName(el, tag) {
-    return (el.nodeName||'').toLowerCase() === tag.toLowerCase();
+    return el && (el.nodeName||'').toLowerCase() === tag.toLowerCase();
 }
 
 function directionCheck(x, y) {
@@ -578,12 +587,10 @@ function directionCheck(x, y) {
         direction.y = y;
         que = [];
         lastScroll = 0;
-        cancelFrame(pending);
+        window.cancelAnimationFrame(pending);
         pending = null;
     }
 }
-
-var deltaBufferTimer;
 
 function isTouchpad(deltaY) {
     if (!deltaY) return;
@@ -597,7 +604,8 @@ function isTouchpad(deltaY) {
     deltaBufferTimer = setTimeout(function () {
         chrome.storage.local.set({ deltaBuffer: deltaBuffer });
     }, 1000);
-    return !allDeltasDivisableBy(120) && !allDeltasDivisableBy(100);
+    var dpiScaledWheelDelta = deltaY > 120 && allDeltasDivisableBy(deltaY); // win64 
+    return !allDeltasDivisableBy(120) && !allDeltasDivisableBy(100) && !dpiScaledWheelDelta;
 } 
 
 function isDivisible(n, divisor) {
@@ -624,28 +632,10 @@ function isInsideYoutubeVideo(event) {
             isControl = (elem.classList && 
                          elem.classList.contains('html5-video-controls'));
             if (isControl) break;
-        } while (elem = elem.parentNode);
+        } while ((elem = elem.parentNode));
     }
     return isControl;
 }
-
-var requestFrame = (function () {
-      return (window.requestAnimationFrame       || 
-              window.webkitRequestAnimationFrame || 
-              function (callback, element, delay) {
-                 setTimeout(callback, delay || (1000/60));
-              });
-})();
-
-var cancelFrame = (function () {
-      return (window.cancelAnimationFrame       || 
-              window.webkitCancelAnimationFrame || 
-              function (callback, element) {
-                 clearTimeout(callback);
-              });
-})();
-
-var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;  
 
 function getScrollRoot() {
     return document.body; // scrolling root in WebKit
