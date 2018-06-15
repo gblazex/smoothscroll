@@ -372,14 +372,25 @@ function wheel(event) {
  * @param {Object} event
  */
 function keydown(event) {
-
     var target   = event.target;
     var modifier = event.ctrlKey || event.altKey || event.metaKey || 
                   (event.shiftKey && event.keyCode !== key.spacebar);
 
     // our own tracked active element could've been removed from the DOM
     if (!document.contains(activeElement)) {
-        activeElement = document.activeElement;
+        let newActiveElement = document.activeElement;
+        if (newActiveElement === document.body) {
+            // Chrome resets it to the body when an element goes away,
+            // but often the thing that's being scrolled is a child.
+            // Let's try to find it.
+            for (let elem of document.body.children) {
+                if (overflowingElement(elem, false)) {
+                    newActiveElement = elem;
+                    break;
+                }
+            }
+        }
+        activeElement = newActiveElement;
     }
 
     // do nothing if user is editing text
@@ -540,6 +551,31 @@ function overflowingAncestor(el, x) {
             return setCache(elems, el, x);
         }
     } while ((el = el.parentElement));
+}
+
+// HACK: copied from overflowAncestor, just removed the loop
+function overflowingElement(el, x) {
+    var elems = [];
+    var body = document.body;
+    var rootScrollHeight = root.scrollHeight;
+    var rootScrollWidth  = root.scrollWidth;
+    var cached = getCache(el, x);
+    if (cached) {
+        return setCache(elems, cached, x);
+    }
+    elems.push(el);
+    if (x && rootScrollWidth  === el.scrollWidth ||
+       !x && rootScrollHeight === el.scrollHeight) {
+        var topOverflowsNotHidden = overflowNotHidden(root, x) && overflowNotHidden(body, x);
+        var isOverflowCSS = topOverflowsNotHidden || overflowAutoOrScroll(root, x);
+        if (isFrame && isContentOverflowing(root, x) ||
+           !isFrame && isOverflowCSS) {
+            return setCache(elems, getScrollRoot(), x);
+        }
+    } else if (isContentOverflowing(el, x) && overflowAutoOrScroll(el, x)) {
+        return setCache(elems, el, x);
+    }
+    return false;
 }
 
 function isContentOverflowing(el, x) {
