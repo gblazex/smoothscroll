@@ -424,6 +424,10 @@ function keydown(event) {
     var shift, x = 0, y = 0;
 
     if (overflowing == document.body) {
+        // Some properties like scrollTop are only set on either body or
+        // documentElement, depending on quirks mode.
+        // See https://bugs.chromium.org/p/chromium/issues/detail?id=157855.
+        overflowing = root;
         clientHeight = window.innerHeight;
     }
 
