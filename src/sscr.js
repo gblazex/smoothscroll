@@ -376,9 +376,10 @@ function keydown(event) {
     var modifier = event.ctrlKey || event.altKey || event.metaKey || 
                   (event.shiftKey && event.keyCode !== key.spacebar);
 
-    // our own tracked active element could've been removed from the DOM
-    if (!document.contains(activeElement)) {
-        let newActiveElement = document.activeElement;
+    // Our own tracked active element could've been deactive by being removed from the DOM
+    // or made invisible.
+    let newActiveElement = document.activeElement;
+    if (newActiveElement !== activeElement) {
         if (newActiveElement === document.body) {
             // Chrome resets it to the body when an element goes away,
             // but often the thing that's being scrolled is a child.
