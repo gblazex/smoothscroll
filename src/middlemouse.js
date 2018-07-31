@@ -120,14 +120,19 @@ function mousedown(e) {
     var delay = 1000 / options.frameRate;
     var finished = false;
     
-    requestFrame(function step(time) {
+    window.requestAnimationFrame(function step(time) {
         var now = dateNow();
         var elapsed = now - last;
-        elem.scrollLeft += (speedX * elapsed) >> 0;
-        elem.scrollTop  += (speedY * elapsed) >> 0;
+        // NOTE: later can also use document.scrollingElement
+        if (elem == document.body) {
+            window.scrollBy(speedX * elapsed, speedY * elapsed);
+        } else {
+            elem.scrollLeft += (speedX * elapsed) >> 0;
+            elem.scrollTop  += (speedY * elapsed) >> 0;
+        }
         last = now;
         if (!finished) {
-            requestFrame(step, elem, delay);
+            window.requestAnimationFrame(step);
         }
     }, elem, delay);
     
