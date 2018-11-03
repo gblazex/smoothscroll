@@ -139,6 +139,23 @@ function init() {
         body.style.backgroundAttachment = 'scroll';
         html.style.backgroundAttachment = 'scroll';
     }
+
+    if (!isFrame) {
+        addEvent('message', function (e) {
+            if (e.data.SS == 'SmoothScroll') {
+                var wheelEvent = e.data;
+                wheelEvent.target = getFrameByEvent(e);
+                wheel(wheelEvent);
+            }
+        });
+    }
+}
+
+function getFrameByEvent(event) {
+  var iframes = document.getElementsByTagName('iframe');
+  return [].filter.call(iframes, function(iframe) {
+    return iframe.contentWindow === event.source;
+  })[0];
 }
 
 /**
@@ -345,6 +362,11 @@ function wheel(event) {
         deltaY *= 40;
     }
 
+    // check if it's a touchpad scroll that should be ignored
+    if (!options.touchpadSupport && isTouchpad(deltaY)) {
+        return true;
+    }
+
     var xOnly = (deltaX && !deltaY);
     var overflowing = overflowingAncestor(target, xOnly);
 
@@ -352,16 +374,13 @@ function wheel(event) {
     if (!overflowing) {
         // Chrome iframes seem to eat wheel events, which we need to 
         // propagate up if the iframe has nothing overflowing to scroll
-        if (isFrame && isWin)  {
+        if (isFrame) {
+            event.preventDefault();
+            postScrollToParent(deltaX, deltaY);
             // change target to iframe element itself for the parent frame
-            Object.defineProperty(event, "target", {value: window.frameElement});
-            return parent.wheel(event);
+            //Object.defineProperty(event, "target", {value: window.frameElement});
+            //return parent.wheel(event);
         }
-        return true;
-    }
-
-    // check if it's a touchpad scroll that should be ignored
-    if (!options.touchpadSupport && isTouchpad(deltaY)) {
         return true;
     }
 
@@ -376,7 +395,7 @@ function wheel(event) {
     }
     
     scrollArray(overflowing, deltaX, deltaY);
-    event.preventDefault();
+    if (event.preventDefault) event.preventDefault();
     scheduleClearCache();
 }
 
@@ -586,6 +605,14 @@ function isScrollBehaviorSmooth(el) {
         smoothBehaviorForElement[id] = ('smooth' == scrollBehavior);
     }
     return smoothBehaviorForElement[id];
+}
+
+function postScrollToParent(deltaX, deltaY) {
+    parent.postMessage({
+        deltaX: deltaX,
+        deltaY: deltaY,
+        SS: 'SmoothScroll'
+    }, '*');
 }
 
 
