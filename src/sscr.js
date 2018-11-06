@@ -621,11 +621,11 @@ function postScrollToParent(deltaX, deltaY) {
  ***********************************************/
 
 function addEvent(type, fn) {
-    window.addEventListener(type, fn, false);
+    window.addEventListener(type, fn, {passive: false});
 }
 
 function removeEvent(type, fn) {
-    window.removeEventListener(type, fn, false);  
+    window.removeEventListener(type, fn, {passive: false});  
 }
 
 function isNodeName(el, tag) {
