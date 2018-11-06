@@ -620,8 +620,8 @@ function postScrollToParent(deltaX, deltaY) {
  * HELPERS
  ***********************************************/
 
-function addEvent(type, fn) {
-    window.addEventListener(type, fn, false);
+function addEvent(type, fn, opts=false) {
+    window.addEventListener(type, fn, opts);
 }
 
 function removeEvent(type, fn) {
@@ -734,7 +734,7 @@ function pulse(x) {
 // new standard wheel event from Chrome 31+
 var wheelEvent = 'onwheel' in document.createElement('div') ? 'wheel' : 'mousewheel'; 
 
-addEvent(wheelEvent, wheel);
+addEvent(wheelEvent, wheel, {passive: true});
 addEvent('mousedown', mousedown);
 addEvent('keydown', keydown);
 addEvent('load', loaded);
