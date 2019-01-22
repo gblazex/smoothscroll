@@ -162,6 +162,13 @@ var profiles = {
     'pulseScale': 4
   },
 
+  '_edge': {
+    'animationTime': 150,
+    'stepSize': 100,
+    'pulseAlgorithm': 'true',
+    'pulseScale': 4
+  },
+
   '_iphone': {
     'animationTime': 600,
     'stepSize': 120,
