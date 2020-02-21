@@ -80,7 +80,7 @@ function initWithOptions(optionsSynced) {
     for (var key in options) {
       if (isCheckbox(key)) {
           byId(key).checked = options[key];
-      } else if (options[key]) {
+      } else if (options[key] !== undefined) {
           byId(key).value = options[key];
       }
     }
