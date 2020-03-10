@@ -420,8 +420,10 @@ function keydown(event) {
     // or inside interactive elements
     var inputNodeNames = /^(textarea|select|embed|object)$/i;
     var buttonTypes = /^(button|submit|radio|checkbox|file|color|image)$/i;
+    var webComponents = /-/i;
     if ( event.defaultPrevented ||
          inputNodeNames.test(target.nodeName) ||
+         webComponents.test(target.nodeName) ||
          isNodeName(target, 'input') && !buttonTypes.test(target.type) ||
          isNodeName(activeElement, 'video') ||
          isInsideYoutubeVideo(event) ||
